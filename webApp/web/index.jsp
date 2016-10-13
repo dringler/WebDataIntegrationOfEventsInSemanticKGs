@@ -93,7 +93,17 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/d3.js"></script>
 <script src="js/topojson.min.js"></script>
+
+<script type="text/javascript" src="/dwr/engine.js"></script>
+<script type="text/javascript" src="/dwr/util.js"></script>
+<script type="text/javascript" src="/dwr/interface/Demo.js"></script>
+<script type="text/javascript" src="/dwr/interface/QueryProcessor.js"></script>
+
+
 <script src="js/main.js"></script>
 <script src="js/map.js"></script>
+
+
+
 </body>
 </html>

@@ -8,7 +8,10 @@
       <param name="class" value="java.util.Date"/>
     </create>
     <create creator="new" javascript="Demo">
-      <param name="class" value="your.java.Bean"/>
+      <param name="class" value="Demo"/>
+    </create>
+    <create creator="new" javascript="QueryProcessor">
+      <param name="class" value="QueryProcessor"/>
     </create>
   </allow>
 </dwr>
