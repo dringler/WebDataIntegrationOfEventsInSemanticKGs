@@ -67,6 +67,32 @@ public class QueryString {
             return queryString;
         }
 
+    public String getYagoQueryString(String cat, String fD, String tD) {
+        String queryString = "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
+                "SELECT ?event ?date ?location WHERE {\n" +
+                "  ?class yago:hasWordnetDomain yago:wordnetDomain_factotum .\n" +
+                "  ?class yago:hasSynsetId ?x .\n" +
+                "  ?event <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class .\n" +
+                "  ?event yago:happenedOnDate ?date .\n" +
+                "  ?event yago:isLocatedIn ?location\n" +
+                "  FILTER (?x=\'100029378\')\n";
+
+        //check for filter values
+        if (!fD.equals("") && !tD.equals("")) { //filter for startDate and endDate
+            queryString = queryString + "FILTER(?date > \'" + fD + "\'^^xsd:date)\n" +
+                    "FILTER(?date < \'" + tD + "\'^^xsd:date)\n";
+        } else if (!fD.equals("") && tD.equals("")) { //filter for startDate only
+            queryString = queryString + "FILTER(?date > \'" + fD + "\'^^xsd:date)\n";
+        } else if (fD.equals("") && !tD.equals("")) { //filter for endDate only
+            queryString = queryString + "FILTER(?date < \'" + tD + "\'^^xsd:date)\n";
+            //} else { // no filter
+        }
+        queryString = queryString + "} LIMIT 10";
+
+        return queryString;
+    }
+
 /*    private static String removeQuotation(String quoted) {
         String unquoted;
         unquoted = quoted.replace("\"", "");

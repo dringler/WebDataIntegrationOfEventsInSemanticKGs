@@ -57,6 +57,14 @@ public class QueryProcessor {
             queryTheKB(wikidata, queryString);
         }
 
+        if (y) {
+            String yago = "https://linkeddata1.calcul.u-psud.fr/sparql";
+            System.out.println("Query " + yago);
+            String queryString = qs.getYagoQueryString(cat, fY, tY);
+
+            queryTheKB(yago, queryString);
+        }
+
         return result;
     }
     public void queryTheKB(String service, String queryString) {
