@@ -104,10 +104,6 @@ d3.csv("csv/population.csv", function(err, data) {
 
     var valueHash = {};
 
-    function log10(val) {
-        return Math.log(val);
-    }
-
     data.forEach(function(d) {
         valueHash[d[MAP_KEY]] = +d[MAP_VALUE];
     });
@@ -143,7 +139,7 @@ d3.csv("csv/population.csv", function(err, data) {
             .attr("d", path)
             .attr("id", function(d,i) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            .style("fill", function(d) {
+            .style("fill", config.color0/*function(d) {
                 if (valueHash[d.properties.name]) {
                     var c = quantize((valueHash[d.properties.name]));
                     var color = colors[c].getColors();
@@ -152,7 +148,7 @@ d3.csv("csv/population.csv", function(err, data) {
                 } else {
                     return "#ccc";
                 }
-            })
+            }*/)
             .on("mousemove", function(d) {
                 var html = "";
 

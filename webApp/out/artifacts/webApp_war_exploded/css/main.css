@@ -59,3 +59,10 @@ body {
  margin-left: 20px;
  float: right;
 }
+
+#wrongInputID {
+    display: none;
+}
+#noDBselectedID {
+    display: none;
+}

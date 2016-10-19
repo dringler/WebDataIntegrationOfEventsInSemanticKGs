@@ -46,7 +46,7 @@
       <form>
         <label>Databases:</label>
         <div class="checkbox">
-          <label><input type="checkbox" value="d" id="dID">DBpedia</label>
+          <label><input type="checkbox" value="d" id="dID" checked>DBpedia</label>
         </div>
         <div class="checkbox">
           <label><input type="checkbox" value="w" id="wID">Wikidata</label>
@@ -66,14 +66,16 @@
         </div>
         <div class="form-group">
           <label for="fromYearID">From year:</label>
-          <input type="number" class="form-control" id="fromYearID">
+          <input type="text" class="form-control" id="fromYearID" value="2015-01-01">
         </div>
         <div class="form-group">
           <label for="toYearID">To year:</label>
-          <input type="number" class="form-control" id="toYearID">
+          <input type="text" class="form-control" id="toYearID" value="2016-01-01">
         </div>
         <button type="button" class="btn btn-default" id="sendQueryID">Send Query</button>
         <!--<button type="submit" class="btn btn-default">Submit</button>-->
+        <div id="wrongInputID"><p class="text-danger">Wrong Input Format! Use yyyy-mm-dd or leave field empty.</p></div>
+        <div id="noDBselectedID"><p class="text-danger">No Database selected! Please select at least one Database.</p></div>
       </form>
 
     </div>
