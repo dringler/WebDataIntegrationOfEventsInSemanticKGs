@@ -2,9 +2,6 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
-import java.lang.reflect.Array;
-
-
 /**
  * Created by curtis on 13/10/16.
  */
@@ -27,8 +24,6 @@ public class QueryProcessor {
         String dataCollectionResult = dataCollection(d, w, y, cat, fY, tY);
 
 
-
-
         //step 2: data translation
 
         //step 3: identity resolution
@@ -44,31 +39,35 @@ public class QueryProcessor {
     public String dataCollection(boolean d, boolean w, boolean y, String cat, String fY, String tY) {
         System.out.println("start data collection");
         String result = "";
-        //if (d) {
-            System.out.println("Query DBpedia true");
-            Model model = ModelFactory.createDefaultModel();
-            model.createTypedLiteral(fY);
+        QueryString qs = new QueryString();
+        // dbpedia
+        if (d) {
+            String dbpedia = "http://dbpedia.org/sparql";
+            System.out.println("Query " + dbpedia);
+            String queryString = qs.getDBpediaQueryString(cat, fY, tY);
 
+            queryTheKB(dbpedia, queryString);
+        }
+        //wikidata
+        if (w) {
+            String wikidata = "https://query.wikidata.org/sparql";
+            System.out.println("Query " + wikidata);
+            String queryString = qs.getWikidataQueryString(cat, fY, tY);
 
-            QueryString qs = new QueryString();
-            String queryString = qs.getQueryString(cat, fY, tY);
-            Query query = QueryFactory.create(queryString);
+            queryTheKB(wikidata, queryString);
+        }
 
-            String service = "http://dbpedia.org/sparql";
-
-
-       // }
-
+        return result;
+    }
+    public void queryTheKB(String service, String queryString) {
+        Query query = QueryFactory.create(queryString);
         QueryExecution qexec = QueryExecutionFactory.sparqlService(service, query);
         try {
-
             ResultSet results = qexec.execSelect();
-            ResultSet output = ResultSetFactory.copyResults(qexec.execSelect());
+            ResultSet output = ResultSetFactory.copyResults(results);
             System.out.println(ResultSetFormatter.asText(output));
-
-            while (results.hasNext()) {
+            /*while (results.hasNext()) {
                 QuerySolution sol = results.next();
-
                 if (sol.get("x") == null) {
                     result = "null";
                 } else if (sol.get("x").isLiteral()) {
@@ -78,16 +77,13 @@ public class QueryProcessor {
                 }
                 System.out.println(result);
             }
-
-
+*/
         } catch (Exception e) {
             e.printStackTrace();
             //no db connection
-
+            System.out.println(service + " connection failed");
         }
         qexec.close();
-
-        return result;
     }
 
 }
