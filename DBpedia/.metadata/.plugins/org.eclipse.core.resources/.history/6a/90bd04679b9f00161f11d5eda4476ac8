@@ -1,0 +1,84 @@
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+
+public class eventClassCounts {
+	public static void main(String[] args) {
+		//Model m = ModelFactory.createDefaultModel();
+		String service = "http://dbpedia.org/sparql";
+		//CHECK DBpedia connection
+		String queryTest = "ASK {}";
+		QueryExecution qeTest = QueryExecutionFactory.sparqlService(service, queryTest);
+		
+		try {
+			if(qeTest.execAsk()) {
+				System.out.println(service + " is up");
+				
+				// COUNT EVENT CLASSES
+				
+				String queryStringArray[] = {"event"};
+				
+				for (String queryStringVar : queryStringArray) {
+					String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>" + 
+							"SELECT" +
+								"(COUNT(DISTINCT ?" + queryStringVar + ") AS ?"+queryStringVar+"C)"+ 
+							"WHERE {" +
+									"?"+ queryStringVar + "a dbo:Event ." +
+							"}";
+					try {
+						Query query = QueryFactory.create(queryString);
+						QueryExecution qe = QueryExecutionFactory.sparqlService(service, query);
+						ResultSet rs = qe.execSelect();
+
+						while (rs.hasNext()) {
+							String output = rs.next().toString();
+							System.out.println(output);
+						}
+						
+					
+						
+					} finally {
+						//done
+					}
+				}
+				
+					/*		"(COUNT(DISTINCT ?competition) AS ?competitionC)"+ 
+							"(COUNT(DISTINCT ?contest) AS ?contestC)"+
+							"(COUNT(DISTINCT ?lifeCycleEvent) AS ?lifeCycleEventC)"+
+							"(COUNT(DISTINCT ?personalEvent) AS ?personalEventC)"+
+							"(COUNT(DISTINCT ?birth) AS ?birthC)"+
+							"(COUNT(DISTINCT ?death) AS ?deathC)"+
+							"(COUNT(DISTINCT ?divorce) AS ?divorceC)"+
+							"(COUNT(DISTINCT ?marriage) AS ?marriageC)"+
+							//"(COUNT(DISTINCT ?) AS ?)"+
+						
+							"?x a dbo:Event ." +
+						"?competition a dbo:Competition ." +
+							"?contest a dbo:Contest ." +
+						"?lifeCycleEvent a dbo:LifeCycleEvent ." +
+							"?personalEvent a dbo:PersonalEvent ." +
+								"?birth a dbo:Birth ." +
+								"?death a dbo:Death ." +
+								"?divorce a dbo:Divorce ." +
+								"?marriage a dbo:Marriage ." +
+						"}";
+						*/
+				
+				
+				
+				
+			}
+			
+			
+			
+		} catch (QueryExceptionHTTP e) {
+			System.out.println(service + " is down");
+		} finally {
+			qeTest.close();
+		}
+		
+	}
+}
