@@ -42,7 +42,7 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="userInputID">
       <form>
         <label>Databases:</label>
         <div class="checkbox">
@@ -66,20 +66,20 @@
         </div>
         <div class="form-group">
           <label for="fromYearID">From year:</label>
-          <input type="text" class="form-control" id="fromYearID" value="2015-01-01">
+          <input type="text" class="form-control" id="fromYearID" value="1980-01-01">
         </div>
         <div class="form-group">
           <label for="toYearID">To year:</label>
-          <input type="text" class="form-control" id="toYearID" value="2016-01-01">
+          <input type="text" class="form-control" id="toYearID" value="1990-01-01">
         </div>
         <button type="button" class="btn btn-default" id="sendQueryID">Send Query</button>
         <!--<button type="submit" class="btn btn-default">Submit</button>-->
         <div id="wrongInputID"><p class="text-danger">Wrong Input Format! Use yyyy-mm-dd or leave field empty.</p></div>
-        <div id="noDBselectedID"><p class="text-danger">No Database selected! Please select at least one Database.</p></div>
+        <div id="noDbSelectedID"><p class="text-danger">No Database selected! Please select at least one Database.</p></div>
       </form>
 
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="chartColumn">
       <div id="tooltip-container"></div>
 
       <div id="canvas-svg"></div>

@@ -1,30 +1,31 @@
 import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 
 /**
- * Created by curtis on 13/10/16.
+ * @author Daniel Ringler
+ * Created on 13/10/16.
  */
 public class QueryProcessor {
-
-    public class DataArray {
-        public boolean d;
-        public boolean w;
-        public boolean y;
-        public String cat;
-        public int fY;
-        public int tY;
-    }
-
-    public String getUserData(boolean d, boolean w, boolean y, String cat, String fY, String tY) {
+    /**
+     Get user parameters from Web App and trigger the Data Integration Process
+     @param  d query DBpedia (boolean)
+     @param w query Wikidata (boolean)
+     @param y query YAGO (boolean)
+     @param cat category to query
+     @param fD fromDate (String)
+     @param tD toDate (String)
+     @return JSON to update the D3.JS chart
+     */
+    public String getUserData(boolean d, boolean w, boolean y, String cat, String fD, String tD) {
         System.out.println("DATA RECEIVED");
         System.out.println(cat);
         //data received, start data integration process
         //step 1: data collection
-        String dataCollectionResult = dataCollection(d, w, y, cat, fY, tY);
+        String dataCollectionResult = dataCollection(d, w, y, cat, fD, tD);
 
 
         //step 2: data translation
+        
+        //http://stackoverflow.com/questions/6514876/most-efficient-conversion-of-resultset-to-json
 
         //step 3: identity resolution
 
@@ -36,38 +37,52 @@ public class QueryProcessor {
         return "returnData";
     }
 
-    public String dataCollection(boolean d, boolean w, boolean y, String cat, String fY, String tY) {
+    /**
+     Data Collection Process
+     @param  d query DBpedia (boolean)
+     @param w query Wikidata (boolean)
+     @param y query YAGO (boolean)
+     @param cat category to query
+     @param fD fromDate (String)
+     @param tD toDate (String)
+     @return results from querying the public endpoints
+     */
+    public String dataCollection(boolean d, boolean w, boolean y, String cat, String fD, String tD) {
         System.out.println("start data collection");
         String result = "";
         QueryString qs = new QueryString();
-        // dbpedia
-        if (d) {
+
+        // create Wrapper for each selected source
+        if (d) { // DBpedia
             String dbpedia = "http://dbpedia.org/sparql";
             System.out.println("Query " + dbpedia);
-            String queryString = qs.getDBpediaQueryString(cat, fY, tY);
+            String queryString = qs.getDBpediaQueryString(cat, fD, tD);
 
-            queryTheKB(dbpedia, queryString);
+            createWrapper(dbpedia, queryString);
         }
-        //wikidata
-        if (w) {
+        if (w) { //wikidata
             String wikidata = "https://query.wikidata.org/sparql";
             System.out.println("Query " + wikidata);
-            String queryString = qs.getWikidataQueryString(cat, fY, tY);
+            String queryString = qs.getWikidataQueryString(cat, fD, tD);
 
-            queryTheKB(wikidata, queryString);
+            createWrapper(wikidata, queryString);
         }
-
-        if (y) {
+        if (y) { //YAGO
             String yago = "https://linkeddata1.calcul.u-psud.fr/sparql";
             System.out.println("Query " + yago);
-            String queryString = qs.getYagoQueryString(cat, fY, tY);
+            String queryString = qs.getYagoQueryString(cat, fD, tD);
 
-            queryTheKB(yago, queryString);
+            createWrapper(yago, queryString);
         }
 
         return result;
     }
-    public void queryTheKB(String service, String queryString) {
+    /**
+     Create a Wrapper for querying a KG
+     @param service url to public KG endpoint
+     @param queryString string to query the KG (String)
+     */
+    public void createWrapper(String service, String queryString) {
         Query query = QueryFactory.create(queryString);
         QueryExecution qexec = QueryExecutionFactory.sparqlService(service, query);
         try {

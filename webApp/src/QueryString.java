@@ -1,12 +1,19 @@
 /**
- * Created by curtis on 18/10/16.
+ * @author Daniel Ringler
+ * Created on 18/10/16.
  */
 public class QueryString {
 
     // TO DO: remove limit in queries
 
 
-
+    /**
+     Get a string to query the DBpedia endpoint
+     @param  cat category
+     @param fD fromDate range
+     @param tD toDate range
+     @return String to query the public DBpedia endpoint at http://dbpedia.org/sparql
+     */
     public String getDBpediaQueryString(String cat, String fD, String tD) {
 
         String queryString = "PREFIX  dbo:  <http://dbpedia.org/ontology/>\n" +
@@ -33,7 +40,13 @@ public class QueryString {
         //return removeQuotation(queryStringQ);
 
         }
-
+        /**
+         Get a string to query the Wikidata endpoint
+         @param  cat category
+         @param fD fromDate range
+         @param tD toDate range
+         @return String to query the public Wikidata endpoint at https://query.wikidata.org/sparql
+         */
         public String getWikidataQueryString(String cat, String fD, String tD) {
             String queryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
                     "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" +
@@ -66,7 +79,13 @@ public class QueryString {
 
             return queryString;
         }
-
+    /**
+     Get a string to query the YAGO endpoint
+     @param  cat category
+     @param fD fromDate range
+     @param tD toDate range
+     @return String to query the public YAGO endpoint at https://linkeddata1.calcul.u-psud.fr/sparql
+     */
     public String getYagoQueryString(String cat, String fD, String tD) {
         String queryString = "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
                 "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
