@@ -1,0 +1,222 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>LOCATION PROPERTIES</title>
+
+<link rel="stylesheet" href="demo.css">
+<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
+<script src="d3.v3.min.js"></script>
+<script src="dagre-d3.min.js"></script>
+
+<h1>LOCATION PROPERTIES</h1>
+
+<style id="css">
+    text {
+        font-weight: 300;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+        font-size: 14px;
+    }
+
+    .node rect {
+        stroke: #999;
+        fill: #fff;
+        stroke-width: 1.5px;
+    }
+
+    .edgePath path {
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+</style>
+
+<svg id="svg-canvas" width=2790 height=1200></svg>
+
+<!--<section>
+    <p>An example of adding SVG labels. This allows the user to add any svg
+        elements to the label. This allows for links to works in IE.</p>
+</section>
+-->
+
+<script id="js">
+    // Create the input graph
+    var g = new dagreD3.graphlib.Graph()
+            .setGraph({})
+            .setDefaultEdgeLabel(function() { return {}; });
+
+    // Create the SVG label to pass in
+    // Must create in SVG namespace
+    // http://stackoverflow.com/questions/7547117/add-a-new-line-in-svg-bug-cannot-see-the-line
+    // This mimics the same way string labels get added in Dagre-D3
+    svg_label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tspan = document.createElementNS('http://www.w3.org/2000/svg','tspan');
+    tspan.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
+    tspan.setAttribute('dy', '1em');
+    tspan.setAttribute('x', '1');
+    link = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+    link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'http://google.com/');
+    link.setAttribute('target', '_blank');
+    link.textContent = 'IE Capable link';
+    tspan.appendChild(link);
+    svg_label.appendChild(tspan);
+
+    // g.setNode(0,  { label: svg_label, labelType: 'svg' });
+    // g.setNode(1,  { label: "A" });
+    // g.setNode(2,  { label: "B" });
+
+    //root event node
+    g.setNode(0, {label: "dbo:Event"});
+
+    // main location classes
+    g.setNode(1, {label: "dbo:Location"});
+    g.setNode(2, {label: "dbo:Place"});
+    g.setNode(3, {label: "dbo:Country"});
+    g.setNode(4, {label: "dbo:City"});
+    g.setNode(5, {label: "dbo:Territory"});
+
+
+    // additional linked location classes
+    g.setNode(10, {label: "dbo:PostalCode"});
+    g.setNode(11, {label: "dbo:Region"});
+    g.setNode(12, {label: "dbo:NearestCity"});
+    g.setNode(13, {label: "dbo:Capital"});
+    g.setNode(14, {label: "dbo:State"});
+    g.setNode(15, {label: "dbo:IsoCodeRegion"});
+    g.setNode(16, {label: "dbo:Code"});
+
+    // owl:sameAs property
+    g.setNode(70, {label: "owl:sameAs"});
+
+    // label and name properties
+    g.setNode(80, {label: "rdfs:label"});
+    g.setNode(81, {label: "foaf:name"});
+    g.setNode(82, {label: "dbp:name"}); 
+    g.setNode(83, {label: "dbp:officialName"});
+    g.setNode(84, {label: "dbp:commonName"});
+    g.setNode(85, {label: "dbp:fullName"});
+    g.setNode(86, {label: "dbp:nativeName"});
+
+    // geo coordinate properties
+    g.setNode(90, {label: "geo:geometry"});
+    g.setNode(91, {label: "geo:lat"});
+    g.setNode(92, {label: "geo:long"});
+    g.setNode(93, {label: "georss:point"});
+    
+    // g.setNode(, {label: ""});    
+
+    g.nodes().forEach(function(v) {
+        var node = g.node(v);
+        // Round the corners of the nodes
+        node.rx = node.ry = 5;
+    });
+
+    svg_edge_label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    edge_tspan = document.createElementNS('http://www.w3.org/2000/svg','tspan');
+    edge_tspan.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
+    edge_tspan.setAttribute('dy', '1em');
+    edge_tspan.setAttribute('x', '1');
+    edge_link = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+    edge_link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', 'http://google.com/');
+    edge_link.setAttribute('target', '_blank');
+    edge_link.textContent = 'IE Capable Edge link';
+    edge_tspan.appendChild(edge_link);
+    svg_edge_label.appendChild(edge_tspan);
+
+    // Set up edges, no special attributes.
+    // g.setEdge(0, 1, { labelType: "svg", label: svg_edge_label });
+    // g.setEdge(0, 2);
+    // g.setEdge(1, 2);
+
+    // event to main classes
+    g.setEdge(0, 1); //location
+    g.setEdge(0, 2); //place
+    g.setEdge(0, 3); //country
+    g.setEdge(0, 4); //city
+    g.setEdge(0, 5); //territory
+    // event to geo
+    g.setEdge(0, 90);
+    g.setEdge(0, 91);
+    g.setEdge(0, 92);
+    g.setEdge(0, 93);
+
+    // location sameAs place
+    g.setEdge(1, 2);
+    g.setEdge(2, 1);
+    g.setEdge(1, 1); //location
+    // location to city and country
+    g.setEdge(1, 3); //country
+    g.setEdge(1, 4); //city
+    g.setEdge(1, 5); //territory
+    //location to other classes
+    g.setEdge(1, 10); //dbo:PostalCode
+    g.setEdge(1, 11); //dbo:Region
+    g.setEdge(1, 12); //dbo:NearestCity
+    g.setEdge(1, 13); //dbo:Capital
+    g.setEdge(1, 14); //dbo:State
+    g.setEdge(1, 15); //dbo:IsoCodeRegion
+    g.setEdge(1, 16); //dbo:Code
+    // location to geo
+    g.setEdge(1, 90);
+    g.setEdge(1, 91);
+    g.setEdge(1, 92);
+    g.setEdge(1, 93);
+
+    //country to capital
+    g.setEdge(3, 13); //dbo:Capital
+    //country to geo
+    g.setEdge(3, 90);
+    g.setEdge(3, 91);
+    g.setEdge(3, 92);
+    g.setEdge(3, 93);
+
+    // city to location, country and self
+    g.setEdge(4, 1);
+    g.setEdge(4, 3);
+    g.setEdge(4, 4);
+    //city to other classes
+    g.setEdge(4, 10); //dbo:PostalCode
+    g.setEdge(4, 15); //dbo:IsoCodeRegion
+    g.setEdge(4, 11); //dbo:Region
+    g.setEdge(4, 14); //dbo:State
+    g.setEdge(4, 16); //dbo:Code
+    //city to geo
+    g.setEdge(4, 90);
+    g.setEdge(4, 91);
+    g.setEdge(4, 92);
+    g.setEdge(4, 93);
+
+    //territory to location, country, city and self
+    g.setEdge(5, 1);
+    g.setEdge(5, 3);
+    g.setEdge(5, 4);
+    g.setEdge(5, 5);
+    //city to other classes
+    g.setEdge(5, 10); //dbo:PostalCode
+    g.setEdge(5, 11); //dbo:Region
+    g.setEdge(5, 13); //dbo:Capital
+    g.setEdge(5, 14); //dbo:State
+    g.setEdge(5, 15); //dbo:IsoCodeRegion
+    g.setEdge(5, 16); //dbo:Code
+    //city to geo
+    g.setEdge(5, 90);
+    g.setEdge(5, 91);
+    g.setEdge(5, 92);
+    g.setEdge(5, 93);
+
+
+    // Create the renderer
+    var render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+    var svg = d3.select("svg"),
+            svgGroup = svg.append("g");
+
+    // Run the renderer. This is what draws the final graph.
+    render(d3.select("svg g"), g);
+
+    // Center the graph
+    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+    svg.attr("height", g.graph().height + 40);
+</script>
+
+<!--<script src="demo.js"></script>-->
