@@ -13,9 +13,9 @@ $('#sendQueryID').on('click', function (e) {
     //check if at least one DB is selected
     if ($('#dID').is(':checked') == false && $('#wID').is(':checked') == false && $('#yID').is(':checked') == false) {
         console.log("no DB selected");
-        document.getElementById("noDBselectedID").style.display = "block";
+        document.getElementById("noDbSelectedID").style.display = "block";
     } else {
-        document.getElementById("noDBselectedID").style.display = "none";
+        document.getElementById("noDbSelectedID").style.display = "none";
 
 
         //check for wrong input format and empty fields
