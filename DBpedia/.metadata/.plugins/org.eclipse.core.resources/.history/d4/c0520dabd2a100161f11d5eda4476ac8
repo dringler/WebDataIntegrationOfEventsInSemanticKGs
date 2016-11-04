@@ -29,7 +29,7 @@ public class QueryDBpedia {
 				//countInstancesOfEventClasses(service);
 				
 				//get all properties of the event instances in desc importance
-				//eventProperties(service, false);
+				//eventProperties(service);
 				
 				// TIME-RELATED PROPERTIES
 				/*String dboTimeArray[] = getDboTimeArray();
@@ -46,7 +46,7 @@ public class QueryDBpedia {
 				//getPropertyDatatypes(service, dbpLocationArray, 1, true);
 				
 				String specialLocationArray[] = getSpecialLocationArray();
-				getPropertyDatatypes(service, specialLocationArray, 2, false);
+				getPropertyDatatypes(service, specialLocationArray, 2, true);
 			}
 		// check connection catch block
 		} catch (QueryExceptionHTTP e) {
@@ -160,36 +160,17 @@ public class QueryDBpedia {
 	   * Get all properties of instances of the event class.
 	   * Sort by instance count for importance of properties.
 	   * @param service URL of the SPARQL endpoint
-	   * @param distinctCount boolean for distinct or non-distinctCount
 	   * @return Nothing
 	   */
-	public static void eventProperties(String service, boolean distinctCount) {
-		//add prefix
-		String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n"; 
-		// SELECT statement (check distinctCount)
-		if (distinctCount) {
-			queryString = queryString +
-					"SELECT ?property (COUNT(DISTINCT ?x) AS ?xC)\n";
-		} else {
-			queryString = queryString +
-					"SELECT ?property (COUNT(?x) AS ?xC)\n";
-		}
-		// WHERE statement and GROUP BY
-		queryString = queryString +
+	public static void eventProperties(String service) {
+		String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
+				"SELECT ?property (COUNT(?x) AS ?xC)\n" +
 				"WHERE {\n" +
 					"?x a dbo:Event .\n" +
 					"?x ?property ?object ."+
 				"}\n"+
-				"GROUP BY ?property\n";
-		// ORDER BY statement (check distinctCount)
-		if (distinctCount) {
-			queryString = queryString +
-					"ORDER BY DESC(COUNT(DISTINCT ?x))";
-		} else {
-			queryString = queryString +
-					"ORDER BY DESC(COUNT(?x))";
-		}
-		// send query 
+				"GROUP BY ?property\n"+
+				"ORDER BY DESC(COUNT(?x))";
 		queryDBpedia(service, queryString, true);	
 	}
 	

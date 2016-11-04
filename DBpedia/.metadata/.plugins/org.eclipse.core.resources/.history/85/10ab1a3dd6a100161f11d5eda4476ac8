@@ -29,7 +29,7 @@ public class QueryDBpedia {
 				//countInstancesOfEventClasses(service);
 				
 				//get all properties of the event instances in desc importance
-				//eventProperties(service, false);
+				eventProperties(service, false);
 				
 				// TIME-RELATED PROPERTIES
 				/*String dboTimeArray[] = getDboTimeArray();
@@ -46,7 +46,7 @@ public class QueryDBpedia {
 				//getPropertyDatatypes(service, dbpLocationArray, 1, true);
 				
 				String specialLocationArray[] = getSpecialLocationArray();
-				getPropertyDatatypes(service, specialLocationArray, 2, false);
+				//getPropertyDatatypes(service, specialLocationArray, 2, true);
 			}
 		// check connection catch block
 		} catch (QueryExceptionHTTP e) {

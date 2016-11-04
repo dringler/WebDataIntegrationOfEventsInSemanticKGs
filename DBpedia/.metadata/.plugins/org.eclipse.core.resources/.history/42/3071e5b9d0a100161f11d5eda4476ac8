@@ -29,24 +29,14 @@ public class QueryDBpedia {
 				//countInstancesOfEventClasses(service);
 				
 				//get all properties of the event instances in desc importance
-				//eventProperties(service, false);
+				//eventProperties(service);
 				
 				// TIME-RELATED PROPERTIES
-				/*String dboTimeArray[] = getDboTimeArray();
-				getPropertyDatatypes(service, dboTimeArray, 0, false);
+				String dboTimeArray[] = getDboTimeArray();
+				getPropertyDatatypes(service, dboTimeArray, true);
 				
 				String dbpTimeArray[] = getDbpTimeArray();
-				getPropertyDatatypes(service, dbpTimeArray, 1, false);
-				*/
-				// LOCATION-RELATED PROPERTIES
-				String dboLocationArray[] = getDboLocationArray();
-				//getPropertyDatatypes(service, dboLocationArray, 0, true);
-				
-				String dbpLocationArray[] = getDbpLocationArray();
-				//getPropertyDatatypes(service, dbpLocationArray, 1, true);
-				
-				String specialLocationArray[] = getSpecialLocationArray();
-				getPropertyDatatypes(service, specialLocationArray, 2, false);
+				getPropertyDatatypes(service, dbpTimeArray, false);
 			}
 		// check connection catch block
 		} catch (QueryExceptionHTTP e) {
@@ -56,78 +46,36 @@ public class QueryDBpedia {
 			System.out.println("DONE");
 		}
 	}
-	/**
-	   * Get query prefixes. Add all prefixes here.
-	   * @return queryPrefixes String including all used prefixes (namespaces)
-	   */
-	private static String getQueryPrefixes(){
-		String queryPrefixes = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
-				 "PREFIX dbp: <http://dbpedia.org/property/>\n"+
-				 "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n"+
-				 "PREFIX georss: <http://www.georss.org/georss/>\n";
-		return queryPrefixes;
-	}
-	/**
-	   * Get count of instances that have the properties.
-	   * Sort by instance count for importance of properties.
-	   * @param service URL of the SPARQL endpoint
-	   * @param propertyArray array of all property names
-	   * @param prefixCase 0:dbo, 1:dbp, 2:prefix included
-	   * @param distinctCount boolean: get distinct count
-	   * @return Nothing
-	   */
-	private static void getPropertyDatatypes(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
-		String fullQueryStringVar = "";
+	
+	private static void getPropertyDatatypes(String service, String[] propertyArray, boolean isDbo) {
 		for (String queryStringVar : propertyArray) {
-			// add prefixes
-			String queryString = getQueryPrefixes();
-			// check for distinct or non-distinct count for SELECT statement
-			if (distinctCount) {
-				queryString = queryString +		 
-					 	"select ?datatype (COUNT(DISTINCT ?x) AS ?iCount) WHERE {\n";
-			} else {
-			queryString = queryString +		 
-								 	"select ?datatype (COUNT(?x) AS ?iCount) WHERE {\n";
-			}
-			
-			queryString = queryString +			
+			String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
+								 "PREFIX dbp: <http://dbpedia.org/property/>\n"+
+								 "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n"+
+								 "PREFIX georss: <http://www.georss.org/georss/>\n"+
+								 	"select ?datatype (COUNT(?x) AS ?iCount) WHERE {\n"+
 								 		"select (datatype(?y) AS ?datatype) ?x where {\n"+
 								 			"?x  a dbo:Event .\n";
-			switch (prefixCase) {
-				case 0: 
-					fullQueryStringVar = "dbo:" + queryStringVar;
-					break;
-				case 1:
-					fullQueryStringVar = "dbp:" + queryStringVar;
-					break;
-				default: //prefix included in propertyArray
-					fullQueryStringVar = queryStringVar;
-					break;
+			if (isDbo) {
+				queryString = queryString + "?x dbo:"+ queryStringVar +" ?y .}\n";
+			} else {
+				queryString = queryString + "?x dbp:"+ queryStringVar +" ?y .}\n";
+										
 			}
-			
-			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .}\n";
-			
 			queryString = queryString + 
 						"GROUP BY ?y (datatype(?y)) ?x }\n" +
-					"GROUP BY ?datatype\n";
-			// check for distinct or non-distinct count for ORDER BY statement
-			if (distinctCount) {
-				queryString = queryString +
-						"ORDER BY DESC(COUNT(DISTINCT ?x))";
+					"GROUP BY ?datatype\n"+
+					"ORDER BY DESC(COUNT(?x))";
+			String type = "db";
+			if (isDbo) {
+				type = type + "o";
 			} else {
-				queryString = queryString +
-						"ORDER BY DESC(COUNT(?x))";
+				type = type + "p";
 			}
-					
-	
-			System.out.println("Datatype for " + fullQueryStringVar);
+			System.out.println("Datatype for " + type + ":" + queryStringVar);
 			queryDBpedia(service, queryString, true);
 		}
 		
-	}
-	private static void getObjectClasses(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
-	}
-	private static void getObjectPropertyDatatypes(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
 	}
 	//TIME PROPERTIES
 	private static String[] getDboTimeArray() {
@@ -160,36 +108,17 @@ public class QueryDBpedia {
 	   * Get all properties of instances of the event class.
 	   * Sort by instance count for importance of properties.
 	   * @param service URL of the SPARQL endpoint
-	   * @param distinctCount boolean for distinct or non-distinctCount
 	   * @return Nothing
 	   */
-	public static void eventProperties(String service, boolean distinctCount) {
-		//add prefix
-		String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n"; 
-		// SELECT statement (check distinctCount)
-		if (distinctCount) {
-			queryString = queryString +
-					"SELECT ?property (COUNT(DISTINCT ?x) AS ?xC)\n";
-		} else {
-			queryString = queryString +
-					"SELECT ?property (COUNT(?x) AS ?xC)\n";
-		}
-		// WHERE statement and GROUP BY
-		queryString = queryString +
+	public static void eventProperties(String service) {
+		String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
+				"SELECT ?property (COUNT(?x) AS ?xC)\n" +
 				"WHERE {\n" +
 					"?x a dbo:Event .\n" +
 					"?x ?property ?object ."+
 				"}\n"+
-				"GROUP BY ?property\n";
-		// ORDER BY statement (check distinctCount)
-		if (distinctCount) {
-			queryString = queryString +
-					"ORDER BY DESC(COUNT(DISTINCT ?x))";
-		} else {
-			queryString = queryString +
-					"ORDER BY DESC(COUNT(?x))";
-		}
-		// send query 
+				"GROUP BY ?property\n"+
+				"ORDER BY DESC(COUNT(?x))";
 		queryDBpedia(service, queryString, true);	
 	}
 	

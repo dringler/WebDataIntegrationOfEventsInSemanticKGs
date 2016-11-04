@@ -46,7 +46,7 @@ public class QueryDBpedia {
 				//getPropertyDatatypes(service, dbpLocationArray, 1, true);
 				
 				String specialLocationArray[] = getSpecialLocationArray();
-				getPropertyDatatypes(service, specialLocationArray, 2, false);
+				getPropertyDatatypes(service, specialLocationArray, 2, true);
 			}
 		// check connection catch block
 		} catch (QueryExceptionHTTP e) {
