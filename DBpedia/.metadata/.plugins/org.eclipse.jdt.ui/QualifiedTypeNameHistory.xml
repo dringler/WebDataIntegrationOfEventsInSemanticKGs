@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.apache.jena.query.QueryFactory"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.QueryExecutionFactory"/>
+<fullyQualifiedTypeName name="java.sql.ResultSet"/>
+<fullyQualifiedTypeName name="org.apache.jena.sparql.engine.http.QueryExceptionHTTP"/>
+<fullyQualifiedTypeName name="javax.management.Query"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.Query"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.QueryExecution"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.ResultSet"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.ResultSetFormatter"/>
+<fullyQualifiedTypeName name="org.apache.jena.query.ResultSetFactory"/>
+</qualifiedTypeNameHistroy>

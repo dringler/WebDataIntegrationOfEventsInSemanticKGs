@@ -95,7 +95,14 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="3930">
                   <caret line="298" column="44" selection-start-line="298" selection-start-column="44" selection-end-line="298" selection-end-column="44" />
-                  <folding />
+                  <folding>
+                    <element signature="e#0#23332#0" expanded="false" />
+                    <element signature="imports" expanded="false" />
+                    <element signature="e#14609#14610#0" expanded="false" />
+                    <element signature="e#14660#14661#0" expanded="false" />
+                    <element signature="e#15803#15804#0" expanded="false" />
+                    <element signature="e#15859#15860#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -105,7 +112,10 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="480">
                   <caret line="52" column="16" selection-start-line="52" selection-start-column="16" selection-end-line="52" selection-end-column="16" />
-                  <folding />
+                  <folding>
+                    <element signature="e#0#2182#0" expanded="false" />
+                    <element signature="imports" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -1003,16 +1013,16 @@
       <workItem from="1476800360956" duration="4066000" />
       <workItem from="1476804778170" duration="29347000" />
       <workItem from="1477427533743" duration="620000" />
-      <workItem from="1477993721006" duration="758000" />
+      <workItem from="1477993721006" duration="1043000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47298000" />
+    <option name="totallyTimeSpent" value="47583000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1579" height="937" extended-state="1" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1579" height="937" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1023,7 +1033,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22695853" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22695853" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1406,7 +1416,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3930">
           <caret line="298" column="44" selection-start-line="298" selection-start-column="44" selection-end-line="298" selection-end-column="44" />
-          <folding />
+          <folding>
+            <element signature="e#0#23332#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#14609#14610#0" expanded="false" />
+            <element signature="e#14660#14661#0" expanded="false" />
+            <element signature="e#15803#15804#0" expanded="false" />
+            <element signature="e#15859#15860#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1414,7 +1431,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
           <caret line="52" column="16" selection-start-line="52" selection-start-column="16" selection-end-line="52" selection-end-column="16" />
-          <folding />
+          <folding>
+            <element signature="e#0#2182#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -3,8 +3,11 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+
+import java.io.PrintWriter;
 /**
 * Query DBpedia for the Data Analysis of the Event Class.
 *
@@ -40,13 +43,18 @@ public class QueryDBpedia {
 				*/
 				// LOCATION-RELATED PROPERTIES
 				String dboLocationArray[] = getDboLocationArray();
-				//getPropertyDatatypes(service, dboLocationArray, 0, true);
+				//getPropertyDatatypes(service, dboLocationArray, 0, false);
+				//getPropertyClasses(service, dboLocationArray, 0, true, 100);
+				//getPropertiesOfEventObjects(service, dboLocationArray, 0, true, false);
 				
 				String dbpLocationArray[] = getDbpLocationArray();
-				//getPropertyDatatypes(service, dbpLocationArray, 1, true);
+				//getPropertyDatatypes(service, dbpLocationArray, 1, false);
+				//getPropertyClasses(service, dbpLocationArray, 1, true);
+				getPropertiesOfEventObjects(service, dbpLocationArray, 1, true, false);
 				
 				String specialLocationArray[] = getSpecialLocationArray();
-				getPropertyDatatypes(service, specialLocationArray, 2, false);
+				//getPropertyDatatypes(service, specialLocationArray, 2, false);
+				
 			}
 		// check connection catch block
 		} catch (QueryExceptionHTTP e) {
@@ -56,6 +64,139 @@ public class QueryDBpedia {
 			System.out.println("DONE");
 		}
 	}
+	/**
+	   * Get count of objects that have a property. 
+	   * (?event-instance ?propertyArray ?object)
+	   * (?object ?objectProperty ?value)
+	   * Sort by object count for importance of classes.
+	   * @param service URL of the SPARQL endpoint
+	   * @param propertyArray array of all property names
+	   * @param prefixCase 0:dbo, 1:dbp, 2:prefix included
+	   * @param bothCounts include distinct and non-distinct counts
+	   * @param distinctCount boolean: get distinct count
+	   * @return Nothing
+	   */
+	private static void getPropertiesOfEventObjects(String service,
+			String[] propertyArray, int prefixCase, boolean bothCounts, boolean distinctCount) {
+		String fullQueryStringVar = "";
+		for (String queryStringVar : propertyArray) {
+			// add prefixes
+			String queryString = getQueryPrefixes();
+			if (bothCounts) {
+				queryString = queryString +		 
+					 	"select ?yProperty (COUNT(DISTINCT ?y) AS ?yCountDistinct) (COUNT(?y) AS ?yCount)  WHERE {\n";
+			} else {
+				// check for distinct or non-distinct count for SELECT statement
+				if (distinctCount) {
+					queryString = queryString +		 
+						 	"select ?yProperty (COUNT(DISTINCT ?y) AS ?yCountDistinct) WHERE {\n";
+				} else {
+				queryString = queryString +		 
+							"select ?yProperty (COUNT(?y) AS ?yCount) WHERE {\n";
+				}
+			}
+			
+			queryString = queryString +
+						"?x  a dbo:Event .\n";
+			
+			fullQueryStringVar = getFullQueryStringVarFromPrefix(queryStringVar, prefixCase);
+			
+		
+			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .\n"
+									+ "?y ?yProperty ?yValue .}\n";
+		
+			queryString = queryString + 
+					"GROUP BY ?yProperty\n";
+			// check for distinct or non-distinct count for ORDER BY statement
+			if (distinctCount) {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(DISTINCT ?y))\n";
+			} else {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(?y))";
+			}
+
+			System.out.println("?yProperty for: ?x " + fullQueryStringVar + " ?y . ?y ?yProperty ?yValue . (distinctCount: " + distinctCount + ")");
+			//queryDBpedia(service, queryString, true);
+			queryDBpediaWriteResultsToFile(service, queryString, "properties_of_" + queryStringVar + "_"+ bothCounts + "_" + distinctCount);
+		}		
+
+		
+	}
+	/**
+	   * Get count of instances that have a specific class.
+	   * Sort by instance count for importance of classes.
+	   * @param service URL of the SPARQL endpoint
+	   * @param propertyArray array of all property names
+	   * @param prefixCase 0:dbo, 1:dbp, 2:prefix included
+	   * @param distinctCount boolean: get distinct count
+	   * @param limit top classes (int)
+	   * @return Nothing
+	   */
+	private static void getPropertyClasses(String service,
+			String[] propertyArray, int prefixCase, boolean distinctCount, int limit) {
+		String fullQueryStringVar = "";
+		for (String queryStringVar : propertyArray) {
+			// add prefixes
+			String queryString = getQueryPrefixes();
+			// check for distinct or non-distinct count for SELECT statement
+			if (distinctCount) {
+				queryString = queryString +		 
+					 	"select ?yClass (COUNT(DISTINCT ?y) AS ?yCount) WHERE {\n";
+			} else {
+			queryString = queryString +		 
+						"select ?yClass (COUNT(?y) AS ?yCount) WHERE {\n";
+			}
+			
+			queryString = queryString +
+						"?x  a dbo:Event .\n";
+			
+			fullQueryStringVar = getFullQueryStringVarFromPrefix(queryStringVar, prefixCase);
+			
+		
+			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .\n"
+									+ "?y a ?yClass .}\n";
+		
+			queryString = queryString + 
+					"GROUP BY ?yClass\n";
+			// check for distinct or non-distinct count for ORDER BY statement
+			if (distinctCount) {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(DISTINCT ?y))\n";
+			} else {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(?y))\n";
+			}
+			queryString = queryString + "LIMIT " + limit;
+
+			System.out.println("Top "+ limit +" ?yClasses for: ?x " + fullQueryStringVar + " ?y . ?y a ?yClass . (distinctCount: " + distinctCount + ")");
+			queryDBpedia(service, queryString, true);
+		}		
+	}
+	/**
+	   * Get query variable including prefix.
+	   * @param queryStringVar name of the property
+	   * @param prefixCase 0:dbo,1:dbp, default: add nothing
+	   * @return queryPrefixes String including all used prefixes (namespaces)
+	   */	
+	private static String getFullQueryStringVarFromPrefix(
+			String queryStringVar, int prefixCase) {
+		String fullQueryStringVar = "";
+		switch (prefixCase) {
+			case 0: 
+				fullQueryStringVar = "dbo:" + queryStringVar;
+				break;
+			case 1:
+				fullQueryStringVar = "dbp:" + queryStringVar;
+				break;
+			default: //prefix included in propertyArray
+				fullQueryStringVar = queryStringVar;
+				break;
+		}
+		return fullQueryStringVar;
+	}
+
+
 	/**
 	   * Get query prefixes. Add all prefixes here.
 	   * @return queryPrefixes String including all used prefixes (namespaces)
@@ -87,23 +228,14 @@ public class QueryDBpedia {
 					 	"select ?datatype (COUNT(DISTINCT ?x) AS ?iCount) WHERE {\n";
 			} else {
 			queryString = queryString +		 
-								 	"select ?datatype (COUNT(?x) AS ?iCount) WHERE {\n";
+						"select ?datatype (COUNT(?x) AS ?iCount) WHERE {\n";
 			}
 			
 			queryString = queryString +			
-								 		"select (datatype(?y) AS ?datatype) ?x where {\n"+
-								 			"?x  a dbo:Event .\n";
-			switch (prefixCase) {
-				case 0: 
-					fullQueryStringVar = "dbo:" + queryStringVar;
-					break;
-				case 1:
-					fullQueryStringVar = "dbp:" + queryStringVar;
-					break;
-				default: //prefix included in propertyArray
-					fullQueryStringVar = queryStringVar;
-					break;
-			}
+						"select (datatype(?y) AS ?datatype) ?x where {\n"+
+							"?x  a dbo:Event .\n";
+			
+			fullQueryStringVar = getFullQueryStringVarFromPrefix(queryStringVar, prefixCase);
 			
 			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .}\n";
 			
@@ -267,9 +399,7 @@ public class QueryDBpedia {
 	   * @return Nothing
 	   */
 	public static void queryDBpedia(String service, String queryString, boolean printBlock) {
-		Query query = QueryFactory.create(queryString);
-		QueryExecution qe = QueryExecutionFactory.sparqlService(service, query);
-		ResultSet results = qe.execSelect();
+		ResultSet results = createQueryAndGetResults(service, queryString);
 		//print output
 		if (printBlock) {
 		System.out.println(ResultSetFormatter.asText(results));
@@ -279,6 +409,41 @@ public class QueryDBpedia {
 				System.out.println(output);
 			}
 		}
+		
+	}
+	 /**
+	   * Query DBpedia and write results to file.
+	   * @param service 	URL of the SPARQL endpoint
+	   * @param queryString 	Query to fire against the endpoint
+	   * @param fileName of the output file (no filetype required, .txt is used)
+	   * @return Nothing
+	   */
+	public static void queryDBpediaWriteResultsToFile(String service, String queryString, String fileName) {
+		ResultSet results = createQueryAndGetResults(service, queryString);
+		try {
+			PrintWriter writer = new PrintWriter(fileName +".txt", "UTF-8");
+			writer.print(ResultSetFormatter.asText(results));
+//			while(results.hasNext()) {
+//				writer.println(results.next().toString());
+//			}
+			writer.close();
+		} catch (Exception e) {
+			System.out.println("ERROR writing to "+fileName+".txt: " + e);
+		} finally {
+			System.out.println("Results written to "+fileName+".txt");
+		}
+	}
+	/**
+	   * Create Query for DBpedia and return results received from endpoint.
+	   * @param service 	URL of the SPARQL endpoint
+	   * @param queryString 	Query to fire against the endpoint
+	   * @return results ResultSet
+	   */
+	public static ResultSet createQueryAndGetResults(String service, String queryString) {
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qe = QueryExecutionFactory.sparqlService(service, query);
+		ResultSet results = qe.execSelect();
+		return results;
 		
 	}
 }

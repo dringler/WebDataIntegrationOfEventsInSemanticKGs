@@ -1,0 +1,351 @@
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+/**
+* Query DBpedia for the Data Analysis of the Event Class.
+*
+* @author  Daniel Ringler
+* @version 1.0
+* @since   2016-11-01 
+*/
+public class QueryDBpedia {
+	public static void main(String[] args) {
+		//Model m = ModelFactory.createDefaultModel();
+		String service = "http://dbpedia.org/sparql";
+		
+		//CHECK DBpedia connection
+		String queryTest = "ASK {}";
+		QueryExecution qeTest = QueryExecutionFactory.sparqlService(service, queryTest);
+		
+		try {
+			if(qeTest.execAsk()) {
+				System.out.println(service + " is up");
+				
+				// call method to count event classes
+				//countInstancesOfEventClasses(service);
+				
+				//get all properties of the event instances in desc importance
+				//eventProperties(service, false);
+				
+				// TIME-RELATED PROPERTIES
+				/*String dboTimeArray[] = getDboTimeArray();
+				getPropertyDatatypes(service, dboTimeArray, 0, false);
+				
+				String dbpTimeArray[] = getDbpTimeArray();
+				getPropertyDatatypes(service, dbpTimeArray, 1, false);
+				*/
+				// LOCATION-RELATED PROPERTIES
+				String dboLocationArray[] = getDboLocationArray();
+				//getPropertyDatatypes(service, dboLocationArray, 0, false);
+				getPropertyClasses(service, dboLocationArray, 0, true);
+				
+				String dbpLocationArray[] = getDbpLocationArray();
+				//getPropertyDatatypes(service, dbpLocationArray, 1, false);
+				//getPropertyClasses(service, dbpLocationArray, 1, true);
+				
+				String specialLocationArray[] = getSpecialLocationArray();
+				//getPropertyDatatypes(service, specialLocationArray, 2, false);
+				
+			}
+		// check connection catch block
+		} catch (QueryExceptionHTTP e) {
+			System.out.println(service + " is down");
+		} finally {
+			qeTest.close();
+			System.out.println("DONE");
+		}
+	}
+	/**
+	   * Get count of instances that have a specific class.
+	   * Sort by instance count for importance of classes.
+	   * @param service URL of the SPARQL endpoint
+	   * @param propertyArray array of all property names
+	   * @param prefixCase 0:dbo, 1:dbp, 2:prefix included
+	   * @param distinctCount boolean: get distinct count
+	   * @return Nothing
+	   */
+	private static void getPropertyClasses(String service,
+			String[] propertyArray, int prefixCase, boolean distinctCount) {
+		String fullQueryStringVar = "";
+		for (String queryStringVar : propertyArray) {
+			// add prefixes
+			String queryString = getQueryPrefixes();
+			// check for distinct or non-distinct count for SELECT statement
+			if (distinctCount) {
+				queryString = queryString +		 
+					 	"select ?yClass (COUNT(DISTINCT ?y) AS ?yCount) WHERE {\n";
+			} else {
+			queryString = queryString +		 
+						"select ?yClass (COUNT(?y) AS ?yCount) WHERE {\n";
+			}
+			
+			queryString = queryString +
+						"?x  a dbo:Event .\n";
+			
+			fullQueryStringVar = getFullQueryStringVarFromPrefix(queryStringVar, prefixCase);
+			
+		
+			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .\n"
+									+ "?y a ?yClass .}\n";
+		
+			queryString = queryString + 
+					"GROUP BY ?yClass\n";
+			// check for distinct or non-distinct count for ORDER BY statement
+			if (distinctCount) {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(DISTINCT ?y))\n";
+			} else {
+				queryString = queryString +
+					"ORDER BY DESC(COUNT(?y))\n";
+			}
+			//queryString = queryString + "LIMIT 50";
+
+			System.out.println("?yClasses for: ?x " + fullQueryStringVar + " ?y . ?y a ?yClass . (distinctCount: " + distinctCount + ")");
+			queryDBpedia(service, queryString, true);
+		}		
+	}
+	/**
+	   * Get query variable including prefix.
+	   * @param queryStringVar name of the property
+	   * @param prefixCase 0:dbo,1:dbp, default: add nothing
+	   * @return queryPrefixes String including all used prefixes (namespaces)
+	   */	
+	private static String getFullQueryStringVarFromPrefix(
+			String queryStringVar, int prefixCase) {
+		String fullQueryStringVar = "";
+		switch (prefixCase) {
+			case 0: 
+				fullQueryStringVar = "dbo:" + queryStringVar;
+				break;
+			case 1:
+				fullQueryStringVar = "dbp:" + queryStringVar;
+				break;
+			default: //prefix included in propertyArray
+				fullQueryStringVar = queryStringVar;
+				break;
+		}
+		return fullQueryStringVar;
+	}
+
+
+	/**
+	   * Get query prefixes. Add all prefixes here.
+	   * @return queryPrefixes String including all used prefixes (namespaces)
+	   */
+	private static String getQueryPrefixes(){
+		String queryPrefixes = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
+				 "PREFIX dbp: <http://dbpedia.org/property/>\n"+
+				 "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n"+
+				 "PREFIX georss: <http://www.georss.org/georss/>\n";
+		return queryPrefixes;
+	}
+	/**
+	   * Get count of instances that have the properties.
+	   * Sort by instance count for importance of properties.
+	   * @param service URL of the SPARQL endpoint
+	   * @param propertyArray array of all property names
+	   * @param prefixCase 0:dbo, 1:dbp, 2:prefix included
+	   * @param distinctCount boolean: get distinct count
+	   * @return Nothing
+	   */
+	private static void getPropertyDatatypes(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
+		String fullQueryStringVar = "";
+		for (String queryStringVar : propertyArray) {
+			// add prefixes
+			String queryString = getQueryPrefixes();
+			// check for distinct or non-distinct count for SELECT statement
+			if (distinctCount) {
+				queryString = queryString +		 
+					 	"select ?datatype (COUNT(DISTINCT ?x) AS ?iCount) WHERE {\n";
+			} else {
+			queryString = queryString +		 
+						"select ?datatype (COUNT(?x) AS ?iCount) WHERE {\n";
+			}
+			
+			queryString = queryString +			
+						"select (datatype(?y) AS ?datatype) ?x where {\n"+
+							"?x  a dbo:Event .\n";
+			
+			fullQueryStringVar = getFullQueryStringVarFromPrefix(queryStringVar, prefixCase);
+			
+			queryString = queryString + "?x "+ fullQueryStringVar +" ?y .}\n";
+			
+			queryString = queryString + 
+						"GROUP BY ?y (datatype(?y)) ?x }\n" +
+					"GROUP BY ?datatype\n";
+			// check for distinct or non-distinct count for ORDER BY statement
+			if (distinctCount) {
+				queryString = queryString +
+						"ORDER BY DESC(COUNT(DISTINCT ?x))";
+			} else {
+				queryString = queryString +
+						"ORDER BY DESC(COUNT(?x))";
+			}
+					
+	
+			System.out.println("Datatype for " + fullQueryStringVar);
+			queryDBpedia(service, queryString, true);
+		}
+		
+	}
+	private static void getObjectClasses(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
+	}
+	private static void getObjectPropertyDatatypes(String service, String[] propertyArray, int prefixCase, boolean distinctCount) {
+	}
+	//TIME PROPERTIES
+	private static String[] getDboTimeArray() {
+		String dboTimeArray[] = {"time", "date", "startDate", "endDate", "foundingYear"}; //, "birthDate", "deathDate"};
+		return dboTimeArray;
+	}
+	private static String[] getDbpTimeArray() {
+		String dbpTimeArray[] = {"date", "electionDate", "next", "time", "first", "last", //"dateOfBirth",
+				"yearEnd", "yearStart", //"dateOfDeath",
+				"birthDate"};
+		
+		return dbpTimeArray;
+	}
+	// LOCATION PROPERTIES	
+	private static String[] getDboLocationArray() {
+		String dboLocationArray[] = {"location", "place", "country", "city"};
+		return dboLocationArray;
+	}
+	private static String[] getDbpLocationArray() {
+		String dbpLocationArray[] = {"place", "location", "country", "city", "stadium", "venue"};
+		return dbpLocationArray;
+	}
+	private static String[] getSpecialLocationArray() {
+		String specialLocationArray[] = {"georss:point", "geo:geometry", "geo:lat", "geo:long"};
+		return specialLocationArray;
+	}
+	
+
+	/**
+	   * Get all properties of instances of the event class.
+	   * Sort by instance count for importance of properties.
+	   * @param service URL of the SPARQL endpoint
+	   * @param distinctCount boolean for distinct or non-distinctCount
+	   * @return Nothing
+	   */
+	public static void eventProperties(String service, boolean distinctCount) {
+		//add prefix
+		String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n"; 
+		// SELECT statement (check distinctCount)
+		if (distinctCount) {
+			queryString = queryString +
+					"SELECT ?property (COUNT(DISTINCT ?x) AS ?xC)\n";
+		} else {
+			queryString = queryString +
+					"SELECT ?property (COUNT(?x) AS ?xC)\n";
+		}
+		// WHERE statement and GROUP BY
+		queryString = queryString +
+				"WHERE {\n" +
+					"?x a dbo:Event .\n" +
+					"?x ?property ?object ."+
+				"}\n"+
+				"GROUP BY ?property\n";
+		// ORDER BY statement (check distinctCount)
+		if (distinctCount) {
+			queryString = queryString +
+					"ORDER BY DESC(COUNT(DISTINCT ?x))";
+		} else {
+			queryString = queryString +
+					"ORDER BY DESC(COUNT(?x))";
+		}
+		// send query 
+		queryDBpedia(service, queryString, true);	
+	}
+	
+	
+	 /**
+	   * Count the instances of the event class and all subclasses.
+	   * @param service URL of the SPARQL endpoint
+	   * @return Nothing
+	   */
+	public static void countInstancesOfEventClasses(String service) {
+		// COUNT EVENT CLASSES
+		//add all dbo:classes to the array
+		String queryStringArray[] = {"Event",
+									"Competition",			
+									"Contest",
+									"LifeCycleEvent",			
+									"PersonalEvent",	
+									"Birth",
+									"Death",
+									"Divorce",	
+									"Marriage",
+									"NaturalEvent",		
+									"Earthquake",
+									"SolarEclipse",		
+									"StormSurge",
+									"SocietalEvent",			
+									"AcademicConference",		
+									"Attack",
+									"Convention",
+									"Election",	
+									"FilmFestival",		
+									"Meeting",
+									"MilitaryConflict",		
+									"MusicFestival",
+									"Rebellion",
+									"SpaceMission",	
+									"SportsEvent",
+									"CyclingCompetition",	
+									"FootballMatch",
+									"GrandPrix",
+									"InternationalFootballLeagueEvent",	
+									"MixedMartialArtsEvent",
+									"NationalFootballLeagueEvent",	
+									"Olympics",
+									"OlympicEvent",
+									"Race",
+									"CyclingRace",
+									"HorseRace",
+									"MotorRace",
+									"Tournament",
+									"GolfTournament",
+									"SoccerTournament",
+									"TennisTournament",
+									"WomensTennisAssociationTournament",
+									"WrestlingEvent"};
+		//for each class in array
+		for (String queryStringVar : queryStringArray) {
+			//create queryString
+			String queryString = "PREFIX dbo: <http://dbpedia.org/ontology/>\n" + 
+					"SELECT\n" +
+						"(COUNT(DISTINCT ?" + queryStringVar.toLowerCase() + ") AS ?"+queryStringVar.toLowerCase()+"C)\n"+ 
+					"WHERE {\n" +
+							"?"+ queryStringVar.toLowerCase() + " a dbo:"+queryStringVar +".\n" +
+					"}";
+			//System.out.println(queryString);
+			//execute query
+			queryDBpedia(service, queryString, false);	
+		}
+	}
+	 /**
+	   * Query DBpedia and print results.
+	   * @param service 	URL of the SPARQL endpoint
+	   * @param queryString 	Query to fire against the endpoint
+	   * @param printBlock  use ResultSetFormatterm, else print line-wise
+	   * @return Nothing
+	   */
+	public static void queryDBpedia(String service, String queryString, boolean printBlock) {
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qe = QueryExecutionFactory.sparqlService(service, query);
+		ResultSet results = qe.execSelect();
+		//print output
+		if (printBlock) {
+		System.out.println(ResultSetFormatter.asText(results));
+		} else {
+			while (results.hasNext()) {
+				String output = results.next().toString();
+				System.out.println(output);
+			}
+		}
+		
+	}
+}
