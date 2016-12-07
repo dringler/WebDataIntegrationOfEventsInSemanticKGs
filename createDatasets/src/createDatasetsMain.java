@@ -6,7 +6,6 @@ import org.apache.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -18,19 +17,13 @@ public class createDatasetsMain {
         boolean dbpedia = true;
         boolean yago = false;
         boolean wikidata = false;
+        int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
 
         boolean getOptionalP = false;
         boolean secondOrderP = false; //second order can only be specified if getOptionalP is true
 
-        String dbpediaFileName = "";
-        String dbpediaSecondOrderFileName = "out/dbpedia-3-secondOrder.tsv";
-
-        if (!getOptionalP)
-            dbpediaFileName = "out/dbpedia-1-woOptional.tsv";
-        else
-            dbpediaFileName = "out/dbpedia-2-wOptional.tsv";
-
-        //wOptional, woOptional, secondOrder
+        String fileName = "";
+        String secondOrderFileName = "";
 
 
         if (secondOrderP && !getOptionalP) {
@@ -51,15 +44,21 @@ public class createDatasetsMain {
         //HashSet<String> xInstancesWithProperties;
 
         if (dbpedia) {
+            k=0;
             service = "http://dbpedia.org/sparql";
             dbIsUp = testConnection(service);
             if (dbIsUp) {
-                HashSet<String> dInstances = getDBpediaInstances(service);
+                HashSet<String> dInstances = getEventInstances(k, service);
                 System.out.println(dInstances.size() + " distinct instances received from " + service);
 
                 try {
                     // 1 get event instances properties
-                    PrintWriter writer = new PrintWriter(dbpediaFileName, "UTF-8");
+                    if (!getOptionalP)
+                        fileName = "out/dbpedia-1-basic.tsv";
+                    else
+                        fileName = "out/dbpedia-2-wOptional.tsv";
+                    secondOrderFileName = "out/dbpedia-3-secondOrder.tsv";
+                    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
                     //write header
                     String header = "uri\tlabel\tdate\tlat\tlong";
                     if (getOptionalP)
@@ -69,9 +68,8 @@ public class createDatasetsMain {
 
                     HashSet<String> dInstancesP = new HashSet<>();
                     for (String instance : dInstances) {
-                        //System.out.println(i);
                         //get all properties for the instance
-                        dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP));
+                        dInstancesP.addAll(getInstanceProperties(k, service, instance, getOptionalP));
                         //write all lines to file
                         for (String s : dInstancesP) {
                             //write line to csv
@@ -86,20 +84,21 @@ public class createDatasetsMain {
                         lineCounter += 1;
                     }
                     writer.close();
-                    System.out.println(writtenLines + " lines written to " + dbpediaFileName);
+                    System.out.println(writtenLines + " lines written to " + fileName);
                     writtenLines = 0;
                     lineCounter = 0;
+
                     // 2 get second order file
                     if (secondOrderP) {
-                        HashSet<String> dPlaceInstances = getDBpediaPlaceInstances(service);
+                        HashSet<String> dPlaceInstances = getPlaceInstances(k, service);
                         System.out.println(dPlaceInstances.size() + " distinct place instances received from " + service);
-                        PrintWriter writer2 = new PrintWriter(dbpediaSecondOrderFileName, "UTF-8");
+                        PrintWriter writer2 = new PrintWriter(secondOrderFileName, "UTF-8");
                         //write header
                         writer2.println("place\tpLat\tpLong\tpSame");
 
                         HashSet<String> dPlaceInstancesP = new HashSet<>();
                         for (String placeInstance : dPlaceInstances) {
-                            dPlaceInstancesP.addAll(getDBpediaPlaceInstanceProperties(service, placeInstance));
+                            dPlaceInstancesP.addAll(getPlaceInstanceProperties(k, service, placeInstance));
 
                             for (String s : dPlaceInstancesP) {
                                 writer2.println(s);
@@ -112,7 +111,7 @@ public class createDatasetsMain {
 
                         }
                         writer2.close();
-                        System.out.println(writtenLines + " lines written to " + dbpediaSecondOrderFileName);
+                        System.out.println(writtenLines + " lines written to " + secondOrderFileName);
                     }
                 } catch (IOException e) {
                     System.out.println("error while writing to file");
@@ -132,10 +131,18 @@ public class createDatasetsMain {
 
 
     }
-
-    private static HashSet<String> getDBpediaPlaceInstanceProperties(String service, String placeInstance) {
+    /**
+     * Get all place instance properties. Might (optional) be the following:
+     * geo:lat, geo:long, owl:sameAs.
+     * owl:sameAs is only included if it points to geonames, yago or wikidata
+     * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param service sparql url
+     * @param placeInstance URI of the instance
+     * @return HashSet<String> including all instance properties
+     */
+    private static HashSet<String> getPlaceInstanceProperties(int k, String service, String placeInstance) {
         HashSet<String> resultSet = new HashSet<>();
-        String queryString = getQueryPrefix();
+        String queryString = getQueryPrefix(k);
         queryString = queryString +
                 "SELECT ?lat ?long ?same WHERE {\n" +
                 " OPTIONAL { <" + placeInstance + "> geo:lat ?lat }\n" +
@@ -169,9 +176,15 @@ public class createDatasetsMain {
         return resultSet;
     }
 
-    private static HashSet<String> getDBpediaPlaceInstances(String service) {
+    /**
+     * Get all distinct place instances that appear as dbo:place object for an event instance.
+     * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param service sparql url
+     * @return HashSet<String> including all place instance URIs
+     */
+    private static HashSet<String> getPlaceInstances(int k, String service) {
         HashSet<String> instanceSet = new HashSet<>();
-        String queryString = getQueryPrefix();
+        String queryString = getQueryPrefix(k);
         queryString = queryString +
                 //"SELECT (COUNT(DISTINCT ?event) as ?count) WHERE {\n" +
                 "SELECT DISTINCT ?place WHERE {\n" +
@@ -196,9 +209,17 @@ public class createDatasetsMain {
         return instanceSet;
     }
 
-    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties) {
+    /**
+     * Get all Instance properties
+     * DBpedia: rdfs:label, dbo:date, geo:lat, geo:long, and optionally: foaf:name, owl:sameAs, and dbo:place
+     * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param service sparql url
+     * @param getOptionalProperties get optional properties as well (foaf:name, owl:sameAs, and dbo:place for DBpedia)
+     * @return HashSet<String> including all instance properties
+     */
+    private static HashSet<String> getInstanceProperties(int k, String service, String instance, boolean getOptionalProperties) {
         HashSet<String> resultSet = new HashSet<>();
-        String queryString = getQueryPrefix();
+        String queryString = getQueryPrefix(k);
         queryString = queryString +
                 "SELECT ?label ?date ?lat ?long ";
         if (getOptionalProperties)
@@ -261,55 +282,32 @@ public class createDatasetsMain {
         return resultSet;
     }
 
-    private static HashSet<String> getSecondOrderProperties(String service, QuerySolution qs, String place, String stringWoSecondOrder) {
-        HashSet<String> resultSet = new HashSet<>();
-
-        String[] Properties = {"pLat", "pLong",  "pSame"};
-        //create query
-        String queryString = getQueryPrefix();
-        queryString = queryString +
-                "SELECT ?pLat ?pLong ?pSame WHERE {\n" +
-                " OPTIONAL { <" + place + "> geo:lat ?pLat }\n" +
-                " OPTIONAL { <" + place + "> geo:long ?pLong }\n" +
-                " OPTIONAL { <" + place + "> owl:sameAs ?pSame }}\n";
-        ResultSet results = queryEndpoint(service, queryString);
-        while (results.hasNext()) {
-            QuerySolution qsP = results.next();
-            String secondOrderString = "";
-            //check all properties (lat, long, same) and add if available
-            for (String p : Properties) {
-                if (qsP.contains(p)) {
-                    secondOrderString = secondOrderString + "\t"+qsP.get(p).toString();
-                } else {
-                    secondOrderString = secondOrderString + "\tnull";
-                }
-            }
-            //add complete string to set
-            resultSet.add(stringWoSecondOrder + secondOrderString);
-
-        }
-
-
-        return resultSet;
-
-    }
-
+    /**
+     * Get the optional properties of the QuerySolution.
+     * Check if the QuerySolution has the provided properties. Insert "null" otherwise.
+     * @param qs
+     * @param properties to check
+     * @return String (tab-separated with property values or "null" if property value is not available)
+     */
     private static String getAvailableOptionalProperties(QuerySolution qs, String[] properties) {
-        //String[] Properties = (!secondOrderP) ? new String[]{"name", "same",  "place"} :  new String[]{"name", "same", "place", "placeSame", "placeLat", "placeLong"};
-        //String[] Properties = (!secondOrderP) ? new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same"} :  new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same", "locationSame", "locationLat", "locationLong", "placeSame", "placeLat", "placeLong", "countrySame", "countryLat", "countryLong", "citySame", "cityLat", "cityLong"};
-        //"point", "geometry",
         String oP = "";
         for (String p : properties) {
             //get value for property or add "null" is property is null
             oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\tnull";
-            //get second order properties if dbo:place is not null
         }
         return oP;
     }
 
-    private static HashSet<String> getDBpediaInstances(String service) {
+    /**
+     * Get all distinct event instances that have the following attributes:
+     * rdfs:label, dbo:date, geo:lat, geo:long
+     * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param service sparql url
+     * @return HashSet<String> including all instance URIs
+     */
+    private static HashSet<String> getEventInstances(int k, String service) {
         HashSet<String> instanceSet = new HashSet<>();
-        String queryString = getQueryPrefix();
+        String queryString = getQueryPrefix(k);
         queryString = queryString +
                 //"SELECT (COUNT(DISTINCT ?event) as ?count) WHERE {\n" +
                 "SELECT DISTINCT ?event WHERE {\n" +
@@ -333,6 +331,12 @@ public class createDatasetsMain {
         return instanceSet;
     }
 
+    /**
+     * Query the SPARQL endpoint
+     * @param service sparql endpoint URL
+     * @param queryString  query to send to the endpoint
+     * @return ResultSet
+     */
     private static ResultSet queryEndpoint(String service, String queryString) {
         Query query = QueryFactory.create(queryString);
         QueryExecution qe =  QueryExecutionFactory.sparqlService(service, query);
@@ -342,20 +346,39 @@ public class createDatasetsMain {
         return resultsCopy;
     }
 
-    private static String getQueryPrefix() {
-        String p =
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX dbo: <http://dbpedia.org/ontology/>\n"+
-                //"PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
-                "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n"+
-               // "PREFIX georss: <http://www.georss.org/georss/>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n";
-                //"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
+    /**
+     * Get query prefix
+     * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @return String of the query prefix
+     */
+    private static String getQueryPrefix(int k) {
+        String p = "";
+        if (k==0) {
+            p =     "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                    //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+                    "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
+                    "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n" +
+                    // "PREFIX georss: <http://www.georss.org/georss/>\n"+
+                    "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n";
+
+        } else if (k==1) {
+            p = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                    //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+                    "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
+                    //"PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n" +
+                    // "PREFIX georss: <http://www.georss.org/georss/>\n"+
+                    "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
+                    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
+        }
         return p;
     }
-
+    /**
+     * Test the service connection
+     * @param service sparql url to test
+     * @return boolean (true if service is up)
+     */
     public static boolean testConnection(String service) {
         boolean isUp = false;
         String queryTest = "ASK {}";
