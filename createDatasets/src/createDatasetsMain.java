@@ -6,6 +6,7 @@ import org.apache.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -18,21 +19,21 @@ public class createDatasetsMain {
         boolean yago = false;
         boolean wikidata = false;
 
-        boolean getOptionalP = true;
-        boolean secondOrderP = true; //second order can only be specified if getOptionalP is true
+        boolean getOptionalP = false;
+        boolean secondOrderP = false; //second order can only be specified if getOptionalP is true
 
         String dbpediaFileName = "";
+        String dbpediaSecondOrderFileName = "out/dbpedia-3-secondOrder.tsv";
+
         if (!getOptionalP)
             dbpediaFileName = "out/dbpedia-1-woOptional.tsv";
         else
-            if (!secondOrderP)
-                dbpediaFileName = "out/dbpedia-2-wOptional.tsv";
-            else
-                dbpediaFileName = "out/dbpedia-3-secondOrder.tsv";
-            //wOptional, woOptional, secondOrder
+            dbpediaFileName = "out/dbpedia-2-wOptional.tsv";
+
+        //wOptional, woOptional, secondOrder
 
 
-        if(secondOrderP && !getOptionalP) {
+        if (secondOrderP && !getOptionalP) {
             System.out.println("Set getOptionalP and secondOrderP to true. secondOrderP cannot be executed without getting the optional properties");
             return;
         }
@@ -45,6 +46,8 @@ public class createDatasetsMain {
         String service = "";
         boolean dbIsUp;
         int lineCounter = 0;
+        int writtenLines = 0;
+        int lineProgress = 500;
         //HashSet<String> xInstancesWithProperties;
 
         if (dbpedia) {
@@ -52,35 +55,65 @@ public class createDatasetsMain {
             dbIsUp = testConnection(service);
             if (dbIsUp) {
                 HashSet<String> dInstances = getDBpediaInstances(service);
-                System.out.println(dInstances.size() + " distinct instances received from " + service );
-                HashSet<String> dInstancesP = new HashSet<>();
-                for (String instance : dInstances) {
-                    //System.out.println(i);
-                    //get all properties for the instance
-                     dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP, secondOrderP));
-                    if (lineCounter % 500 == 0 && lineCounter != 0)
-                        System.out.println(lineCounter + " instances processed.");
-                    lineCounter += 1;
-                }
+                System.out.println(dInstances.size() + " distinct instances received from " + service);
+
                 try {
+                    // 1 get event instances properties
                     PrintWriter writer = new PrintWriter(dbpediaFileName, "UTF-8");
                     //write header
-                    String header =  "uri\tlabel\tdate\tlat\tlong";
+                    String header = "uri\tlabel\tdate\tlat\tlong";
                     if (getOptionalP)
-                        if(!secondOrderP) //no second order
-                            header = header + "\tname\tplace\tsame";//"\tpoint\tgeometry"+
-                        else //with second order attributes for place
-                            header = header + "\tname\tplace\tsame\tplaceSame\tplaceLat\tplaceLong";
-                        //header = header + "\tname\ttitle\ttime\tstartDate\tlocation\tplace\tcountry\tcity\tsame";//"\tpoint\tgeometry"+
-                    writer.println(header);
-                    for (String s : dInstancesP) {
-                        //write line to csv
-                        System.out.println(s);
-                        //writer.println(s);
-                    }
+                        header = header + "\tname\tsame\tplace";
 
+                    writer.println(header);
+
+                    HashSet<String> dInstancesP = new HashSet<>();
+                    for (String instance : dInstances) {
+                        //System.out.println(i);
+                        //get all properties for the instance
+                        dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP));
+                        //write all lines to file
+                        for (String s : dInstancesP) {
+                            //write line to csv
+                            //System.out.println(s);
+                            writer.println(s);
+                        }
+                        writtenLines = writtenLines + dInstancesP.size();
+                        //clear set of lines that have been written to file
+                        dInstancesP.clear();
+                        if (lineCounter % lineProgress == 0 && lineCounter != 0)
+                            System.out.println(lineCounter + " instances processed.");
+                        lineCounter += 1;
+                    }
                     writer.close();
-                    System.out.println(dInstancesP.size() + " lines written to " + dbpediaFileName);
+                    System.out.println(writtenLines + " lines written to " + dbpediaFileName);
+                    writtenLines = 0;
+                    lineCounter = 0;
+                    // 2 get second order file
+                    if (secondOrderP) {
+                        HashSet<String> dPlaceInstances = getDBpediaPlaceInstances(service);
+                        System.out.println(dPlaceInstances.size() + " distinct place instances received from " + service);
+                        PrintWriter writer2 = new PrintWriter(dbpediaSecondOrderFileName, "UTF-8");
+                        //write header
+                        writer2.println("place\tpLat\tpLong\tpSame");
+
+                        HashSet<String> dPlaceInstancesP = new HashSet<>();
+                        for (String placeInstance : dPlaceInstances) {
+                            dPlaceInstancesP.addAll(getDBpediaPlaceInstanceProperties(service, placeInstance));
+
+                            for (String s : dPlaceInstancesP) {
+                                writer2.println(s);
+                            }
+                            writtenLines = writtenLines + dPlaceInstancesP.size();
+                            dPlaceInstancesP.clear();
+                            if (lineCounter % lineProgress == 0 && lineCounter != 0)
+                                System.out.println(lineCounter + " place instances processed.");
+                            lineCounter += 1;
+
+                        }
+                        writer2.close();
+                        System.out.println(writtenLines + " lines written to " + dbpediaSecondOrderFileName);
+                    }
                 } catch (IOException e) {
                     System.out.println("error while writing to file");
                 }
@@ -98,22 +131,79 @@ public class createDatasetsMain {
         }
 
 
-
-
-
     }
 
-    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties, boolean secondOrderP) {
+    private static HashSet<String> getDBpediaPlaceInstanceProperties(String service, String placeInstance) {
+        HashSet<String> resultSet = new HashSet<>();
+        String queryString = getQueryPrefix();
+        queryString = queryString +
+                "SELECT ?lat ?long ?same WHERE {\n" +
+                " OPTIONAL { <" + placeInstance + "> geo:lat ?lat }\n" +
+                " OPTIONAL { <" + placeInstance +"> geo:long ?long }\n"+
+                " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }}";
+        ResultSet results = queryEndpoint(service, queryString);
+        String[] properties = {"lat", "long", "same"};
+        String resultString = "";
+        boolean oneLineAdded = false;
+        while (results.hasNext()) {
+            QuerySolution qs = results.next();
+            resultString =  placeInstance + getAvailableOptionalProperties(qs, properties);
+
+            //only add sameAs  if they link to yago, wikidata or geonames BUT add at least one line with lat&long if no sameAs link goes to yago, wkidata or geonames
+            if (qs.contains("same")) {
+                String sameAs = qs.get("same").toString();
+                if (sameAs.startsWith("http://sws.geonames.org") || sameAs.startsWith("http://yago-knowledge.org") || sameAs.startsWith("http://www.wikidata.org")) {
+                    resultSet.add(resultString);
+                    oneLineAdded = true;
+                }
+
+            }  else {
+                resultSet.add(resultString);
+                oneLineAdded = true;
+            }
+        }
+        //check if at least one line was added
+        if (!oneLineAdded) {
+            resultSet.add(resultString);
+        }
+        return resultSet;
+    }
+
+    private static HashSet<String> getDBpediaPlaceInstances(String service) {
+        HashSet<String> instanceSet = new HashSet<>();
+        String queryString = getQueryPrefix();
+        queryString = queryString +
+                //"SELECT (COUNT(DISTINCT ?event) as ?count) WHERE {\n" +
+                "SELECT DISTINCT ?place WHERE {\n" +
+                " ?event a dbo:Event .\n" +
+                " ?event rdfs:label ?label .\n" +
+                " ?event dbo:date ?date .\n" +
+                " ?event geo:lat ?lat .\n" +
+                " ?event geo:long ?long .\n" +
+                " ?event dbo:place ?place .\n" +
+                "}";
+
+        ResultSet results = queryEndpoint(service, queryString);
+        while (results.hasNext()) {
+            QuerySolution qs = results.next();
+            if (qs.get("place").isURIResource()) {
+                instanceSet.add(qs.get("place").toString());
+                //System.out.println(qs.get("event").toString());
+            }
+            //System.out.println(qs.get("count").toString());
+        }
+
+        return instanceSet;
+    }
+
+    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties) {
         HashSet<String> resultSet = new HashSet<>();
         String queryString = getQueryPrefix();
         queryString = queryString +
                 "SELECT ?label ?date ?lat ?long ";
         if (getOptionalProperties)
-            queryString = queryString + "?name ?place ?same ";// "?point ?geometry "+
-            //queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?country ?city ?same ";// "?point ?geometry "+
-        if (secondOrderP)
-            queryString = queryString + "?placeSame ?placeLat ?placeLong ";
-            //queryString = queryString + "?locationSame ?locationLat ?locationLong ?placeSame ?placeLat ?placeLong ?countrySame ?countryLat ?countryLong ?citySame ?cityLat ?cityLong ";
+            queryString = queryString + "?name ?same ?place ";// "?point ?geometry "+
+
 
         queryString = queryString +
                 "WHERE {\n" +
@@ -124,64 +214,95 @@ public class createDatasetsMain {
         if (getOptionalProperties) {
             queryString = queryString +
                     " OPTIONAL { <" + instance + "> foaf:name ?name }\n" +
-                    //" OPTIONAL { <" + instance + "> dbo:title ?title }\n" +
-                    //" OPTIONAL { <" + instance + "> dbo:time ?time }\n" +
-                    //" OPTIONAL { <" + instance + "> dbo:startDate ?startDate }\n" +
-                    //" OPTIONAL { <" + instance + "> dbo:location ?location }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:place ?place }\n" +
-                    //" OPTIONAL { <" + instance + "> georss:point ?point }\n" +
-                    //" OPTIONAL { <" + instance + "> geo:geometry ?geometry}\n"+
-                   // " OPTIONAL { <" + instance + "> dbo:country ?country }\n" +
-                    //" OPTIONAL { <" + instance + "> dbo:city ?city }\n" +
-                    " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n";
-        }
+                    " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:place ?place }\n";
 
-        if (secondOrderP) {
-            queryString = queryString +
-                    " OPTIONAL { ?place owl:sameAs ?placeSame }\n" +
-                    " OPTIONAL { ?place geo:lat ?placeLat }\n" +
-                    " OPTIONAL { ?place geo:long ?placeLong }\n";
-                    /* "OPTIONAL { ?location owl:sameAs ?locationSame }\n" +
-                    "  OPTIONAL { ?location geo:lat ?locationLat }\n" +
-                    "  OPTIONAL { ?location geo:long ?locationLong }\n" +
-                    "  OPTIONAL { ?country owl:sameAs ?countrySame }\n" +
-                    "  OPTIONAL { ?country geo:lat ?countryLat }\n" +
-                    "  OPTIONAL { ?country geo:long ?countryLong }\n" +
-                    "  OPTIONAL { ?city owl:sameAs ?citySame }\n" +
-                    "  OPTIONAL { ?city geo:lat ?cityLat }\n"+
-                    "  OPTIONAL { ?city geo:long ?cityLong }\n";*/
         }
-
 
         queryString = queryString +
                 " FILTER langMatches( lang(?label), \'EN\' )\n" +
                 "}";
-        System.out.println(queryString);
+        //System.out.println(queryString);
         ResultSet results = queryEndpoint(service, queryString);
 
-        String resultString = "";
+        //boolean addSet = false;
+        String resultString;
+        String[] properties = {"name", "same",  "place"};
+        //HashSet<String> secondOrderResultStringSet = null;
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("lat").toString() + "\t" + qs.get("long").toString();
-
+           // addSet = false;
             if (getOptionalProperties)
-                resultString = resultString + getAvailableOptionalProperties(qs, secondOrderP);
+                resultString = resultString + getAvailableOptionalProperties(qs, properties);
+               /* if(secondOrderP)
+                    //check is qs has an value for the dbo:place property
+                    if (qs.contains("place")) {
+                        addSet = true;
+                        secondOrderResultStringSet = getSecondOrderProperties(service, qs, qs.get("place").toString(), resultString);
+                        //System.out.println(qs.get("place").toString());
+                    } else { //no dbo:place property -> set the 3 values to null
+                        resultString = resultString +  "\tnull\tnull\tnull";
+                    }*/
+
+
+
 
             //System.out.println(resultString);
+            /*if (addSet) { //check if multiple strings are returned -> add all to resultSet
+                for (String s : secondOrderResultStringSet) {
+                    resultSet.add(s);
+                }
+            } else { //add single returned string to resultSet*/
             resultSet.add(resultString);
+            //}
         }
 
         return resultSet;
     }
 
-    private static String getAvailableOptionalProperties(QuerySolution qs, boolean secondOrderP) {
+    private static HashSet<String> getSecondOrderProperties(String service, QuerySolution qs, String place, String stringWoSecondOrder) {
+        HashSet<String> resultSet = new HashSet<>();
 
-        String[] Properties = (!secondOrderP) ? new String[]{"name", "place", "same"} :  new String[]{"name", "place", "same", "placeSame", "placeLat", "placeLong"};
+        String[] Properties = {"pLat", "pLong",  "pSame"};
+        //create query
+        String queryString = getQueryPrefix();
+        queryString = queryString +
+                "SELECT ?pLat ?pLong ?pSame WHERE {\n" +
+                " OPTIONAL { <" + place + "> geo:lat ?pLat }\n" +
+                " OPTIONAL { <" + place + "> geo:long ?pLong }\n" +
+                " OPTIONAL { <" + place + "> owl:sameAs ?pSame }}\n";
+        ResultSet results = queryEndpoint(service, queryString);
+        while (results.hasNext()) {
+            QuerySolution qsP = results.next();
+            String secondOrderString = "";
+            //check all properties (lat, long, same) and add if available
+            for (String p : Properties) {
+                if (qsP.contains(p)) {
+                    secondOrderString = secondOrderString + "\t"+qsP.get(p).toString();
+                } else {
+                    secondOrderString = secondOrderString + "\tnull";
+                }
+            }
+            //add complete string to set
+            resultSet.add(stringWoSecondOrder + secondOrderString);
+
+        }
+
+
+        return resultSet;
+
+    }
+
+    private static String getAvailableOptionalProperties(QuerySolution qs, String[] properties) {
+        //String[] Properties = (!secondOrderP) ? new String[]{"name", "same",  "place"} :  new String[]{"name", "same", "place", "placeSame", "placeLat", "placeLong"};
         //String[] Properties = (!secondOrderP) ? new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same"} :  new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same", "locationSame", "locationLat", "locationLong", "placeSame", "placeLat", "placeLong", "countrySame", "countryLat", "countryLong", "citySame", "cityLat", "cityLong"};
         //"point", "geometry",
         String oP = "";
-        for (String p : Properties) {
-            oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\t null";
+        for (String p : properties) {
+            //get value for property or add "null" is property is null
+            oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\tnull";
+            //get second order properties if dbo:place is not null
         }
         return oP;
     }
@@ -197,7 +318,7 @@ public class createDatasetsMain {
                     " ?event dbo:date ?date .\n" +
                     " ?event geo:lat ?lat .\n" +
                     " ?event geo:long ?long .\n" +
-                "} LIMIT 10";
+                "}";
 
         ResultSet results = queryEndpoint(service, queryString);
         while (results.hasNext()) {
