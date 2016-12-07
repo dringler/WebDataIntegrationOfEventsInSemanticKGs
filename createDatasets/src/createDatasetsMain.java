@@ -19,9 +19,25 @@ public class createDatasetsMain {
         boolean yago = false;
         boolean wikidata = false;
 
-        boolean getOptionalP = true;
+        boolean getOptionalP = false;
+        boolean secondOrderP = false; //second order can only be specified if getOptionalP is true
 
-        String dbpediaFileName = "out/dbpedia_wOptional.tsv";
+        String dbpediaFileName = "";
+        if (!getOptionalP)
+            dbpediaFileName = "out/dbpedia-1-woOptional.tsv";
+        else
+            if (!secondOrderP)
+                dbpediaFileName = "out/dbpedia-2-wOptional.tsv";
+            else
+                dbpediaFileName = "out/dbpedia-3-secondOrder.tsv";
+            //wOptional, woOptional, secondOrder
+
+
+        if(secondOrderP && !getOptionalP) {
+            System.out.println("Set getOptionalP and secondOrderP to true. secondOrderP cannot be executed without getting the optional properties");
+            return;
+        }
+
 
         //configure log4j
         org.apache.log4j.BasicConfigurator.configure();
@@ -42,7 +58,7 @@ public class createDatasetsMain {
                 for (String instance : dInstances) {
                     //System.out.println(i);
                     //get all properties for the instance
-                     dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP));
+                     dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP, secondOrderP));
                     if (lineCounter % 500 == 0 && lineCounter != 0)
                         System.out.println(lineCounter + " instances processed.");
                     lineCounter += 1;
@@ -50,9 +66,9 @@ public class createDatasetsMain {
                 try {
                     PrintWriter writer = new PrintWriter(dbpediaFileName, "UTF-8");
                     //write header
-                    String header =  "uri\tlabel\tdate\tgeometry";
+                    String header =  "uri\tlabel\tdate\tlat\tlong";
                     if (getOptionalP)
-                        header = header + "\tname\ttitle\ttime\tstartDate\tpoint\tlat\tlong\tlocation\tplace\tcountry\tcity\tsame";
+                        header = header + "\tname\ttitle\ttime\tstartDate\tlocation\tplace\tcountry\tcity\tsame";//"\tpoint\tgeometry"+
                     writer.println(header);
                     for (String s : dInstancesP) {
                         //write line to csv
@@ -84,19 +100,22 @@ public class createDatasetsMain {
 
     }
 
-    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties) {
+    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties, boolean secondOrderP) {
         HashSet<String> resultSet = new HashSet<>();
         String queryString = getQueryPrefix();
         queryString = queryString +
-                "SELECT ?label ?date ?geometry ";
+                "SELECT ?label ?date ?lat ?long ";
         if (getOptionalProperties)
-            queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?point ?lat ?long ?country ?city ?same ";
+            queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?country ?city ?same ";// "?point ?geometry "+
+        if (secondOrderP)
+            queryString = queryString + "?locationSame ?locationLat ?locationLong ?placeSame ?placeLat ?placeLong ?countrySame ?countryLat ?countryLong ?citySame ?cityLat ?cityLong ";
 
         queryString = queryString +
                 "WHERE {\n" +
                 " <" + instance + "> rdfs:label ?label .\n" +
                 " <" + instance + "> dbo:date ?date .\n" +
-                " <" + instance + "> geo:geometry ?geometry .\n";
+                " <" + instance + "> geo:lat ?lat .\n" +
+                " <" + instance + "> geo:long ?long .\n";
         if (getOptionalProperties) {
             queryString = queryString +
                     " OPTIONAL { <" + instance + "> foaf:name ?name }\n" +
@@ -105,13 +124,29 @@ public class createDatasetsMain {
                     " OPTIONAL { <" + instance + "> dbo:startDate ?startDate }\n" +
                     " OPTIONAL { <" + instance + "> dbo:location ?location }\n" +
                     " OPTIONAL { <" + instance + "> dbo:place ?place }\n" +
-                    " OPTIONAL { <" + instance + "> georss:point ?point }\n" +
-                    " OPTIONAL { <" + instance + "> geo:lat ?lat }\n" +
-                    " OPTIONAL { <" + instance + "> geo:long ?long }\n" +
+                    //" OPTIONAL { <" + instance + "> georss:point ?point }\n" +
+                    //" OPTIONAL { <" + instance + "> geo:geometry ?geometry}\n"+
                     " OPTIONAL { <" + instance + "> dbo:country ?country }\n" +
                     " OPTIONAL { <" + instance + "> dbo:city ?city }\n" +
                     " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n";
         }
+
+        if (secondOrderP) {
+            queryString = queryString +
+                    "  OPTIONAL { ?location owl:sameAs ?locationSame }\n" +
+                    "  OPTIONAL { ?location geo:lat ?locationLat }\n" +
+                    "  OPTIONAL { ?location geo:long ?locationLong }\n" +
+                    "  OPTIONAL { ?place owl:sameAs ?placeSame }\n" +
+                    "  OPTIONAL { ?place geo:lat ?placeLat }\n" +
+                    "  OPTIONAL { ?place geo:long ?placeLong }\n" +
+                    "  OPTIONAL { ?country owl:sameAs ?countrySame }\n" +
+                    "  OPTIONAL { ?country geo:lat ?countryLat }\n" +
+                    "  OPTIONAL { ?country geo:long ?countryLong }\n" +
+                    "  OPTIONAL { ?city owl:sameAs ?citySame }\n" +
+                    "  OPTIONAL { ?city geo:lat ?cityLat }\n"+
+                    "  OPTIONAL { ?city geo:long ?cityLong }\n";
+        }
+
 
         queryString = queryString +
                 " FILTER langMatches( lang(?label), \'EN\' )\n" +
@@ -121,10 +156,10 @@ public class createDatasetsMain {
         String resultString = "";
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("geometry").toString();
+            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("lat").toString() + "\t" + qs.get("long").toString();
 
             if (getOptionalProperties)
-                resultString = resultString + getAvailableOptionalProperties(qs);
+                resultString = resultString + getAvailableOptionalProperties(qs, secondOrderP);
 
             //System.out.println(resultString);
             resultSet.add(resultString);
@@ -133,8 +168,10 @@ public class createDatasetsMain {
         return resultSet;
     }
 
-    private static String getAvailableOptionalProperties(QuerySolution qs) {
-        String[] Properties = {"name", "title", "time", "startDate", "point", "lat", "long", "location", "place", "country", "city", "same"};
+    private static String getAvailableOptionalProperties(QuerySolution qs, boolean secondOrderP) {
+
+        String[] Properties = (!secondOrderP) ? new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same"} :  new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same", "locationSame", "locationLat", "locationLong", "placeSame", "placeLat", "placeLong", "countrySame", "countryLat", "countryLong", "citySame", "cityLat", "cityLong"};
+        //"point", "geometry",
         String oP = "";
 
         for (String p : Properties) {
@@ -152,7 +189,8 @@ public class createDatasetsMain {
                     " ?event a dbo:Event .\n" +
                     " ?event rdfs:label ?label .\n" +
                     " ?event dbo:date ?date .\n" +
-                    " ?event geo:geometry ?geometry .\n" +
+                    " ?event geo:lat ?lat .\n" +
+                    " ?event geo:long ?long .\n" +
                 "}";
 
         ResultSet results = queryEndpoint(service, queryString);
