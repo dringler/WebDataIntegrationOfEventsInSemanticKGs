@@ -6,7 +6,6 @@ import org.apache.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -19,8 +18,8 @@ public class createDatasetsMain {
         boolean yago = false;
         boolean wikidata = false;
 
-        boolean getOptionalP = false;
-        boolean secondOrderP = false; //second order can only be specified if getOptionalP is true
+        boolean getOptionalP = true;
+        boolean secondOrderP = true; //second order can only be specified if getOptionalP is true
 
         String dbpediaFileName = "";
         if (!getOptionalP)
@@ -68,12 +67,16 @@ public class createDatasetsMain {
                     //write header
                     String header =  "uri\tlabel\tdate\tlat\tlong";
                     if (getOptionalP)
-                        header = header + "\tname\ttitle\ttime\tstartDate\tlocation\tplace\tcountry\tcity\tsame";//"\tpoint\tgeometry"+
+                        if(!secondOrderP) //no second order
+                            header = header + "\tname\tplace\tsame";//"\tpoint\tgeometry"+
+                        else //with second order attributes for place
+                            header = header + "\tname\tplace\tsame\tplaceSame\tplaceLat\tplaceLong";
+                        //header = header + "\tname\ttitle\ttime\tstartDate\tlocation\tplace\tcountry\tcity\tsame";//"\tpoint\tgeometry"+
                     writer.println(header);
                     for (String s : dInstancesP) {
                         //write line to csv
-                        //System.out.println(s);
-                        writer.println(s);
+                        System.out.println(s);
+                        //writer.println(s);
                     }
 
                     writer.close();
@@ -106,9 +109,11 @@ public class createDatasetsMain {
         queryString = queryString +
                 "SELECT ?label ?date ?lat ?long ";
         if (getOptionalProperties)
-            queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?country ?city ?same ";// "?point ?geometry "+
+            queryString = queryString + "?name ?place ?same ";// "?point ?geometry "+
+            //queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?country ?city ?same ";// "?point ?geometry "+
         if (secondOrderP)
-            queryString = queryString + "?locationSame ?locationLat ?locationLong ?placeSame ?placeLat ?placeLong ?countrySame ?countryLat ?countryLong ?citySame ?cityLat ?cityLong ";
+            queryString = queryString + "?placeSame ?placeLat ?placeLong ";
+            //queryString = queryString + "?locationSame ?locationLat ?locationLong ?placeSame ?placeLat ?placeLong ?countrySame ?countryLat ?countryLong ?citySame ?cityLat ?cityLong ";
 
         queryString = queryString +
                 "WHERE {\n" +
@@ -119,38 +124,39 @@ public class createDatasetsMain {
         if (getOptionalProperties) {
             queryString = queryString +
                     " OPTIONAL { <" + instance + "> foaf:name ?name }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:title ?title }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:time ?time }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:startDate ?startDate }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:location ?location }\n" +
+                    //" OPTIONAL { <" + instance + "> dbo:title ?title }\n" +
+                    //" OPTIONAL { <" + instance + "> dbo:time ?time }\n" +
+                    //" OPTIONAL { <" + instance + "> dbo:startDate ?startDate }\n" +
+                    //" OPTIONAL { <" + instance + "> dbo:location ?location }\n" +
                     " OPTIONAL { <" + instance + "> dbo:place ?place }\n" +
                     //" OPTIONAL { <" + instance + "> georss:point ?point }\n" +
                     //" OPTIONAL { <" + instance + "> geo:geometry ?geometry}\n"+
-                    " OPTIONAL { <" + instance + "> dbo:country ?country }\n" +
-                    " OPTIONAL { <" + instance + "> dbo:city ?city }\n" +
+                   // " OPTIONAL { <" + instance + "> dbo:country ?country }\n" +
+                    //" OPTIONAL { <" + instance + "> dbo:city ?city }\n" +
                     " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n";
         }
 
         if (secondOrderP) {
             queryString = queryString +
-                    "  OPTIONAL { ?location owl:sameAs ?locationSame }\n" +
+                    " OPTIONAL { ?place owl:sameAs ?placeSame }\n" +
+                    " OPTIONAL { ?place geo:lat ?placeLat }\n" +
+                    " OPTIONAL { ?place geo:long ?placeLong }\n";
+                    /* "OPTIONAL { ?location owl:sameAs ?locationSame }\n" +
                     "  OPTIONAL { ?location geo:lat ?locationLat }\n" +
                     "  OPTIONAL { ?location geo:long ?locationLong }\n" +
-                    "  OPTIONAL { ?place owl:sameAs ?placeSame }\n" +
-                    "  OPTIONAL { ?place geo:lat ?placeLat }\n" +
-                    "  OPTIONAL { ?place geo:long ?placeLong }\n" +
                     "  OPTIONAL { ?country owl:sameAs ?countrySame }\n" +
                     "  OPTIONAL { ?country geo:lat ?countryLat }\n" +
                     "  OPTIONAL { ?country geo:long ?countryLong }\n" +
                     "  OPTIONAL { ?city owl:sameAs ?citySame }\n" +
                     "  OPTIONAL { ?city geo:lat ?cityLat }\n"+
-                    "  OPTIONAL { ?city geo:long ?cityLong }\n";
+                    "  OPTIONAL { ?city geo:long ?cityLong }\n";*/
         }
 
 
         queryString = queryString +
                 " FILTER langMatches( lang(?label), \'EN\' )\n" +
                 "}";
+        System.out.println(queryString);
         ResultSet results = queryEndpoint(service, queryString);
 
         String resultString = "";
@@ -170,10 +176,10 @@ public class createDatasetsMain {
 
     private static String getAvailableOptionalProperties(QuerySolution qs, boolean secondOrderP) {
 
-        String[] Properties = (!secondOrderP) ? new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same"} :  new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same", "locationSame", "locationLat", "locationLong", "placeSame", "placeLat", "placeLong", "countrySame", "countryLat", "countryLong", "citySame", "cityLat", "cityLong"};
+        String[] Properties = (!secondOrderP) ? new String[]{"name", "place", "same"} :  new String[]{"name", "place", "same", "placeSame", "placeLat", "placeLong"};
+        //String[] Properties = (!secondOrderP) ? new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same"} :  new String[]{"name", "title", "time", "startDate", "location", "place", "country", "city", "same", "locationSame", "locationLat", "locationLong", "placeSame", "placeLat", "placeLong", "countrySame", "countryLat", "countryLong", "citySame", "cityLat", "cityLong"};
         //"point", "geometry",
         String oP = "";
-
         for (String p : Properties) {
             oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\t null";
         }
@@ -191,7 +197,7 @@ public class createDatasetsMain {
                     " ?event dbo:date ?date .\n" +
                     " ?event geo:lat ?lat .\n" +
                     " ?event geo:long ?long .\n" +
-                "}";
+                "} LIMIT 10";
 
         ResultSet results = queryEndpoint(service, queryString);
         while (results.hasNext()) {
@@ -219,13 +225,13 @@ public class createDatasetsMain {
         String p =
                 "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+                //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
                 "PREFIX dbo: <http://dbpedia.org/ontology/>\n"+
-                "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
+                //"PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
                 "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n"+
-                "PREFIX georss: <http://www.georss.org/georss/>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
+               // "PREFIX georss: <http://www.georss.org/georss/>\n"+
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n";
+                //"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
         return p;
     }
 
