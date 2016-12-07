@@ -4,6 +4,8 @@ import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -17,12 +19,17 @@ public class createDatasetsMain {
         boolean yago = false;
         boolean wikidata = false;
 
+        boolean getOptionalP = true;
+
+        String dbpediaFileName = "out/dbpedia_wOptional.tsv";
+
         //configure log4j
         org.apache.log4j.BasicConfigurator.configure();
         LogManager.getRootLogger().setLevel(Level.OFF); //set console logger off
 
         String service = "";
         boolean dbIsUp;
+        int lineCounter = 0;
         //HashSet<String> xInstancesWithProperties;
 
         if (dbpedia) {
@@ -35,14 +42,30 @@ public class createDatasetsMain {
                 for (String instance : dInstances) {
                     //System.out.println(i);
                     //get all properties for the instance
-                     dInstancesP.addAll(getDBpediaInstanceProperties(service, instance));
+                     dInstancesP.addAll(getDBpediaInstanceProperties(service, instance, getOptionalP));
+                    if (lineCounter % 500 == 0 && lineCounter != 0)
+                        System.out.println(lineCounter + " instances processed.");
+                    lineCounter += 1;
+                }
+                try {
+                    PrintWriter writer = new PrintWriter(dbpediaFileName, "UTF-8");
+                    //write header
+                    String header =  "uri\tlabel\tdate\tgeometry";
+                    if (getOptionalP)
+                        header = header + "\tname\ttitle\ttime\tstartDate\tpoint\tlat\tlong\tlocation\tplace\tcountry\tcity\tsame";
+                    writer.println(header);
+                    for (String s : dInstancesP) {
+                        //write line to csv
+                        //System.out.println(s);
+                        writer.println(s);
+                    }
 
+                    writer.close();
+                    System.out.println(dInstancesP.size() + " lines written to " + dbpediaFileName);
+                } catch (IOException e) {
+                    System.out.println("error while writing to file");
                 }
-                for (String s : dInstancesP) {
-                    //save to csv
-                    //System.out.println(s);
-                }
-                System.out.println(dInstancesP.size());
+                //System.out.println(dInstancesP.size() + " lines received from " + service);
             }
 
         }
@@ -61,28 +84,67 @@ public class createDatasetsMain {
 
     }
 
-    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance) {
+    private static HashSet<String> getDBpediaInstanceProperties(String service, String instance, boolean getOptionalProperties) {
         HashSet<String> resultSet = new HashSet<>();
         String queryString = getQueryPrefix();
         queryString = queryString +
-                "SELECT ?label ?date ?geometry WHERE {\n" +
+                "SELECT ?label ?date ?geometry ";
+        if (getOptionalProperties)
+            queryString = queryString + "?name ?title ?time ?startDate ?location ?place ?point ?lat ?long ?country ?city ?same ";
+
+        queryString = queryString +
+                "WHERE {\n" +
                 " <" + instance + "> rdfs:label ?label .\n" +
                 " <" + instance + "> dbo:date ?date .\n" +
-                " <" + instance + ">geo:geometry ?geometry .\n" +
+                " <" + instance + "> geo:geometry ?geometry .\n";
+        if (getOptionalProperties) {
+            queryString = queryString +
+                    " OPTIONAL { <" + instance + "> foaf:name ?name }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:title ?title }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:time ?time }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:startDate ?startDate }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:location ?location }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:place ?place }\n" +
+                    " OPTIONAL { <" + instance + "> georss:point ?point }\n" +
+                    " OPTIONAL { <" + instance + "> geo:lat ?lat }\n" +
+                    " OPTIONAL { <" + instance + "> geo:long ?long }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:country ?country }\n" +
+                    " OPTIONAL { <" + instance + "> dbo:city ?city }\n" +
+                    " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n";
+        }
+
+        queryString = queryString +
                 " FILTER langMatches( lang(?label), \'EN\' )\n" +
                 "}";
         ResultSet results = queryEndpoint(service, queryString);
+
+        String resultString = "";
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            String resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("geometry").toString();
+            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("geometry").toString();
+
+            if (getOptionalProperties)
+                resultString = resultString + getAvailableOptionalProperties(qs);
+
+            //System.out.println(resultString);
             resultSet.add(resultString);
         }
 
         return resultSet;
     }
 
+    private static String getAvailableOptionalProperties(QuerySolution qs) {
+        String[] Properties = {"name", "title", "time", "startDate", "point", "lat", "long", "location", "place", "country", "city", "same"};
+        String oP = "";
+
+        for (String p : Properties) {
+            oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\t null";
+        }
+        return oP;
+    }
+
     private static HashSet<String> getDBpediaInstances(String service) {
-        HashSet<String> resultSet = new HashSet<>();
+        HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix();
         queryString = queryString +
                 //"SELECT (COUNT(DISTINCT ?event) as ?count) WHERE {\n" +
@@ -97,13 +159,13 @@ public class createDatasetsMain {
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             if (qs.get("event").isURIResource()) {
-                resultSet.add(qs.get("event").toString());
+                instanceSet.add(qs.get("event").toString());
                 //System.out.println(qs.get("event").toString());
             }
             //System.out.println(qs.get("count").toString());
         }
 
-        return resultSet;
+        return instanceSet;
     }
 
     private static ResultSet queryEndpoint(String service, String queryString) {
