@@ -14,9 +14,9 @@ import java.util.HashSet;
 public class createDatasetsMain {
     public static void main(String[] args) {
         // PARAMETERS
-        boolean dbpedia = true;
-        boolean yago = false;
-        boolean wikidata = false;
+        boolean dbpedia = false;
+        boolean yago = true;
+        boolean wikidata = true;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
 
         boolean getOptionalP = false;
@@ -49,7 +49,7 @@ public class createDatasetsMain {
             service = "http://dbpedia.org/sparql";
             dbIsUp = testConnection(service);
             if (dbIsUp) {
-                //specifiy fileNames and csv header
+                //specify fileNames and csv header
                 header = "uri\tlabel\tdate\tlat\tlong";
                 if (!getOptionalP) {
                     fileName = "out/dbpedia-1-basic.tsv";
@@ -103,7 +103,7 @@ public class createDatasetsMain {
                             placeInstancesProperties.forEach(writer2::println);
                             writtenLines += placeInstancesProperties.size();
                             placeInstancesProperties.clear();
-                            lineCounter = increaseLineCounter(lineCounter, lineProgress)
+                            lineCounter = increaseLineCounter(lineCounter, lineProgress);
 
                         }
                         writer2.close();
@@ -112,7 +112,6 @@ public class createDatasetsMain {
                 } catch (IOException e) {
                     System.out.println("error while writing to file");
                 }
-                //System.out.println(dInstancesP.size() + " lines received from " + service);
             }
 
         }
@@ -125,6 +124,9 @@ public class createDatasetsMain {
             k = 2;
             service = "https://query.wikidata.org/sparql";
             dbIsUp = testConnection(service);
+            if (dbIsUp) {
+
+            }
         }
 
 
