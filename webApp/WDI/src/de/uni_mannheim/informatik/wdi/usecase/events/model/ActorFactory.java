@@ -54,5 +54,8 @@ public class ActorFactory extends MatchableFactory<Actor> {
 
 		return actor;
 	}
+	public Actor createModelFromTSVline(String[] values, String provenanceInfo) {
+		return null;
+	}
 
 }

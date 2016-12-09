@@ -19,7 +19,7 @@ public class EventFactory extends MatchableFactory<Event> {
         Event event = new Event(id, provenanceInfo);
 
         // fill the attributes
-        event.setName(getValueFromChildElement(node, "name"));
+        event.setLabel(getValueFromChildElement(node, "label"));
         event.setLat(Double.valueOf(getValueFromChildElement(node, "lat")));
         event.setLon(Double.valueOf(getValueFromChildElement(node, "lon")));
 
@@ -41,7 +41,7 @@ public class EventFactory extends MatchableFactory<Event> {
         Event event = new Event(values[0], provenanceInfo);
 
         //fill the attributes
-        event.setName(values[1]);
+        event.setLabel(values[1]);
 
         // 1214-07-27^^http://www.w3.org/2001/XMLSchema#date
         event.setDate(LocalDate.parse(values[2].substring(0, values[2].indexOf("^"))));

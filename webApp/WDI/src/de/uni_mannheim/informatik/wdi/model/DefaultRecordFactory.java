@@ -94,4 +94,9 @@ public class DefaultRecordFactory extends MatchableFactory<DefaultRecord> {
 		return model;
 	}
 
+	@Override
+	public DefaultRecord createModelFromTSVline(String[] values, String proveranceInfo) {
+		return null;
+	}
+
 }

@@ -65,18 +65,19 @@ public class Events_IdentityResolution_Main {
 				new MovieFactory(), "/movies/movie");
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
-		dataDBpedia.loadFromTSV(new File("usecase/event/input/dbpedia-1-basic.tsv"),
+		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1-basic_s.tsv"),
 				new EventFactory(), "events/event");
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
-		dataDBpedia.loadFromTSV(new File("usecase/event/input/yago-1-basic.tsv"),
+		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1-basic_s.tsv"),
 				new EventFactory(), "events/event");
+
 
 		// create a matching rule
 		LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(
 				0.7);
 		// add comparators
-		matchingRule.addComparator(new EventNameComparatorJaccard(), 0.8);
+		matchingRule.addComparator(new EventLabelComparatorLevenshtein(), 0.8);
 		matchingRule.addComparator(new EventDateComparator(), 0.2);
 
 		// create a blocker (blocking strategy)
@@ -94,7 +95,7 @@ public class Events_IdentityResolution_Main {
 		engine.writeCorrespondences(
 				correspondences.get(),
 				new File(
-						"usecase/event/output/dbpedia_2_yago_correspondences.csv"));
+						"WDI/usecase/event/output/dbpedia_2_yago_correspondences_s.csv"));
 
 		// print the correspondences to console
 		// printCorrespondences(correspondences);
@@ -102,7 +103,7 @@ public class Events_IdentityResolution_Main {
 		// load the gold standard (test set)
 		MatchingGoldStandard gsTest = new MatchingGoldStandard();
 		gsTest.loadFromCSVFile(new File(
-				"usecase/event/goldstandard/dbpedia_2_yago.csv"));
+				"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);

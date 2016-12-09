@@ -22,7 +22,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 	 */
 
     private static final long serialVersionUID = 1L;
-    private String name;
+    private String label;
     private LocalDate date;
     private double lat;
     private double lon;
@@ -31,12 +31,12 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         super(identifier, provenance);
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public LocalDate getDate() {
@@ -70,7 +70,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
      */
     @Override
     public int hashCode() {
-        int result = 31 + ((name == null) ? 0 : name.hashCode());
+        int result = 31 + ((label == null) ? 0 : label.hashCode());
         return result;
     }
 
@@ -88,15 +88,15 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        if (name == null) {
-            if (other.name != null)
+        if (label == null) {
+            if (other.label != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!label.equals(other.label))
             return false;
         return true;
     }
 
-    public static final DefaultSchemaElement NAME = new DefaultSchemaElement("Name");
+    public static final DefaultSchemaElement LABEL = new DefaultSchemaElement("Label");
     public static final DefaultSchemaElement DATE = new DefaultSchemaElement("Date");
     public static final DefaultSchemaElement LAT = new DefaultSchemaElement("Lat");
     public static final DefaultSchemaElement LON = new DefaultSchemaElement("Lon");
@@ -106,8 +106,8 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
      */
     @Override
     public boolean hasValue(DefaultSchemaElement attribute) {
-        if(attribute==NAME)
-            return name!=null;
+        if(attribute==LABEL)
+            return label!=null;
         else if(attribute==DATE)
             return date!=null;
         else if(attribute==LAT)

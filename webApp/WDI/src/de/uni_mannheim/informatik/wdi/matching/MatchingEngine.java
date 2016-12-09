@@ -25,7 +25,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.joda.time.DateTime;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 import de.uni_mannheim.informatik.wdi.matching.blocking.BlockedMatchable;
 import de.uni_mannheim.informatik.wdi.matching.blocking.Blocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.SchemaBlocker;

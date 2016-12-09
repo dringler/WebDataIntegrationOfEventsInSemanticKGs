@@ -17,5 +17,16 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/opencsv-3.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/secondstring-20120620.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -70,6 +70,11 @@ public class MovieFactory extends MatchableFactory<Movie> implements
 	}
 
 	@Override
+	public Movie createModelFromTSVline(String[] values, String proveranceInfo) {
+		return null;
+	}
+
+	@Override
 	public Movie createInstanceForFusion(RecordGroup<Movie, DefaultSchemaElement> cluster) {
 
 		List<String> ids = new LinkedList<>();

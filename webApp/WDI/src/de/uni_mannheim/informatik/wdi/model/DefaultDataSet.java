@@ -43,7 +43,6 @@ import javax.xml.xpath.XPathFactory;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import de.uni_mannheim.informatik.wdi.usecase.events.model.EventFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -137,7 +136,16 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 
 		String[] lineValues;
 		while ((lineValues = reader.readNext()) != null) {
+            // CHANGE THESE METHODS WHEN SETS ARE USED FOR POSSIBLE MULTIPLE VALUES FOR AN ATTRIBUTE
+            // createModelFromTSVline, addRecord
+
 			RecordType record = modelFactory.createModelFromTSVline(lineValues, dataSource.getName());
+
+		    if (record != null) {
+                addRecord(record);
+            } else {
+                System.out.println(String.format("Could not generate entry for ", lineValues.toString()));
+            }
 		}
 
 	}

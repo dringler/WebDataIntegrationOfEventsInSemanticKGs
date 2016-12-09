@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import de.uni_mannheim.informatik.wdi.model.Fusable;
 import de.uni_mannheim.informatik.wdi.model.FusableDataSet;
 import de.uni_mannheim.informatik.wdi.model.Matchable;
