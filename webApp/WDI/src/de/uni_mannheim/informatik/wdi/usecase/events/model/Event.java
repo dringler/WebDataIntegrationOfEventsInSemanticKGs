@@ -1,11 +1,13 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
 import de.uni_mannheim.informatik.wdi.model.DefaultSchemaElement;
+import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.model.Record;
 
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * A {@link Record} which represents an actor
@@ -15,52 +17,83 @@ import java.time.LocalDate;
  */
 public class Event extends Record<DefaultSchemaElement> implements Serializable {
 
-	/*
-	 * example entry <actor> <name>Janet Gaynor</name>
-	 * <birthday>1906-01-01</birthday> <birthplace>Pennsylvania</birthplace>
-	 * </actor>
-	 */
-
     private static final long serialVersionUID = 1L;
-    private String label;
-    private LocalDate date;
-    private double lat;
-    private double lon;
+
+    private List<String> labels;
+    private List<LocalDate> dates;
+    private List<Pair<Double, Double>> coordinates;
+    private List<String> cities;
+    private List<String> countries;
+    private List<String> locations;
+    private List<String> sames;
 
     public Event(String identifier, String provenance) {
         super(identifier, provenance);
     }
 
-    public String getLabel() {
-        return label;
+
+    public List<String> getLabels() {
+		return labels;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public List<LocalDate> getDates() {
+        return dates;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public List<Pair<Double, Double>> getCoordinates() {
+        return coordinates;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public List<String> getCities() {
+        return cities;
     }
 
-    public double getLat() {
-        return lat;
+    public List<String> getCountries() {
+        return countries;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public List<String> getLocations() {
+        return locations;
+    }
+    public List<String> getSames() {
+        return sames;
     }
 
-    public double getLon() {
-        return lon;
+
+    public void addLabel(String label) {
+        if (!this.labels.contains(label))
+            this.labels.add(label);
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
+    public void addDate(LocalDate date) {
+        if (!this.dates.contains(date))
+            this.dates.add(date);
+
+    }
+
+    public void addCoordinates(Pair<Double, Double> coordinates) {
+        if(!this.coordinates.contains(coordinates))
+            this.coordinates.add(coordinates);
+    }
+
+    public void addCity(String city) {
+        if (!this.cities.contains(city))
+            this.cities.add(city);
+    }
+
+    public void addCountry(String country) {
+        if(!this.countries.contains(country))
+            this.countries.add(country);
+    }
+
+    public void addLocation(String location) {
+        if(!this.locations.contains(location))
+            this.locations.add(location);
+    }
+
+    public void addSame(String same) {
+        if(!this.sames.contains(same))
+            this.sames.add(same);
     }
 
     /*
@@ -70,7 +103,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
      */
     @Override
     public int hashCode() {
-        int result = 31 + ((label == null) ? 0 : label.hashCode());
+        int result = 31 + ((labels == null) ? 0 : labels.hashCode());
         return result;
     }
 
@@ -88,32 +121,41 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        if (label == null) {
-            if (other.label != null)
+        if (labels == null) {
+            if (other.labels != null)
                 return false;
-        } else if (!label.equals(other.label))
+        } else if (!labels.equals(other.labels))
             return false;
         return true;
     }
 
-    public static final DefaultSchemaElement LABEL = new DefaultSchemaElement("Label");
-    public static final DefaultSchemaElement DATE = new DefaultSchemaElement("Date");
-    public static final DefaultSchemaElement LAT = new DefaultSchemaElement("Lat");
-    public static final DefaultSchemaElement LON = new DefaultSchemaElement("Lon");
+    public static final DefaultSchemaElement LABELS = new DefaultSchemaElement("Labels");
+    public static final DefaultSchemaElement DATES = new DefaultSchemaElement("Dates");
+    public static final DefaultSchemaElement COORDINATES = new DefaultSchemaElement("Coordinates");
+    public static final DefaultSchemaElement CITIES = new DefaultSchemaElement("Cities");
+    public static final DefaultSchemaElement COUNTRIES = new DefaultSchemaElement("Countries");
+    public static final DefaultSchemaElement LOCATIONS = new DefaultSchemaElement("Locations");
+    public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
     /* (non-Javadoc)
      * @see de.uni_mannheim.informatik.wdi.model.Record#hasValue(java.lang.Object)
      */
     @Override
     public boolean hasValue(DefaultSchemaElement attribute) {
-        if(attribute==LABEL)
-            return label!=null;
-        else if(attribute==DATE)
-            return date!=null;
-        else if(attribute==LAT)
-            return !Double.isNaN(lat);
-        else if(attribute==LON)
-            return !Double.isNaN(lon);
+        if(attribute==LABELS)
+            return labels!=null;
+        else if(attribute==DATES)
+            return dates!=null;
+        else if(attribute==COORDINATES)
+            return coordinates!=null;//!Double.isNaN(lon);
+        else if(attribute==CITIES)
+            return cities!=null;
+        else if(attribute==COUNTRIES)
+            return countries!=null;
+        else if (attribute==LOCATIONS)
+            return locations!=null;
+        else if (attribute==SAMES)
+            return sames!=null;
         return false;
     }
 }
