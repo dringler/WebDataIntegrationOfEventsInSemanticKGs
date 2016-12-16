@@ -6,7 +6,9 @@ import org.apache.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by curtis on 06/12/16.
@@ -19,8 +21,8 @@ public class createDatasetsMain {
         boolean wikidata = false;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
 
-        boolean getOptionalP = false;
-        boolean secondOrderP = false; //second order can only be specified if getOptionalP is true
+        boolean getOptionalP = true;
+        boolean secondOrderP = true; //second order can only be specified if getOptionalP is true
 
         String fileName;
         String secondOrderFileName;
@@ -223,7 +225,10 @@ public class createDatasetsMain {
                 " OPTIONAL { <" + placeInstance +"> " + varNames.getLongVar() + " ?long }\n"+
                 " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }}";
         ResultSet results = queryEndpoint(service, queryString);
-        String[] properties = {"lat", "long", "same"};
+        List<String> properties = new ArrayList<>();
+        properties.add("lat");
+        properties.add("long");
+        properties.add("same");
         String resultString = "";
         boolean oneLineAdded = false;
         while (results.hasNext()) {
@@ -307,12 +312,12 @@ public class createDatasetsMain {
                 "WHERE {\n" +
                 " <" + instance + "> rdfs:label ?label .\n" +
                 " <" + instance + "> " + varNames.getDateVar() + " ?date .\n" +
-                " <" + instance + "> " + varNames.getLatVar() + " ?lat .\n" +
-                " <" + instance + "> " + varNames.getLongVar() + " ?long .\n";
+                " OPTIONAL { <" + instance + "> " + varNames.getLatVar() + " ?lat }\n" +
+                " OPTIONAL { <" + instance + "> " + varNames.getLongVar() + " ?long }\n"+
+                " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n";
         if (getOptionalProperties) {
             queryString = queryString +
                     " OPTIONAL { <" + instance + "> " + varNames.getLabel2Var() +  "?name }\n" +
-                    " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n" +
                     " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n";
         }
 
@@ -323,10 +328,18 @@ public class createDatasetsMain {
         ResultSet results = queryEndpoint(service, queryString);
 
         String resultString;
-        String[] optionalProperties = {"name", "same",  "place"};
+        List<String> optionalProperties = new ArrayList<>();
+        optionalProperties.add("lat");
+        optionalProperties.add("long");
+        optionalProperties.add("same");
+
+        if (getOptionalProperties) {
+            optionalProperties.add("name");
+            optionalProperties.add("place");
+        }
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("lat").toString() + "\t" + qs.get("long").toString();
+            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString();
             if (getOptionalProperties)
                 resultString = resultString + getAvailableOptionalProperties(qs, optionalProperties);
 
@@ -344,7 +357,7 @@ public class createDatasetsMain {
      * @param optionalProperties to check
      * @return String (tab-separated with property values or "null" if property value is not available)
      */
-    private static String getAvailableOptionalProperties(QuerySolution qs, String[] optionalProperties) {
+    private static String getAvailableOptionalProperties(QuerySolution qs, List<String> optionalProperties) {
         String oP = "";
         for (String p : optionalProperties) {
             //get value for property or add "null" is property is null
@@ -371,8 +384,8 @@ public class createDatasetsMain {
                     " ?event a " + varNames.getEventClass() + " .\n" +
                     " ?event rdfs:label ?label .\n" +
                     " ?event " + varNames.getDateVar() +" ?date .\n" +
-                    " ?event " + varNames.getLatVar() + "?lat .\n" +
-                    " ?event " + varNames.getLongVar() + " ?long .\n" +
+                   // " ?event " + varNames.getLatVar() + "?lat .\n" +
+                    //" ?event " + varNames.getLongVar() + " ?long .\n" +
                     " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                     "}";
 
