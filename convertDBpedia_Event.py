@@ -6,15 +6,19 @@
 import pandas as pd
 
 inputFile = '/Users/curtis/MT/DBpediaTables/Event.csv'
-outputFile = '/Users/curtis/MT/DBpediaTables/Event_k.csv'
+#outputFile = '/Users/curtis/MT/DBpediaTables/Event_k.csv'
+outputFile = '/Users/curtis/MT/DBpediaTables/EventInstanceURIs.csv'
 
-keepColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
-mandatoryColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
-
+#keepColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
+#mandatoryColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
+keepColumns = ['URI', 'rdf-schema#label', 'date']
+mandatoryColumns = ['URI', 'rdf-schema#label', 'date']
+saveColumns = ['URI']
 
 f = pd.read_csv(inputFile, skiprows=[1,2,3], usecols=keepColumns)
 
 f = f.dropna(subset=[mandatoryColumns])
+f = f[saveColumns]
 
 f.to_csv(outputFile, index=False)
 print (outputFile + ' is complete.')
