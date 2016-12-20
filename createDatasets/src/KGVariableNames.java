@@ -9,6 +9,7 @@ public class KGVariableNames {
     private String longVar = "";
     private String label2Var = "";
     private String placeVar = "";
+    private String place2Var = "";
     private String enVar = "";
     private String otherKgURLstart = "";
 
@@ -20,6 +21,7 @@ public class KGVariableNames {
             this.longVar = "geo:long";
             this.label2Var = "foaf:name";
             this.placeVar = "dbo:place";
+            this.place2Var = "dbo:location";
             this.enVar = "EN";
             this.otherKgURLstart = "http://yago-knowledge.org";
         } else if (k==1) { //yago
@@ -29,6 +31,7 @@ public class KGVariableNames {
             this.longVar = "yago:hasLongitude";
             this.label2Var = "skos:prefLabel";
             this.placeVar = "yago:happenedIn";
+            this.place2Var = "yago:isLocatedIn";
             this.enVar = "ENG";
             this.otherKgURLstart = "http://dbpedia.org";
         }
@@ -56,6 +59,9 @@ public class KGVariableNames {
     public String getPlaceVar() {
         return placeVar;
     }
+    public String getPlace2Var() {
+        return place2Var;
+    }
 
     public String getEnVar() {
         return enVar;
@@ -63,5 +69,18 @@ public class KGVariableNames {
 
     public String getOtherKgURL() {
         return otherKgURLstart;
+    }
+
+    public String getPlaceVar(String propertyName) {
+        if (propertyName.equals("place") ||
+                propertyName.equals("location") ||
+                propertyName.equals("city") ||
+                propertyName.equals("territory")
+                ) {return "dbo:"+propertyName;}
+
+        if (propertyName.equals("happenedIn") ||
+                propertyName.equals("isLocatedIn")) {return "yago:"+propertyName;}
+
+    return null;
     }
 }
