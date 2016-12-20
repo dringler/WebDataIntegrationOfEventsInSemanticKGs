@@ -3,6 +3,7 @@ package de.uni_mannheim.informatik.wdi.usecase.events.model;
 import de.uni_mannheim.informatik.wdi.model.DefaultSchemaElement;
 import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.model.Record;
+import de.uni_mannheim.informatik.wdi.usecase.events.model.Location;
 
 
 import java.io.Serializable;
@@ -22,9 +23,10 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     private List<String> labels;
     private List<LocalDate> dates;
     private List<Pair<Double, Double>> coordinates;
-    private List<String> cities;
-    private List<String> countries;
-    private List<String> locations;
+    //private List<String> cities;
+    //private List<String> countries;
+    private List<Location> locations;
+    private List<String> participants;
     private List<String> sames;
 
     public Event(String identifier, String provenance) {
@@ -44,17 +46,16 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return coordinates;
     }
 
-    public List<String> getCities() {
-        return cities;
-    }
+   /*public List<String> getCities() {  return cities; }
 
-    public List<String> getCountries() {
-        return countries;
-    }
+    public List<String> getCountries() { return countries;}*/
 
-    public List<String> getLocations() {
+    public List<Location> getLocations() {
         return locations;
     }
+
+    public List<String> getParticipants() {  return participants; }
+
     public List<String> getSames() {
         return sames;
     }
@@ -76,7 +77,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
             this.coordinates.add(coordinates);
     }
 
-    public void addCity(String city) {
+    /*public void addCity(String city) {
         if (!this.cities.contains(city))
             this.cities.add(city);
     }
@@ -84,11 +85,16 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     public void addCountry(String country) {
         if(!this.countries.contains(country))
             this.countries.add(country);
-    }
+    }*/
 
-    public void addLocation(String location) {
+    public void addLocation(Location location) {
         if(!this.locations.contains(location))
             this.locations.add(location);
+    }
+
+    public void addParticipant(String participant) {
+        if(!this.participants.contains(participant))
+            this.participants.add(participant);
     }
 
     public void addSame(String same) {
@@ -132,9 +138,10 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     public static final DefaultSchemaElement LABELS = new DefaultSchemaElement("Labels");
     public static final DefaultSchemaElement DATES = new DefaultSchemaElement("Dates");
     public static final DefaultSchemaElement COORDINATES = new DefaultSchemaElement("Coordinates");
-    public static final DefaultSchemaElement CITIES = new DefaultSchemaElement("Cities");
-    public static final DefaultSchemaElement COUNTRIES = new DefaultSchemaElement("Countries");
+    //public static final DefaultSchemaElement CITIES = new DefaultSchemaElement("Cities");
+    //public static final DefaultSchemaElement COUNTRIES = new DefaultSchemaElement("Countries");
     public static final DefaultSchemaElement LOCATIONS = new DefaultSchemaElement("Locations");
+    public static final DefaultSchemaElement PARTICIPANTS = new DefaultSchemaElement("Participants");
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
     /* (non-Javadoc)
@@ -148,12 +155,14 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
             return dates!=null;
         else if(attribute==COORDINATES)
             return coordinates!=null;//!Double.isNaN(lon);
-        else if(attribute==CITIES)
+        /**else if(attribute==CITIES)
             return cities!=null;
         else if(attribute==COUNTRIES)
-            return countries!=null;
+            return countries!=null;*/
         else if (attribute==LOCATIONS)
             return locations!=null;
+        else if (attribute==PARTICIPANTS)
+            return participants!=null;
         else if (attribute==SAMES)
             return sames!=null;
         return false;

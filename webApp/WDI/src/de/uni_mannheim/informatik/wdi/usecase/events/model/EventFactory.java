@@ -1,6 +1,7 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
 import de.uni_mannheim.informatik.wdi.model.MatchableFactory;
+import de.uni_mannheim.informatik.wdi.model.Pair;
 import org.w3c.dom.Node;
 import java.time.LocalDate;
 
@@ -49,6 +50,11 @@ public class EventFactory extends MatchableFactory<Event> {
         //50.5833^^http://www.w3.org/2001/XMLSchema#float	3.225^^http://www.w3.org/2001/XMLSchema#float
         //event.setLat(Double.valueOf(values[3].substring(0, values[3].indexOf("^"))));
         //event.setLon(Double.valueOf(values[4].substring(0, values[4].indexOf("^"))));
+        Pair<Double, Double> p = new Pair<>(
+                Double.valueOf(values[3].substring(0, values[3].indexOf("^"))),
+                Double.valueOf(values[4].substring(0, values[4].indexOf("^")))
+        );
+        event.addCoordinates(p);
 
         return event;
     }
