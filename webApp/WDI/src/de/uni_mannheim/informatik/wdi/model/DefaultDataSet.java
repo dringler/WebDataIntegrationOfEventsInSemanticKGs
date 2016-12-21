@@ -18,13 +18,7 @@
 package de.uni_mannheim.informatik.wdi.model;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,10 +69,10 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	 * 
 	 * @param dataSource
 	 *            the XML file containing the data
-	 * @param entryFactory
+	 * @param modelFactory
 	 *            the Factory that creates the Model instances from the XML
 	 *            nodes
-	 * @param entriesPath
+	 * @param recordPath
 	 *            the XPath to the XML nodes representing the entries
 	 * @throws ParserConfigurationException
 	 * @throws IOException
@@ -135,19 +129,37 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		CSVReader reader = new CSVReader(new FileReader(dataSource), '\t', '\"' , 1);
 
 		String[] lineValues;
+		//HashMap<instanceURI, HashSet<lineValues>>
+		HashMap<String, HashSet<String[]>> instances = new HashMap<>();
+
 		while ((lineValues = reader.readNext()) != null) {
             // CHANGE THESE METHODS WHEN SETS ARE USED FOR POSSIBLE MULTIPLE VALUES FOR AN ATTRIBUTE
             // createModelFromTSVline, addRecord
 
-			RecordType record = modelFactory.createModelFromTSVline(lineValues, dataSource.getName());
+			if (instances.containsKey(lineValues[0])) {
+				instances.get(lineValues[0]).add(lineValues);
+			} else {
+				HashSet<String[]> lineValuesSet = new HashSet<>();
+				lineValuesSet.add(lineValues);
+				instances.put(lineValues[0], lineValuesSet);
+			}
 
-		    if (record != null) {
-                addRecord(record);
-            } else {
-                System.out.println(String.format("Could not generate entry for ", lineValues.toString()));
-            }
+			//RecordType record = modelFactory.createModelFromTSVline(lineValues, dataSource.getName());
+
 		}
 
+		//create events for each instance uri
+		for (String instance : instances.keySet()) {
+			//get HashSet of instanceLines
+
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName());
+
+			if (record != null) {
+				addRecord(record);
+			} else {
+				System.out.println(String.format("Could not generate entry for ", lineValues.toString()));
+			}
+		}
 	}
 
 	/**
@@ -187,7 +199,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	 * Adds an entry to this data set. Any existing entry with the same
 	 * identifier will be replaced.
 	 * 
-	 * @param entry
+	 * @param record
 	 */
 	@Override
 	public void addRecord(RecordType record) {
