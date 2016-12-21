@@ -22,6 +22,8 @@ import org.w3c.dom.Node;
 
 import de.uni_mannheim.informatik.wdi.model.MatchableFactory;
 
+import java.util.HashSet;
+
 /**
  * A {@link MatchableFactory} for {@link Actor}s.
  * 
@@ -55,6 +57,11 @@ public class ActorFactory extends MatchableFactory<Actor> {
 		return actor;
 	}
 	public Actor createModelFromTSVline(String[] values, String provenanceInfo) {
+		return null;
+	}
+
+	@Override
+	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo) {
 		return null;
 	}
 

@@ -18,6 +18,7 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,6 +74,10 @@ public class MovieFactory extends MatchableFactory<Movie> implements
 	public Movie createModelFromTSVline(String[] values, String proveranceInfo) {
 		return null;
 	}
+
+	@Override
+	public Movie createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo) { return null;}
+
 
 	@Override
 	public Movie createInstanceForFusion(RecordGroup<Movie, DefaultSchemaElement> cluster) {
