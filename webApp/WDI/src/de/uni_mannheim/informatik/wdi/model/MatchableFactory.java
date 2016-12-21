@@ -18,6 +18,7 @@
 package de.uni_mannheim.informatik.wdi.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.w3c.dom.Node;
@@ -51,6 +52,16 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 	 */
 	public abstract RecordType createModelFromTSVline(String[] values,
 													 String proveranceInfo);
+
+	/**
+	 * creates a RecordType record from multiple TSV lines
+	 *
+	 * @param gatheredValues
+	 *            the List of lines containing the values
+	 * @return
+	 */
+	public abstract RecordType createModelFromMultpleTSVline(HashSet<String[]> gatheredValues,
+															 String proveranaceInfo);
 
 	/**
 	 * returns a value from a child node of the first parameter. The child not

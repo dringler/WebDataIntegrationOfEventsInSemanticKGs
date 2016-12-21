@@ -18,6 +18,7 @@
 package de.uni_mannheim.informatik.wdi.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +97,11 @@ public class DefaultRecordFactory extends MatchableFactory<DefaultRecord> {
 
 	@Override
 	public DefaultRecord createModelFromTSVline(String[] values, String proveranceInfo) {
+		return null;
+	}
+
+	@Override
+	public DefaultRecord createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo) {
 		return null;
 	}
 
