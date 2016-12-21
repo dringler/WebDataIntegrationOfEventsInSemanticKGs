@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 public class createDatasetsMain {
     public static void main(String[] args) {
         // PARAMETERS
+        boolean testing = false;
+
         boolean dbpedia = true;
         boolean yago = true;
         boolean wikidata = false;
@@ -27,9 +29,9 @@ public class createDatasetsMain {
         boolean secondOrderP = true; //second order can only be specified if getOptionalP is true
 
         String fileName;
-        List<String> secondOrderFileNames = new ArrayList<String>();
+        List<String> secondOrderFileNames = new ArrayList<>();
         String header;
-        String secondOrderHeader = "uri\ttype\tlat\tlong\tsame";
+        String secondOrderHeader = "uri\tlabel\tlat\tlong\tsame";//"uri\ttype\tlat\tlong\tsame";
 
         //configure log4j
         org.apache.log4j.BasicConfigurator.configure();
@@ -47,18 +49,18 @@ public class createDatasetsMain {
             if (dbIsUp) {
                 //specify fileNames and csv header
                 fileName = "out/dbpedia-1.tsv";
-                header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace\tlocation\tcity\tterritory";
+                header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";//\tlocation\tcity\tterritory";
                 //secondOrderHeader = "uri\ttype\tlat\tlong\tsame";
                 secondOrderFileNames.add("out/dbpedia-2-place.tsv");
-                secondOrderFileNames.add("out/dbpedia-2-location.tsv");
-                secondOrderFileNames.add("out/dbpedia-2-city.tsv");
-                secondOrderFileNames.add("out/dbpedia-2-territory.tsv");
+                //secondOrderFileNames.add("out/dbpedia-2-location.tsv");
+                //secondOrderFileNames.add("out/dbpedia-2-city.tsv");
+                //secondOrderFileNames.add("out/dbpedia-2-territory.tsv");
 
 
                 KGVariableNames dbpediaVarNames = new KGVariableNames(k);
                 //get event instances from DBpedia
 
-                HashSet<String> eventInstances = getEventInstances(k, service, dbpediaVarNames);
+                HashSet<String> eventInstances = getEventInstances(k, service, dbpediaVarNames, testing);
                 System.out.println(eventInstances.size() + " distinct instances received from " + service);
                 //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
                 //System.out.println(eventInstances.size() + " distinct instances read from DBpedia table");
@@ -69,7 +71,7 @@ public class createDatasetsMain {
 
                 // 2 get and write second order file
                 if (secondOrderP) {
-                    getAndWritePlaceInstancePropertiesToFile(k, service, dbpediaVarNames, secondOrderFileNames, secondOrderHeader, lineProgress);
+                    getAndWritePlaceInstancePropertiesToFile(k, service, dbpediaVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
                 }
             }
         }
@@ -84,11 +86,11 @@ public class createDatasetsMain {
                 fileName = "out/yago-1.tsv";
 
                 secondOrderFileNames.add("out/yago-2-happenedIn.tsv");
-                secondOrderFileNames.add("out/yago-2-isLocatedIn.tsv");
+                //secondOrderFileNames.add("out/yago-2-isLocatedIn.tsv");
 
                 KGVariableNames yagoVarNames = new KGVariableNames(k);
                 //get event instances from YAGO
-                HashSet<String> eventInstances = getEventInstances(k, service, yagoVarNames);
+                HashSet<String> eventInstances = getEventInstances(k, service, yagoVarNames, testing);
                 System.out.println(eventInstances.size() + " distinct instances received from " + service);
 
                 // 1 get event instances properties
@@ -96,7 +98,7 @@ public class createDatasetsMain {
 
                 // 2 get and write second order file
                 if (secondOrderP) {
-                    getAndWritePlaceInstancePropertiesToFile(k, service, yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress);
+                    getAndWritePlaceInstancePropertiesToFile(k, service, yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
                 }
 
 
@@ -105,16 +107,14 @@ public class createDatasetsMain {
 
         }
 
-
-        if (wikidata) {
+        /*if (wikidata) {
             k = 2;
             service = "https://query.wikidata.org/sparql";
             dbIsUp = testConnection(service);
             if (dbIsUp) {
 
             }
-        }
-
+        }*/
 
     }
 
@@ -142,11 +142,11 @@ public class createDatasetsMain {
      * @param secondOrderHeader
      * @param lineProgress print message after lineProgress lines
      */
-    private static void getAndWritePlaceInstancePropertiesToFile(int k, String service, KGVariableNames varNames, List<String> secondOrderFileNames, String secondOrderHeader, int lineProgress) {
+    private static void getAndWritePlaceInstancePropertiesToFile(int k, String service, KGVariableNames varNames, List<String> secondOrderFileNames, String secondOrderHeader, int lineProgress, boolean testing) {
 
         for (String secondOrderFileName : secondOrderFileNames) {
             String propertyName = getPropertyName(secondOrderFileName);
-            HashSet<String> placeInstances = getPlaceInstances(k, service, varNames, propertyName);
+            HashSet<String> placeInstances = getPlaceInstances(k, service, varNames, propertyName, testing);
             System.out.println(placeInstances.size() + " distinct "+  propertyName + " instances received from " + service);
             int lineCounter = 0;
             int writtenLines = 0;
@@ -251,16 +251,21 @@ public class createDatasetsMain {
         HashSet<String> resultSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
         queryString = queryString +
-                "SELECT ?label ?type ?lat ?long ?same WHERE {\n" +
+                "SELECT ?label ?lat ?long ?same WHERE {\n" + //type, country, city, ...
                 " OPTIONAL { <" + placeInstance +"> rdfs:label ?label }\n"+
-                " OPTIONAL { <" + placeInstance +"> a ?type }\n"+
+                //" OPTIONAL { <" + placeInstance +"> a ?type }\n"+
                 " OPTIONAL { <" + placeInstance + "> " + varNames.getLatVar() + " ?lat }\n" +
                 " OPTIONAL { <" + placeInstance +"> " + varNames.getLongVar() + " ?long }\n"+
-                " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }}";
+                " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }\n"+
+                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' ) }";
         ResultSet results = queryEndpoint(service, queryString);
+
+        //ResultSetFormatter.outputAsXML(System.out, results);
+
+
         List<String> properties = new ArrayList<>();
         properties.add("label");
-        properties.add("type");
+       // properties.add("type");
         properties.add("lat");
         properties.add("long");
         properties.add("same");
@@ -293,14 +298,14 @@ public class createDatasetsMain {
     }
 
     /**
-     * Get all distinct place instances that appear as dbo:place object for an event instance.
+     * Get all distinct place instances that appear as place object for an event instance.
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
      * @param service sparql url
      * @param varNames
      * @param propertyName
      * @return HashSet<String> including all place instance URIs
      */
-    private static HashSet<String> getPlaceInstances(int k, String service, KGVariableNames varNames, String propertyName) {
+    private static HashSet<String> getPlaceInstances(int k, String service, KGVariableNames varNames, String propertyName, boolean testing) {
         HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
         queryString = queryString +
@@ -308,8 +313,15 @@ public class createDatasetsMain {
                 " ?event a " + varNames.getEventClass() + " .\n" +
                 " ?event rdfs:label ?label .\n" +
                 " ?event " + varNames.getDateVar() + " ?date .\n" +
+                //comment if optional
+                " ?event " + varNames.getLatVar() + "?lat .\n" +
+                " ?event " + varNames.getLongVar() + " ?long .\n" +
                 " ?event " + varNames.getPlaceVar(propertyName) + " ?place .\n" +
+                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                 "}";
+        if (testing) {
+            queryString = queryString + " LIMIT 10";
+        }
 
         ResultSet results = queryEndpoint(service, queryString);
         while (results.hasNext()) {
@@ -338,19 +350,19 @@ public class createDatasetsMain {
         //optionalProperties.add("long");
         optionalProperties.add("same");
         optionalProperties.add("place");
-        optionalProperties.add("location");
+        //optionalProperties.add("location");
 
         HashSet<String> resultSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
 
         queryString = queryString +
-                "SELECT ?label ?date ?lat ?long ?same ?place ?location";
+                "SELECT ?label ?date ?lat ?long ?same ?place";// ?location";
 
-        if (k==0) {
+        /*if (k==0) {
             queryString = queryString + " ?city ?territory";
             optionalProperties.add("city");
             optionalProperties.add("territory");
-        }
+        }*/
 
         queryString = queryString +
                 " WHERE {\n" +
@@ -361,14 +373,14 @@ public class createDatasetsMain {
                 //" OPTIONAL { <" + instance + "> " + varNames.getLatVar() + " ?lat }\n" +
                 //" OPTIONAL { <" + instance + "> " + varNames.getLongVar() + " ?long }\n"+
                 " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n"+
-                " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n"+
-                " OPTIONAL { <" + instance + "> " + varNames.getPlace2Var() + " ?location }\n";
+                " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n";
+               // " OPTIONAL { <" + instance + "> " + varNames.getPlace2Var() + " ?location }\n";
 
-        if (k==0) {
+      /*  if (k==0) {
             queryString = queryString +
                     " OPTIONAL { <" + instance + "> dbo:city ?city }\n"+
                     " OPTIONAL { <" + instance + "> dbo:territory ?territory }\n";
-        }
+        }*/
         queryString = queryString +
                 " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                 "}";
@@ -377,11 +389,10 @@ public class createDatasetsMain {
 
         String resultString;
 
-
-
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString();
+            //resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString();
+            resultString = instance + "\t" + qs.get("label").toString() + "\t" + qs.get("date").toString() + "\t" + qs.get("lat").toString() + "\t" + qs.get("long").toString();
             resultString = resultString + getAvailableOptionalProperties(qs, optionalProperties);
 
             resultSet.add(resultString);
@@ -402,7 +413,7 @@ public class createDatasetsMain {
         String oP = "";
         for (String p : optionalProperties) {
             //get value for property or add "null" is property is null
-            oP = (qs.contains(p)) ? oP + "\t " + qs.get(p).toString() : oP + "\tnull";
+            oP = (qs.contains(p)) ? oP + "\t" + qs.get(p).toString() : oP + "\tnull";
         }
         return oP;
     }
@@ -415,7 +426,7 @@ public class createDatasetsMain {
      * @param varNames
      * @return HashSet<String> including all instance URIs
      */
-    private static HashSet<String> getEventInstances(int k, String service, KGVariableNames varNames) {
+    private static HashSet<String> getEventInstances(int k, String service, KGVariableNames varNames, boolean testing) {
         HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
 
@@ -425,10 +436,15 @@ public class createDatasetsMain {
                     " ?event a " + varNames.getEventClass() + " .\n" +
                     " ?event rdfs:label ?label .\n" +
                     " ?event " + varNames.getDateVar() +" ?date .\n" +
+                //comment if properties should be OPTIONAL
                     " ?event " + varNames.getLatVar() + "?lat .\n" +
                     " ?event " + varNames.getLongVar() + " ?long .\n" +
                     " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                     "}";
+
+        if (testing) {
+            queryString = queryString + " LIMIT 10";
+        }
 
         ResultSet results = queryEndpoint(service, queryString);
         while (results.hasNext()) {
