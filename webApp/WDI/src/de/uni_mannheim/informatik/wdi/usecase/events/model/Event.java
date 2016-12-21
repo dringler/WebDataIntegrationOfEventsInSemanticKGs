@@ -8,6 +8,7 @@ import de.uni_mannheim.informatik.wdi.usecase.events.model.Location;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,14 +21,14 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
-    private List<String> labels;
-    private List<LocalDate> dates;
-    private List<Pair<Double, Double>> coordinates;
+    private List<String> labels = new ArrayList<>();
+    private List<LocalDate> dates = new ArrayList<>();;
+    private List<Pair<Double, Double>> coordinates = new ArrayList<>();;
     //private List<String> cities;
     //private List<String> countries;
-    private List<Location> locations;
-    private List<String> participants;
-    private List<String> sames;
+    private List<Location> locations = new ArrayList<>();;
+    private List<String> participants = new ArrayList<>();;
+    private List<String> sames = new ArrayList<>();;
 
     public Event(String identifier, String provenance) {
         super(identifier, provenance);
