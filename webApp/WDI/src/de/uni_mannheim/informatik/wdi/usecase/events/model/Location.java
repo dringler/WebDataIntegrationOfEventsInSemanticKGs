@@ -15,7 +15,15 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
     private List<String> labels;
     private List<String> types;
     private List<Pair<Double, Double>> coordinates;
+    private List<String> countries;
+    private List<String> cities;
+    private boolean isACountry;
+    private boolean isAState;
+    private boolean isACity;
     private List<String> sames;
+
+    //countries, cities, capital ...
+    //immer das spezifischste attribut mitnehmen (land < staat < stadt)
 
     public Location(String identifier, String provenance) {
         super(identifier, provenance);
