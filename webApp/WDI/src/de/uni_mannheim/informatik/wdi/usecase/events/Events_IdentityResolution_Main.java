@@ -65,11 +65,11 @@ public class Events_IdentityResolution_Main {
 				new MovieFactory(), "/movies/movie");
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
-		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1-basic_s.tsv"),
+		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
 				new EventFactory(), "events/event");
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
-		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1-basic_s.tsv"),
+		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
 				new EventFactory(), "events/event");
 
 
