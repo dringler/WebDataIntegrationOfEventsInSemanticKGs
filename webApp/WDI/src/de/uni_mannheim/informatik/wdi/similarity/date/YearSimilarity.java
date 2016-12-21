@@ -22,15 +22,12 @@ import org.joda.time.Years;
 
 import de.uni_mannheim.informatik.wdi.similarity.SimilarityMeasure;
 
-import java.time.LocalDate;
-
 /**
  * {@link SimilarityMeasure}, that calculates the similarity of the year parts
  * of two dates with respect to a maximum difference.
  * 
  * @author Oliver Lehmberg (oli@dwslab.de)
- * @author Daniel Ringler
- * 
+ *
  */
 public class YearSimilarity extends SimilarityMeasure<DateTime> {
 
@@ -61,18 +58,5 @@ public class YearSimilarity extends SimilarityMeasure<DateTime> {
 		}
 	}
 
-    public double calculate(LocalDate first, LocalDate second) {
-		if (first == null || second == null) {
-			return 0.0;
-		} else {
-			int diff;
-			if (first.isBefore(second))
-				diff = Math.abs(first.until(second).getYears());
-			else
-				diff = Math.abs(second.until(first).getYears());
-			double norm = Math.min((double) diff / (double) maxDifference, 1.0);
 
-			return  1- norm;
-		}
-    }
 }
