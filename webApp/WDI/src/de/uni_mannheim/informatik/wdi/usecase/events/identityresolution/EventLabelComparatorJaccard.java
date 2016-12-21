@@ -26,8 +26,6 @@ public class EventLabelComparatorJaccard extends Comparator<Event, DefaultSchema
             Event record2,
             Correspondence<DefaultSchemaElement, Event> schemaCorrespondences) {
 
-        double similarity = bestListSimilarity.getBestStringSimilarity(sim, record1.getLabels(), record2.getLabels());
-
-        return similarity;
+        return bestListSimilarity.getBestStringSimilarity(sim, record1.getLabels(), record2.getLabels());
     }
 }
