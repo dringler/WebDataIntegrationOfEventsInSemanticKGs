@@ -37,7 +37,7 @@ public interface Fusable<SchemaElementType> {
 	 * Returns whether the attribute has a value. Required for the calculation
 	 * of density.
 	 * 
-	 * @param attributeName
+	 * @param attribute
 	 * @return
 	 */
 	boolean hasValue(SchemaElementType attribute);

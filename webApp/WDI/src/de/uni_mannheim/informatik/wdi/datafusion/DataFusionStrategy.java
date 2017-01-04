@@ -66,7 +66,7 @@ public class DataFusionStrategy<RecordType extends Matchable & Fusable<SchemaEle
 	 * Adds a combination of fuser and evaluation rule. The evaluation rule will
 	 * be used to evaluate the result of the fuser for the given schema element from the target schema
 	 * 
-	 * @param attributeName
+	 * @param schemaElement
 	 * @param fuser
 	 * @param rule
 	 */

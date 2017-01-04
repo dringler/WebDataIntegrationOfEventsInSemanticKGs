@@ -239,15 +239,16 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	 */
 	public void writeCSV(File file, CSVFormatter<RecordType, SchemaElementType> formatter)
 			throws IOException {
-		CSVWriter writer = new CSVWriter(new FileWriter(file));
+
+		CSVWriter writer = new CSVWriter(new FileWriter(file),'\t');
 
 		String[] headers = formatter.getHeader(this);
-		writer.writeNext(headers);
+		writer.writeNext(headers, false);
 
 		for (RecordType record : records.values()) {
 			String[] values = formatter.format(record, this);
 
-			writer.writeNext(values);
+			writer.writeNext(values, false);
 		}
 
 		writer.close();

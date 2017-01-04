@@ -1,12 +1,15 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
-import de.uni_mannheim.informatik.wdi.model.MatchableFactory;
-import de.uni_mannheim.informatik.wdi.model.Pair;
+import de.uni_mannheim.informatik.wdi.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A {@link MatchableFactory} for {@link Event}s.
@@ -14,7 +17,8 @@ import java.util.HashSet;
  * @author Daniel Ringler
  *
  */
-public class EventFactory extends MatchableFactory<Event> {
+public class EventFactory extends MatchableFactory<Event> implements
+        FusableFactory<Event, DefaultSchemaElement> {
 
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     @Override
@@ -78,12 +82,18 @@ public class EventFactory extends MatchableFactory<Event> {
             }
             //fill the attributes
             //add label after removing the language tag
-            event.addLabel(values[1].substring(0, values[1].indexOf("@")));
+            if (values[1].contains("@"))
+                event.addLabel(values[1].substring(0, values[1].indexOf("@")));
+            else
+                event.addLabel(values[1]);
 
 
             // 1214-07-27^^http://www.w3.org/2001/XMLSchema#date
             //incomplete date 1863-##-##^^http://www.w3.org/2001/XMLSchema#date
-            String date = values[2].substring(0, values[2].indexOf("^")).replace("##", "01");
+            String date = values[2].replace("##", "01");
+            if (values[2].contains("^"))
+                date = date.substring(0, date.indexOf("^"));
+
             try {
                 event.addDate(LocalDate.parse(date, formatter));
             } catch (DateTimeParseException e) {
@@ -93,9 +103,17 @@ public class EventFactory extends MatchableFactory<Event> {
             //50.5833^^http://www.w3.org/2001/XMLSchema#float	3.225^^http://www.w3.org/2001/XMLSchema#float
             //event.setLat(Double.valueOf(values[3].substring(0, values[3].indexOf("^"))));
             //event.setLon(Double.valueOf(values[4].substring(0, values[4].indexOf("^"))));
+
+            String latString = values[3];
+            if (latString.contains("^"))
+                latString = latString.substring(0, latString.indexOf("^"));
+            String longString = values[4];
+            if (longString.contains("^"))
+                longString = longString.substring(0, longString.indexOf("^"));
+
             Pair<Double, Double> p = new Pair<>(
-                    Double.valueOf(values[3].substring(0, values[3].indexOf("^"))),
-                    Double.valueOf(values[4].substring(0, values[4].indexOf("^")))
+                    Double.valueOf(latString),
+                    Double.valueOf(longString)
             );
             event.addCoordinates(p);
 
@@ -106,4 +124,20 @@ public class EventFactory extends MatchableFactory<Event> {
 
         return event;
     }
+    @Override
+    public Event createInstanceForFusion(RecordGroup<Event, DefaultSchemaElement> cluster) {
+
+        List<String> ids = new LinkedList<>();
+
+        for (Event m : cluster.getRecords()) {
+            ids.add(m.getIdentifier());
+        }
+
+        Collections.sort(ids);
+
+        String mergedId = StringUtils.join(ids, '+');
+
+        return new Event(mergedId, "fused");
+    }
+
 }

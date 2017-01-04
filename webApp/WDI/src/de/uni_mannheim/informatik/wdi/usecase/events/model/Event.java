@@ -4,12 +4,12 @@ import de.uni_mannheim.informatik.wdi.model.DefaultSchemaElement;
 import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.model.Record;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Location;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@link Record} which represents an actor
@@ -34,14 +34,72 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         super(identifier, provenance);
     }
 
+    private String[] attributeNames = {"uri", "labels", "dates", "lat", "long", "locations", "participants", "sames"};
+    public String[] getAttributeNames() {
+        return attributeNames;
+    }
 
+    public String[] getAllAttributeValues() {
+        //separator for multiple values
+        char separator = ',';
+        //all uris
+        String allURIs = "";
+
+        //get Labels
+        String allLabels = "";
+        if (hasValue(LABELS)) {
+            for (String label : labels) {
+                allLabels += label + separator;
+            }
+            allLabels = allLabels.substring(0,allLabels.length()-1);
+        }
+        //get Dates
+        String allDates = "";
+        if (hasValue(DATES)) {
+            for (LocalDate date : dates) {
+                allDates += date.toString() + separator;
+            }
+            allDates = allDates.substring(0, allDates.length()-1);
+        }
+        //get coordinates
+        String allLat = "";
+        if (hasValue(COORDINATES)) {
+            for (Pair<Double, Double> p : coordinates) {
+                allLat += p.getFirst() + separator;
+            }
+            allLat = allLat.substring(0, allLat.length()-1);
+        }
+        String allLong = "";
+        if (hasValue(COORDINATES)) {
+            for (Pair<Double, Double> p : coordinates) {
+                allLong += p.getSecond() + separator;
+            }
+            allLong = allLong.substring(0, allLong.length()-1);
+        }
+
+        //get locations
+       String allLocations = "";
+       /*  if (hasValue(LOCATIONS)) {
+            for (Location location : locations) {
+
+            }
+        }*/
+
+       //get participants
+        String allParticipants = "";
+
+        //get Sames
+        String allSames = "";
+        String [] allValues = {allURIs, allLabels, allDates, allLat, allLong, allLocations, allParticipants, allSames};
+        return allValues;
+    }
+
+    //getter
     public List<String> getLabels() {
 		return labels;
     }
 
-    public List<LocalDate> getDates() {
-        return dates;
-    }
+    public List<LocalDate> getDates() { return dates; }
 
     public List<Pair<Double, Double>> getCoordinates() {
         return coordinates;
@@ -61,7 +119,38 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return sames;
     }
 
+    //setter
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
+    }
+    public void setDates(List<LocalDate> dates) {
+        this.dates = dates;
+    }
+    public void setCoordinates(List<Pair<Double, Double>> coordinates) { this.coordinates = coordinates;  }
+    public void setLocations(List<Location> locations) { this.locations = locations; }
+    public void setParticipants(List<String> participants) { this.participants = participants; }
+    public void setSames(List<String> sames) { this.sames = sames; }
+    /*
+    * clear labels and add one new label
+    * @param label
+    */
+    public void setSingleLabel(String label) {
+        this.labels.clear();
+        this.labels.add(label);
+    }
 
+    public void setSingleDate(LocalDate date) {
+        this.dates.clear();
+        this.dates.add(date);
+    }
+
+    public void setSingleCoordinates(Pair<Double, Double> p) {
+        this.coordinates.clear();
+        this.coordinates.add(p);
+    }
+
+
+    //adder
     public void addLabel(String label) {
         if (!this.labels.contains(label))
             this.labels.add(label);
@@ -151,21 +240,56 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     @Override
     public boolean hasValue(DefaultSchemaElement attribute) {
         if(attribute==LABELS)
-            return labels!=null;
+            return labels.size()>0;
         else if(attribute==DATES)
-            return dates!=null;
+            return dates.size()>0;
         else if(attribute==COORDINATES)
-            return coordinates!=null;//!Double.isNaN(lon);
+            return coordinates.size()>0;//!=null;//!Double.isNaN(lon);
         /**else if(attribute==CITIES)
             return cities!=null;
         else if(attribute==COUNTRIES)
             return countries!=null;*/
         else if (attribute==LOCATIONS)
-            return locations!=null;
+            return locations.size()>0;
         else if (attribute==PARTICIPANTS)
-            return participants!=null;
+            return participants.size()>0;
         else if (attribute==SAMES)
-            return sames!=null;
+            return sames.size()>0;
         return false;
     }
+
+    private Map<DefaultSchemaElement, Collection<String>> provenance = new HashMap<>();
+    private Collection<String> recordProvenance;
+
+    public void setRecordProvenance(Collection<String> provenance) {
+        //this.provenance.put("RECORD", provenance);
+        recordProvenance = provenance;
+    }
+
+    public Collection<String> getRecordProvenance() {
+        //return provenance.get("RECORD");
+        return recordProvenance;
+    }
+
+    public void setAttributeProvenance(DefaultSchemaElement attribute,
+                                       Collection<String> provenance) {
+        this.provenance.put(attribute, provenance);
+    }
+
+    public Collection<String> getAttributeProvenance(String attribute) {
+        return provenance.get(attribute);
+    }
+
+    public String getMergedAttributeProvenance(DefaultSchemaElement attribute) {
+        Collection<String> prov = provenance.get(attribute);
+
+        if (prov != null) {
+            return StringUtils.join(prov, "+");
+        } else {
+            return "";
+        }
+    }
+
+
+
 }
