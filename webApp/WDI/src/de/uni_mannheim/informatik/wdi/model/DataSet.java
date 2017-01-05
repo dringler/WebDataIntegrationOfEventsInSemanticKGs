@@ -40,7 +40,7 @@ public interface DataSet<RecordType extends Matchable, SchemaElementType> extend
 	 * Adds an entry to this data set. Any existing entry with the same
 	 * identifier will be replaced.
 	 * 
-	 * @param entry
+	 * @param record
 	 */
 	public void addRecord(RecordType record);
 

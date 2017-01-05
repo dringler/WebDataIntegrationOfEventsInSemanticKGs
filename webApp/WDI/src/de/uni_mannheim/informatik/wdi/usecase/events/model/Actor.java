@@ -121,4 +121,9 @@ public class Actor extends Record<DefaultSchemaElement> implements Serializable 
 			return birthday!=null;
 		return false;
 	}
+
+	@Override
+	public DefaultSchemaElement[] getDefaultSchemaElements() {
+		return new DefaultSchemaElement[0];
+	}
 }

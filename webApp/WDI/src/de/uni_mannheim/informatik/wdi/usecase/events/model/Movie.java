@@ -163,7 +163,10 @@ public class Movie extends Record<DefaultSchemaElement> implements Serializable 
 		}else
 			return false;
 	}
-	
-	
-	
+
+
+	@Override
+	public DefaultSchemaElement[] getDefaultSchemaElements() {
+		return new DefaultSchemaElement[0];
+	}
 }

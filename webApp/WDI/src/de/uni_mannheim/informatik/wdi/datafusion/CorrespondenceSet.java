@@ -131,7 +131,6 @@ public class CorrespondenceSet<RecordType extends Matchable & Fusable<SchemaElem
 	 * 
 	 * @param correspondenceFile
 	 * @param first
-	 * @param second
 	 * @throws IOException
 	 */
 	public void loadCorrespondences(File correspondenceFile,
@@ -242,8 +241,7 @@ public class CorrespondenceSet<RecordType extends Matchable & Fusable<SchemaElem
 	/**
 	 * prints the distribution of the sizes of the groups of records to the
 	 * specified file
-	 * 
-	 * @param outputFile
+	 *
 	 * @throws IOException
 	 */
 	public void printGroupSizeDistribution() throws IOException {

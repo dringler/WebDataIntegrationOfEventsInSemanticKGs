@@ -39,7 +39,13 @@ public class DefaultSchemaElement implements Matchable, Serializable {
 	public String getProvenance() {
 		return provenance;
 	}
-	
+
+	@Override
+	public DefaultSchemaElement[] getDefaultSchemaElements() {
+		return null;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

@@ -1,13 +1,13 @@
-/** 
+/**
  *
  * Copyright (C) 2015 Data and Web Science Group, University of Mannheim, Germany (code@dwslab.de)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * 		http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ import javax.xml.xpath.XPathFactory;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,15 +45,15 @@ import org.xml.sax.SAXException;
 
 /**
  * A Data set contains a set of {@link Record}.
- * 
+ *
  * @author Oliver Lehmberg (oli@dwslab.de)
- * 
+ *
  * @param <RecordType>
  */
 public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> implements DataSet<RecordType, SchemaElementType> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -66,7 +67,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 
 	/**
 	 * Loads a data set from an XML file
-	 * 
+	 *
 	 * @param dataSource
 	 *            the XML file containing the data
 	 * @param modelFactory
@@ -131,11 +132,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		String[] lineValues;
 		//HashMap<instanceURI, HashSet<lineValues>>
 		HashMap<String, HashSet<String[]>> instances = new HashMap<>();
-
 		while ((lineValues = reader.readNext()) != null) {
-            // CHANGE THESE METHODS WHEN SETS ARE USED FOR POSSIBLE MULTIPLE VALUES FOR AN ATTRIBUTE
-            // createModelFromTSVline, addRecord
-
 			if (instances.containsKey(lineValues[0])) {
 				instances.get(lineValues[0]).add(lineValues);
 			} else {
@@ -143,15 +140,13 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 				lineValuesSet.add(lineValues);
 				instances.put(lineValues[0], lineValuesSet);
 			}
-
 			//RecordType record = modelFactory.createModelFromTSVline(lineValues, dataSource.getName());
-
 		}
+
 
 		//create events for each instance uri
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
-
 			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName());
 
 			if (record != null) {
@@ -160,11 +155,16 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 				System.out.println(String.format("Could not generate entry for ", lineValues.toString()));
 			}
 		}
+
+		//DefaultSchemaElement[]
+		addAttributes(getRandomRecord().getDefaultSchemaElements());
 	}
+
+
 
 	/**
 	 * Returns a collection with all entries of this data set.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -175,7 +175,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	/**
 	 * Returns the entry with the specified identifier or null, if it is not
 	 * found.
-	 * 
+	 *
 	 * @param identifier
 	 *            The identifier of the entry that should be returned
 	 * @return
@@ -187,7 +187,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 
 	/**
 	 * Returns the number of entries in this data set
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -198,7 +198,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	/**
 	 * Adds an entry to this data set. Any existing entry with the same
 	 * identifier will be replaced.
-	 * 
+	 *
 	 * @param record
 	 */
 	@Override
@@ -208,7 +208,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 
 	/**
 	 * Returns a random record from the data set
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -229,10 +229,10 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	public void ClearRecords() {
 		records.clear();
 	}
-	
+
 	/**
 	 * Writes the data set to a CSV file
-	 * 
+	 *
 	 * @param file
 	 * @param formatter
 	 * @throws IOException
@@ -256,7 +256,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 
 	/**
 	 * Writes this dataset to an XML file using the specified formatter
-	 * 
+	 *
 	 * @param outputFile
 	 * @param formatter
 	 * @throws ParserConfigurationException
@@ -292,13 +292,26 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		transformer.transform(source, result);
 
 	}
-	
+
+	private void addAttributes(DefaultSchemaElement[] attributes) {
+		for (DefaultSchemaElement attribute : attributes) {
+			addDefaultAttribute(attribute);
+		}
+	}
+
+	private List<DefaultSchemaElement> defaultAttributes = new LinkedList<>();
+	public void addDefaultAttribute(DefaultSchemaElement attribute) {
+		defaultAttributes.add(attribute);
+	}
+	public List<DefaultSchemaElement> getDefaultAttributes() { return defaultAttributes;}
+
+
 	private List<SchemaElementType> attributes = new LinkedList<>();
-	
+
 	public void addAttribute(SchemaElementType attribute) {
 		attributes.add(attribute);
 	}
-	
+
 	/**
 	 * @return the attributes
 	 */
@@ -307,7 +320,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	}
 
 	//TODO refactor such that dataset and basiccollection use the same methods ...
-	
+
 	/* (non-Javadoc)
 	 * @see de.uni_mannheim.informatik.wdi.model.BasicCollection#add(java.lang.Object)
 	 */

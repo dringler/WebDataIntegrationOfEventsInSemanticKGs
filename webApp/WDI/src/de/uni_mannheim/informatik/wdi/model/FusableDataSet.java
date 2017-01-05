@@ -115,6 +115,7 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 		return (double) values / (double) attributes;
 	}
 
+
 	/**
 	 * Returns the number of attributes that have a value for the given record
 	 * 
@@ -123,8 +124,9 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 	 */
 	protected int getNumberOfValues(RecordType record) {
 		int cnt = 0;
-		for (SchemaElementType att : getAttributes()) {
-			cnt += record.hasValue(att) ? 1 : 0;
+		//for (SchemaElementType att : getAttributes()) {
+		for (DefaultSchemaElement att : getDefaultAttributes()) {
+			cnt += record.hasValue((SchemaElementType) att) ? 1 : 0;
 		}
 		return cnt;
 	}
@@ -136,7 +138,8 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 	 * @return
 	 */
 	protected int getNumberOfAttributes(RecordType record) {
-		return getAttributes().size();
+		//return getAttributes().size();
+		return getDefaultAttributes().size();
 	}
 
 	/**
@@ -153,7 +156,9 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 
 		for (RecordType record : getRecords()) {
 
-			for (SchemaElementType att : getAttributes()) {
+			//for (SchemaElementType att : getAttributes()) {
+			for (DefaultSchemaElement defAtt : getDefaultAttributes()) {
+				SchemaElementType att = (SchemaElementType) defAtt;
 
 				Integer size = sizes.get(att);
 				if (size == null) {

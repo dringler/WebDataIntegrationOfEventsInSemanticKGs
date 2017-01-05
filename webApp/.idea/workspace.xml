@@ -2,35 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb584427-7cfb-45cb-893f-4c95e9bb62e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/conflictresolution/coordinates/FirstCoordinates.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/conflictresolution/date/FirstDate.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/conflictresolution/date/RandomDate.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableValues.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusedValues.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/CoordinatesEvaluationRule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/EventDateEvaluationRule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/LabelEvaluationRule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/CoordinatesFuserFirst.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/EventDateFuserFirst.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/EventDateFuserRandom.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/LabelFuserShortestString.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventCSVFormatter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarity.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarity.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventDateComparator.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventDateComparator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorJaccard.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorJaccard.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorLevenshtein.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorLevenshtein.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionStrategy.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionStrategy.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/CorrespondenceSet.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/CorrespondenceSet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Fusable.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Fusable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecord.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecord.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultSchemaElement.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultSchemaElement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Actor.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Actor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Location.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Location.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Movie.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Movie.java" />
     </list>
     <ignored path="webApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -51,13 +34,13 @@
     <favorites_list name="webApp" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.45970836">
+    <splitter split-orientation="horizontal" split-proportion="0.3676132">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="Events_IdentityResolution_Main.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="865">
+                <state relative-caret-position="850">
                   <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
                   <folding>
                     <element signature="imports" expanded="true" />
@@ -70,14 +53,24 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="Events_DataFusion_Main.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Events_DataFusion_Main.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="220">
-                  <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+                <state relative-caret-position="-564">
+                  <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="FusableDataSet.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="156">
+                  <caret line="164" column="29" lean-forward="true" selection-start-line="164" selection-start-column="29" selection-end-line="164" selection-end-column="29" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -85,42 +78,8 @@
           <file leaf-file-name="Event.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="201">
-                  <caret line="92" column="40" lean-forward="false" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="DefaultDataSet.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="389">
-                  <caret line="250" column="32" lean-forward="true" selection-start-line="250" selection-start-column="32" selection-end-line="250" selection-end-column="32" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="EventCSVFormatter.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventCSVFormatter.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="315">
-                  <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="EventFactory.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1695">
-                  <caret line="113" column="48" lean-forward="true" selection-start-line="113" selection-start-column="48" selection-end-line="113" selection-end-column="48" />
+                <state relative-caret-position="396">
+                  <caret line="248" column="0" lean-forward="false" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -146,6 +105,9 @@
       <find>addAttr</find>
       <find>addAttribute</find>
       <find>sepaa</find>
+      <find>addAtt</find>
+      <find>attributesattribute</find>
+      <find>SchemaElementType</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -159,23 +121,15 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/QueryProcessor.java" />
-        <option value="$PROJECT_DIR$/web/js/main.js" />
-        <option value="$PROJECT_DIR$/WDI/src/main/java/de/uni_mannheim/informatik/wdi/usecase/movies/Movies_DataFusion_Main.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Movies_DuplicateDetection_Main.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DuplicateDetection_Main.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventComparatorJaccard.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/MatchingGoldStandard.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/CorrespondenceSet.java" />
         <option value="$PROJECT_DIR$/WDI/src/test/java/de/uni_mannheim/informatik/wdi/clustering/CentreClustererTest.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventNameComparatorJaccard.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Location.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/MovieFactory.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/ActorFactory.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecordFactory.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/string/LevenshteinSimilarity.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/MatchableFactory.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarityLocalDate.java" />
@@ -186,9 +140,7 @@
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionStrategy.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventXMLFormatter.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventCSVFormatter.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/DateEvaluationRule.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/EventDateEvaluationRule.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/EventDateFuserGetAll.java" />
@@ -209,7 +161,17 @@
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/CoordinatesEvaluationRule.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventFactory.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/CorrespondenceSet.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecord.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultSchemaElement.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Location.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Actor.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Movie.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java" />
       </list>
     </option>
   </component>
@@ -1583,15 +1545,15 @@
       <workItem from="1481910451940" duration="758000" />
       <workItem from="1482152765481" duration="2119000" />
       <workItem from="1482241310248" duration="1103000" />
-      <workItem from="1482328213629" duration="31998000" />
+      <workItem from="1482328213629" duration="38659000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="105159000" />
+    <option name="totallyTimeSpent" value="111820000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="983" extended-state="0" />
+    <frame x="0" y="23" width="1680" height="983" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1618,7 +1580,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22440477" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18708971" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1689,13 +1651,19 @@
           <option name="timeStamp" value="79" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java</url>
-          <line>158</line>
+          <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java</url>
+          <line>159</line>
           <properties />
-          <option name="timeStamp" value="81" />
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java</url>
+          <line>111</line>
+          <properties />
+          <option name="timeStamp" value="102" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="91" />
+      <option name="time" value="103" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -1710,108 +1678,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventXMLFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="2" lean-forward="true" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/ActorXMLFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/XMLFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="28" column="22" lean-forward="true" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/evaluation/TitleEvaluationRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultSchemaElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionEvaluator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330">
-          <caret line="37" column="13" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionStrategy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="68" column="27" lean-forward="false" selection-start-line="68" selection-start-column="27" selection-end-line="68" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/MovieFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="81" column="4" lean-forward="true" selection-start-line="81" selection-start-column="4" selection-end-line="95" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FeatureVectorDataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="39" column="8" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="51" column="40" lean-forward="true" selection-start-line="51" selection-start-column="40" selection-end-line="51" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/MovieXMLFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="46" column="31" lean-forward="false" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/DateFuserVoting.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="35" column="13" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/DirectorFuserFavourSource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -1840,22 +1706,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="33" column="22" lean-forward="false" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Fusable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="45" column="0" lean-forward="true" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1897,7 +1747,7 @@
         <state relative-caret-position="423">
           <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1907,7 +1757,7 @@
         <state relative-caret-position="243">
           <caret line="41" column="0" lean-forward="true" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1933,8 +1783,8 @@
         <state relative-caret-position="201">
           <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2991#3033#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2991#3033#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1965,7 +1815,7 @@
         <state relative-caret-position="405">
           <caret line="27" column="9" lean-forward="true" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1975,7 +1825,7 @@
         <state relative-caret-position="240">
           <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1985,9 +1835,9 @@
         <state relative-caret-position="483">
           <caret line="36" column="30" lean-forward="true" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#610#611#0" expanded="true" />
-            <element signature="e#706#707#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#610#611#0" expanded="false" />
+            <element signature="e#706#707#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1997,7 +1847,7 @@
         <state relative-caret-position="243">
           <caret line="32" column="30" lean-forward="true" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2015,7 +1865,7 @@
         <state relative-caret-position="495">
           <caret line="33" column="30" lean-forward="false" selection-start-line="33" selection-start-column="30" selection-end-line="33" selection-end-column="30" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2025,7 +1875,7 @@
         <state relative-caret-position="345">
           <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2035,7 +1885,7 @@
         <state relative-caret-position="348">
           <caret line="31" column="62" lean-forward="true" selection-start-line="31" selection-start-column="62" selection-end-line="31" selection-end-column="62" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2050,22 +1900,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1857">
-          <caret line="31" column="13" lean-forward="false" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/datafusion/fusers/EventDateFuserFirst.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="543">
           <caret line="42" column="1" lean-forward="true" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#610#611#0" expanded="true" />
-            <element signature="e#688#689#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#610#611#0" expanded="false" />
+            <element signature="e#688#689#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2075,26 +1917,6 @@
         <state relative-caret-position="135">
           <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventCSVFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="92" column="40" lean-forward="false" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2121,8 +1943,8 @@
         <state relative-caret-position="645">
           <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
           <folding>
-            <element signature="e#2182#2183#0" expanded="true" />
-            <element signature="e#2213#2214#0" expanded="true" />
+            <element signature="e#2182#2183#0" expanded="false" />
+            <element signature="e#2213#2214#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2151,8 +1973,200 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="865">
+        <state relative-caret-position="850">
           <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FeatureVectorDataSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="39" column="8" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventCSVFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Fusable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="25" column="17" lean-forward="false" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/CorrespondenceSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2534">
+          <caret line="71" column="20" lean-forward="true" selection-start-line="71" selection-start-column="20" selection-end-line="71" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecordFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="66" column="26" lean-forward="false" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/MatchableFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="62" column="31" lean-forward="false" selection-start-line="62" selection-start-column="31" selection-end-line="62" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Record.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="58" column="54" lean-forward="false" selection-start-line="58" selection-start-column="37" selection-end-line="58" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/datafusion/DataFusionEvaluator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="37" column="13" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DataSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="12" column="72" lean-forward="false" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/FusableDataSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="164" column="29" lean-forward="true" selection-start-line="164" selection-start-column="29" selection-end-line="164" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultSchemaElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="44" column="19" lean-forward="false" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
+          <folding>
+            <element signature="e#834#835#0" expanded="true" />
+            <element signature="e#852#853#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Movie.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="727">
+          <caret line="169" column="8" lean-forward="false" selection-start-line="169" selection-start-column="8" selection-end-line="169" selection-end-column="43" />
+          <folding>
+            <element signature="e#4594#4595#0" expanded="true" />
+            <element signature="e#4635#4636#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="160" column="0" lean-forward="false" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#2105#2106#0" expanded="true" />
+            <element signature="e#5555#5556#0" expanded="true" />
+            <element signature="e#5585#5586#0" expanded="true" />
+            <element signature="e#5847#5848#0" expanded="true" />
+            <element signature="e#5884#5885#0" expanded="true" />
+            <element signature="e#5997#5998#0" expanded="true" />
+            <element signature="e#6025#6026#0" expanded="true" />
+            <element signature="e#6215#6216#0" expanded="true" />
+            <element signature="e#6265#6266#0" expanded="true" />
+            <element signature="e#6659#6660#0" expanded="true" />
+            <element signature="e#6681#6682#0" expanded="true" />
+            <element signature="e#8751#8752#0" expanded="true" />
+            <element signature="e#8790#8791#0" expanded="true" />
+            <element signature="e#9003#9004#0" expanded="true" />
+            <element signature="e#9035#9036#0" expanded="true" />
+            <element signature="e#9123#9124#0" expanded="true" />
+            <element signature="e#9147#9148#0" expanded="true" />
+            <element signature="e#9386#9387#0" expanded="true" />
+            <element signature="e#9411#9412#0" expanded="true" />
+            <element signature="e#9553#9554#0" expanded="true" />
+            <element signature="e#9579#9580#0" expanded="true" />
+            <element signature="e#9704#9705#0" expanded="true" />
+            <element signature="e#9727#9728#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Matchable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="43" column="1" lean-forward="true" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultRecord.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="67" column="5" lean-forward="true" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
+          <folding>
+            <element signature="e#1466#1467#0" expanded="true" />
+            <element signature="e#1500#1501#0" expanded="true" />
+            <element signature="e#2116#2117#0" expanded="true" />
+            <element signature="e#2134#2135#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Location.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="90" column="19" lean-forward="false" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
+          <folding>
+            <element signature="e#2746#2747#0" expanded="true" />
+            <element signature="e#2773#2774#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Actor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="126" column="8" lean-forward="false" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="43" />
+          <folding>
+            <element signature="e#3166#3167#0" expanded="true" />
+            <element signature="e#3207#3208#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="248" column="0" lean-forward="false" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2161,19 +2175,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_DataFusion_Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+        <state relative-caret-position="-564">
+          <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="250" column="32" lean-forward="true" selection-start-line="250" selection-start-column="32" selection-end-line="250" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>

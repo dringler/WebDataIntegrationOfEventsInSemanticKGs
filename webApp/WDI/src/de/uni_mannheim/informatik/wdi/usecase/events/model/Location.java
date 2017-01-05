@@ -85,4 +85,9 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
             return sames!=null;
         return false;
     }
+
+    @Override
+    public DefaultSchemaElement[] getDefaultSchemaElements() {
+        return null;
+    }
 }

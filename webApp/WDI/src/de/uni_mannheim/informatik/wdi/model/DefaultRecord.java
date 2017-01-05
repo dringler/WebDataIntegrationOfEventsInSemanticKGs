@@ -67,4 +67,8 @@ public class DefaultRecord extends Record<DefaultSchemaElement> {
 				|| lists.containsKey(attribute);
 	}
 
+	@Override
+	public DefaultSchemaElement[] getDefaultSchemaElements() {
+		return null;
+	}
 }

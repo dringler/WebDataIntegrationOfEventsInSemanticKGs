@@ -39,4 +39,6 @@ public interface Matchable {
 	 * @return
 	 */
 	String getProvenance();
+
+	DefaultSchemaElement[] getDefaultSchemaElements();
 }

@@ -34,7 +34,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         super(identifier, provenance);
     }
 
-    private String[] attributeNames = {"uri", "labels", "dates", "lat", "long", "locations", "participants", "sames"};
+    private String[] attributeNames = {"URIs", "Labels", "Dates", "Lat", "Long", "Locations", "Participants", "Sames"};
     public String[] getAttributeNames() {
         return attributeNames;
     }
@@ -233,6 +233,11 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     public static final DefaultSchemaElement LOCATIONS = new DefaultSchemaElement("Locations");
     public static final DefaultSchemaElement PARTICIPANTS = new DefaultSchemaElement("Participants");
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
+
+    public DefaultSchemaElement[] getDefaultSchemaElements() {
+        DefaultSchemaElement [] allDefaultSchemaElements = {LABELS, DATES, COORDINATES, LOCATIONS, PARTICIPANTS, SAMES};
+        return allDefaultSchemaElements;
+    }
 
     /* (non-Javadoc)
      * @see de.uni_mannheim.informatik.wdi.model.Record#hasValue(java.lang.Object)
