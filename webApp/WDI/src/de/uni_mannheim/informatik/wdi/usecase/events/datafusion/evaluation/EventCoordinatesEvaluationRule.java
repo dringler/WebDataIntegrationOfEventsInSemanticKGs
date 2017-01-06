@@ -3,35 +3,33 @@ package de.uni_mannheim.informatik.wdi.usecase.events.datafusion.evaluation;
 import de.uni_mannheim.informatik.wdi.datafusion.EvaluationRule;
 import de.uni_mannheim.informatik.wdi.model.Correspondence;
 import de.uni_mannheim.informatik.wdi.model.DefaultSchemaElement;
+import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.similarity.SimilarityMeasure;
-import de.uni_mannheim.informatik.wdi.similarity.string.LevenshteinSimilarity;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 
 
+
 /**
- * {@link EvaluationRule} for the labels of {@link Event}s. The rule simply
- * compares the titles of two {@link Event}s and returns true, in case their
- * similarity based on {@link LevenshteinSimilarity} is 1.0 for at least on label.
- * Based on TitleEvaluationRule. Created on 2017-01-04
+ * {@link EvaluationRule} for the coordinates of {@link Event}s. The rule simply
+ * compares the coordinates of two {@link Event}s and returns true, in case two
+ * coordinates are exactly the same.
+ * Created on 2017-01-04
  * @author Daniel Ringler
  *
  */
-public class LabelEvaluationRule extends EvaluationRule<Event, DefaultSchemaElement> {
+public class EventCoordinatesEvaluationRule extends EvaluationRule<Event, DefaultSchemaElement> {
 
-    SimilarityMeasure<String> sim = new LevenshteinSimilarity();
 
     @Override
     public boolean isEqual(Event record1, Event record2, DefaultSchemaElement schemaElement) {
         //compare all labels
-        for (String r1Label : record1.getLabels()) {
-            for (String r2Label : record2.getLabels()) {
-                double labelResult = sim.calculate(r1Label, r2Label);
-                // return true if both labels match
-                if (labelResult == 1.0)
+        for (Pair<Double, Double> r1p : record1.getCoordinates()) {
+            for (Pair<Double, Double> r2p : record2.getCoordinates()) {
+                if (r1p.equals(r2p))
                     return true;
             }
         }
-        //return false if none of the labels matches
+        //return false if none of the coordinate pairs matches
         return false;
     }
 

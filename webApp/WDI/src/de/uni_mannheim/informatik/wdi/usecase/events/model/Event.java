@@ -21,6 +21,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
+    private List<String> uris = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
     private List<LocalDate> dates = new ArrayList<>();;
     private List<Pair<Double, Double>> coordinates = new ArrayList<>();;
@@ -41,10 +42,17 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
     public String[] getAllAttributeValues() {
         //separator for multiple values
-        char separator = ',';
-        //all uris
-        String allURIs = "";
+        char separator = '+';
 
+        //get URIs
+        String allURIs = "";
+        if (hasValue(URIS)) {
+            Collections.sort(uris);
+            for (String uri : uris) {
+                allURIs += uri + separator;
+            }
+            allURIs = allURIs.substring(0, allURIs.length()-1);
+        }
         //get Labels
         String allLabels = "";
         if (hasValue(LABELS)) {
@@ -65,14 +73,14 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         String allLat = "";
         if (hasValue(COORDINATES)) {
             for (Pair<Double, Double> p : coordinates) {
-                allLat += p.getFirst() + separator;
+                allLat += p.getFirst().toString() + separator;
             }
             allLat = allLat.substring(0, allLat.length()-1);
         }
         String allLong = "";
         if (hasValue(COORDINATES)) {
             for (Pair<Double, Double> p : coordinates) {
-                allLong += p.getSecond() + separator;
+                allLong += p.getSecond().toString() + separator;
             }
             allLong = allLong.substring(0, allLong.length()-1);
         }
@@ -95,6 +103,9 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     }
 
     //getter
+    public List<String> getUris() {
+        return uris;
+    }
     public List<String> getLabels() {
 		return labels;
     }
@@ -120,6 +131,9 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     }
 
     //setter
+    public void setURIs(List<String> uris) {
+        this.uris = uris;
+    }
     public void setLabels(List<String> labels) {
         this.labels = labels;
     }
@@ -130,6 +144,11 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     public void setLocations(List<Location> locations) { this.locations = locations; }
     public void setParticipants(List<String> participants) { this.participants = participants; }
     public void setSames(List<String> sames) { this.sames = sames; }
+
+    public void setSingleURI(String uri) {
+        this.uris.clear();
+        this.uris.add(uri);
+    }
     /*
     * clear labels and add one new label
     * @param label
@@ -151,6 +170,10 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
 
     //adder
+    public void addURI(String uri) {
+        if (!this.uris.contains(uri))
+            this.uris.add(uri);
+    }
     public void addLabel(String label) {
         if (!this.labels.contains(label))
             this.labels.add(label);
@@ -225,6 +248,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return true;
     }
 
+    public static final DefaultSchemaElement URIS = new DefaultSchemaElement("URIs");
     public static final DefaultSchemaElement LABELS = new DefaultSchemaElement("Labels");
     public static final DefaultSchemaElement DATES = new DefaultSchemaElement("Dates");
     public static final DefaultSchemaElement COORDINATES = new DefaultSchemaElement("Coordinates");
@@ -235,7 +259,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
     public DefaultSchemaElement[] getDefaultSchemaElements() {
-        DefaultSchemaElement [] allDefaultSchemaElements = {LABELS, DATES, COORDINATES, LOCATIONS, PARTICIPANTS, SAMES};
+        DefaultSchemaElement [] allDefaultSchemaElements = {URIS, LABELS, DATES, COORDINATES, LOCATIONS, PARTICIPANTS, SAMES};
         return allDefaultSchemaElements;
     }
 
@@ -244,6 +268,8 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
      */
     @Override
     public boolean hasValue(DefaultSchemaElement attribute) {
+        if(attribute==URIS)
+            return uris.size()>0;
         if(attribute==LABELS)
             return labels.size()>0;
         else if(attribute==DATES)

@@ -74,7 +74,14 @@ public abstract class AttributeValueFuser<ValueType, RecordType extends Matchabl
 	 * @return
 	 */
 	protected abstract ValueType getValue(RecordType record, Correspondence<SchemaElementType, RecordType> correspondence);
-	
+
+	/**
+	 * returns the values that is used by this fuser from the given record. Required for the collection of fusable values.
+	 * @param record
+	 * @return
+	 */
+	//protected abstract List<ValueType> getValues(RecordType record, Correspondence<SchemaElementType, RecordType> correspondence);
+
 	@Override
 	public Double getConsistency(RecordGroup<RecordType, SchemaElementType> group,
 			EvaluationRule<RecordType, SchemaElementType> rule, ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences, SchemaElementType schemaElement) {

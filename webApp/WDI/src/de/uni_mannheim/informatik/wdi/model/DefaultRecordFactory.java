@@ -101,7 +101,7 @@ public class DefaultRecordFactory extends MatchableFactory<DefaultRecord> {
 	}
 
 	@Override
-	public DefaultRecord createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo) {
+	public DefaultRecord createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator) {
 		return null;
 	}
 

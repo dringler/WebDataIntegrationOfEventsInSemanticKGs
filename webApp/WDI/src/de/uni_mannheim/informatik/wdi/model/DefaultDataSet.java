@@ -37,7 +37,6 @@ import javax.xml.xpath.XPathFactory;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -125,7 +124,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		}
 	}
 
-	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath) throws IOException {
+	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator) throws IOException {
 		//tab separated, skip header row
 		CSVReader reader = new CSVReader(new FileReader(dataSource), '\t', '\"' , 1);
 
@@ -147,7 +146,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		//create events for each instance uri
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
-			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName());
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName(), separator);
 
 			if (record != null) {
 				addRecord(record);
@@ -345,5 +344,13 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		return getSize();
 	}
 
+	/**
+	 * Split multiple values for the attributes
+	 */
+	public void splitMultipleValues(char separator) {
+		for (RecordType record : records.values()) {
 
+		}
+
+	}
 }

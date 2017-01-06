@@ -61,7 +61,7 @@ public class ActorFactory extends MatchableFactory<Actor> {
 	}
 
 	@Override
-	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo) {
+	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator) {
 		return null;
 	}
 

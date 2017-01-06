@@ -1,20 +1,22 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.datafusion.fusers;
 
 import de.uni_mannheim.informatik.wdi.datafusion.AttributeValueFuser;
-import de.uni_mannheim.informatik.wdi.datafusion.conflictresolution.date.FirstDate;
+import de.uni_mannheim.informatik.wdi.datafusion.conflictresolution.list.Union;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
+
 import java.time.LocalDate;
+import java.util.List;
 
 /**
- * {@link AttributeValueFuser} for the date of {@link Event}s.
- *
+ * {@link AttributeValueFuser} for the dates of {@link Event}s.
+ * Based on ActorFuserUnion. Created on 2017-01-06
  * @author Daniel Ringler
  *
  */
-public class EventDateFuserFirst extends AttributeValueFuser<LocalDate, Event, DefaultSchemaElement> {
-    public EventDateFuserFirst() {
-        super(new FirstDate<LocalDate, Event, DefaultSchemaElement>());
+public class EventDateFuserAll extends AttributeValueFuser<List<LocalDate>, Event, DefaultSchemaElement> {
+    public EventDateFuserAll() {
+        super(new Union<LocalDate, Event, DefaultSchemaElement>());
     }
 
     @Override
@@ -23,20 +25,15 @@ public class EventDateFuserFirst extends AttributeValueFuser<LocalDate, Event, D
     }
 
     @Override
-    protected LocalDate getValue(Event record, Correspondence<DefaultSchemaElement, Event> correspondence) {
-        if (record.getDates().size()>0) {
-            for(LocalDate date : record.getDates()) {
-                    return date;
-            }
-        }
-        return null;
+    protected List<LocalDate> getValue(Event record, Correspondence<DefaultSchemaElement, Event> correspondence) {
+        return record.getDates();
     }
 
 
     @Override
     public void fuse(RecordGroup<Event, DefaultSchemaElement> group, Event fusedRecord, ResultSet<Correspondence<DefaultSchemaElement, Event>> schemaCorrespondences, DefaultSchemaElement schemaElement) {
-        FusedValue<LocalDate, Event, DefaultSchemaElement> fused = getFusedValue(group, schemaCorrespondences, schemaElement);
-        fusedRecord.setSingleDate(fused.getValue());
+        FusedValue<List<LocalDate>, Event, DefaultSchemaElement> fused = getFusedValue(group, schemaCorrespondences, schemaElement);
+        fusedRecord.setDates(fused.getValue());
         fusedRecord.setAttributeProvenance(Event.DATES, fused.getOriginalIds());
     }
 

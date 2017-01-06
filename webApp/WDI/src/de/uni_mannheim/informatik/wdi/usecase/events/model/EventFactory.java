@@ -51,6 +51,8 @@ public class EventFactory extends MatchableFactory<Event> implements
         Event event = new Event(values[0], provenanceInfo);
 
         //fill the attributes
+        event.addURI(values[0]);
+
         event.addLabel(values[1]);
 
         // 1214-07-27^^http://www.w3.org/2001/XMLSchema#date
@@ -72,7 +74,8 @@ public class EventFactory extends MatchableFactory<Event> implements
         return event;
     }
 
-    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo) {
+    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator) {
+
         Event event = null;
         boolean firstLine = true;
         for (String[] values : gatheredValues) {
@@ -81,6 +84,9 @@ public class EventFactory extends MatchableFactory<Event> implements
                 firstLine = false;
             }
             //fill the attributes
+            //add uri
+            event.addURI(values[0]);
+
             //add label after removing the language tag
             if (values[1].contains("@"))
                 event.addLabel(values[1].substring(0, values[1].indexOf("@")));
@@ -103,23 +109,27 @@ public class EventFactory extends MatchableFactory<Event> implements
             //50.5833^^http://www.w3.org/2001/XMLSchema#float	3.225^^http://www.w3.org/2001/XMLSchema#float
             //event.setLat(Double.valueOf(values[3].substring(0, values[3].indexOf("^"))));
             //event.setLon(Double.valueOf(values[4].substring(0, values[4].indexOf("^"))));
+            if (values.length>4) {
+                String latString = values[3];
+                if (latString.contains("^"))
+                    latString = latString.substring(0, latString.indexOf("^"));
+                String longString = values[4];
+                if (longString.contains("^"))
+                    longString = longString.substring(0, longString.indexOf("^"));
 
-            String latString = values[3];
-            if (latString.contains("^"))
-                latString = latString.substring(0, latString.indexOf("^"));
-            String longString = values[4];
-            if (longString.contains("^"))
-                longString = longString.substring(0, longString.indexOf("^"));
-
-            Pair<Double, Double> p = new Pair<>(
-                    Double.valueOf(latString),
-                    Double.valueOf(longString)
-            );
-            event.addCoordinates(p);
-
-            event.addSame(values[5]);
-            Location location = new Location(values[6], provenanceInfo);
-            event.addLocation(location);
+                Pair<Double, Double> p = new Pair<>(
+                        Double.valueOf(latString),
+                        Double.valueOf(longString)
+                );
+                event.addCoordinates(p);
+            }
+            if (values.length>5) {
+                event.addSame(values[5]);
+            }
+            if (values.length>6) {
+                Location location = new Location(values[6], provenanceInfo);
+                event.addLocation(location);
+            }
         }
 
         return event;

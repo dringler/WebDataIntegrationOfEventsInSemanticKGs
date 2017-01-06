@@ -4,20 +4,19 @@ import de.uni_mannheim.informatik.wdi.datafusion.AttributeValueFuser;
 import de.uni_mannheim.informatik.wdi.datafusion.conflictresolution.string.ShortestString;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
-import de.uni_mannheim.informatik.wdi.usecase.events.model.Movie;
 
 /**
- * {@link AttributeValueFuser} for the titles of {@link Event}s.
+ * {@link AttributeValueFuser} for the URIs of {@link Event}s.
  * based on TitleFuserShortestString
- * created on 2017-01-04
+ * created on 2017-01-06
  * @author Daniel Ringler
  *
  */
-public class LabelFuserShortestString extends
+public class EventURIFuserShortestString extends
         AttributeValueFuser<String, Event, DefaultSchemaElement> {
 
 
-    public LabelFuserShortestString() {
+    public EventURIFuserShortestString() {
         super(new ShortestString<Event, DefaultSchemaElement>());
     }
 
@@ -28,26 +27,25 @@ public class LabelFuserShortestString extends
         FusedValue<String, Event, DefaultSchemaElement> fused = getFusedValue(group, schemaCorrespondences, schemaElement);
 
         // set the value for the fused record
-        fusedRecord.setSingleLabel(fused.getValue());
+        fusedRecord.setSingleURI(fused.getValue());
 
         // add provenance info
-        fusedRecord.setAttributeProvenance(Event.LABELS, fused.getOriginalIds());
+        fusedRecord.setAttributeProvenance(Event.URIS, fused.getOriginalIds());
     }
 
     @Override
     public boolean hasValue(Event record, Correspondence<DefaultSchemaElement, Event> correspondence) {
-        return record.hasValue(Event.LABELS);
+        return record.hasValue(Event.URIS);
     }
 
     @Override
     protected String getValue(Event record, Correspondence<DefaultSchemaElement, Event> correspondence) {
-        String labels = "";
-        for (String label : record.getLabels()) {
-            labels = labels + label + ",";
+        String uris = "";
+        for (String uri : record.getUris()) {
+            uris += uri + ",";
         }
-        if (labels.length()>0)
-            labels = labels.substring(0,labels.length()-1);
-        return labels;
+        if (uris.length()>0)
+            uris = uris.substring(0,uris.length()-1);
+        return uris;
     }
-
 }

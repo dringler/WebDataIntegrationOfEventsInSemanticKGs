@@ -53,6 +53,8 @@ public class Events_DataFusion_Main {
 			ParserConfigurationException, SAXException, IOException,
 			TransformerException {
 
+		char separator = '+';
+
 		// Load the Data into FusableDataSet
 		/*FusableDataSet<Movie, DefaultSchemaElement> ds1 = new FusableDataSet<>();
 		ds1.loadFromXML(new File("usecase/movie/input/academy_awards.xml"),
@@ -74,12 +76,12 @@ public class Events_DataFusion_Main {
 		*/
 		FusableDataSet<Event, DefaultSchemaElement> dataDBpedia = new FusableDataSet<>();
 		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
-				new EventFactory(), "events/event");
+				new EventFactory(), "events/event", separator);
 		dataDBpedia.printDataSetDensityReport();
 
 		FusableDataSet<Event, DefaultSchemaElement> dataYAGO = new FusableDataSet<>();
 		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
-				new EventFactory(), "events/event");
+				new EventFactory(), "events/event", separator);
 		dataYAGO.printDataSetDensityReport();
 
 		// Maintain Provenance
@@ -127,12 +129,14 @@ public class Events_DataFusion_Main {
 		 strategy.addAttributeFuser(new DefaultSchemaElement("Actors"),
 		 new ActorsFuserUnion(),
 		 new ActorsEvaluationRule());*/
-		strategy.addAttributeFuser(new DefaultSchemaElement("Label"), new LabelFuserShortestString(),
-				new LabelEvaluationRule());
-		strategy.addAttributeFuser(new DefaultSchemaElement("Date"), new EventDateFuserFirst(),
+		//strategy.addAttributeFuser(new DefaultSchemaElement("Uri"), new EventURIFuserAll(),
+		//		new EventURIEvaluationRule());
+		strategy.addAttributeFuser(new DefaultSchemaElement("Label"), new EventLabelFuserAll(),
+				new EventLabelEvaluationRule());
+		strategy.addAttributeFuser(new DefaultSchemaElement("Date"), new EventDateFuserAll(),
 				new EventDateEvaluationRule());
-		strategy.addAttributeFuser(new DefaultSchemaElement("Coordinates"), new CoordinatesFuserFirst(),
-				new CoordinatesEvaluationRule());
+		strategy.addAttributeFuser(new DefaultSchemaElement("Coordinates"), new EventCoordinatesFuserFirst(),
+				new EventCoordinatesEvaluationRule());
 
 
 		//... all attributes
@@ -154,11 +158,13 @@ public class Events_DataFusion_Main {
 		fusedDataSet.writeCSV(new File("WDI/usecase/event/output/fused.tsv"),
 				new EventCSVFormatter());
 
+
 		// load the gold standard
 		DefaultDataSet<Event, DefaultSchemaElement> gs = new FusableDataSet<>();
 		gs.loadFromTSV(new File("WDI/usecase/event/goldstandard/fused.tsv"),
-				new EventFactory(), "/events/event");
+				new EventFactory(), "/events/event", separator);
 
+		gs.splitMultipleValues(separator);
 		// evaluate
 		//DataFusionEvaluator<Movie, DefaultSchemaElement> evaluator = new DataFusionEvaluator<>(
 		//		strategy, new RecordGroupFactory<Movie, DefaultSchemaElement>());

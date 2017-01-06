@@ -17,6 +17,7 @@
  */
 package de.uni_mannheim.informatik.wdi.usecase.events.datafusion.fusers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uni_mannheim.informatik.wdi.datafusion.AttributeValueFuser;

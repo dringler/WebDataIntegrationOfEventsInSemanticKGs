@@ -4,8 +4,6 @@ import de.uni_mannheim.informatik.wdi.datafusion.AttributeValueFuser;
 import de.uni_mannheim.informatik.wdi.datafusion.conflictresolution.date.RandomDate;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
-
-
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -39,6 +37,8 @@ public class EventDateFuserRandom extends AttributeValueFuser<LocalDate, Event, 
         }
         return null;
     }
+
+
 
     @Override
     public void fuse(RecordGroup<Event, DefaultSchemaElement> group, Event fusedRecord, ResultSet<Correspondence<DefaultSchemaElement, Event>> schemaCorrespondences, DefaultSchemaElement schemaElement) {

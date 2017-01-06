@@ -58,10 +58,11 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 	 *
 	 * @param gatheredValues
 	 *            the List of lines containing the values
+	 * @param separator
 	 * @return
 	 */
 	public abstract RecordType createModelFromMultpleTSVline(HashSet<String[]> gatheredValues,
-															 String proveranaceInfo);
+															 String proveranaceInfo, char separator);
 
 	/**
 	 * returns a value from a child node of the first parameter. The child not
