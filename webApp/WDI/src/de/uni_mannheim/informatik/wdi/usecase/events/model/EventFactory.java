@@ -20,7 +20,7 @@ import java.util.List;
 public class EventFactory extends MatchableFactory<Event> implements
         FusableFactory<Event, DefaultSchemaElement> {
 
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
     @Override
     public Event createModelFromElement(Node node, String provenanceInfo) {
         String id = getValueFromChildElement(node, "id");
@@ -74,7 +74,19 @@ public class EventFactory extends MatchableFactory<Event> implements
         return event;
     }
 
-    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator) {
+    /**
+     * Returns an event with all gathered values (have the same URI)
+     * @param gatheredValues
+     * @param provenanceInfo
+     * @param separator
+     * @param filterByDates
+     * @param dateTimeFormatter
+     * @param fromDate
+     * @param toDate
+     *
+     * @return Event
+     */
+    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
 
         Event event = null;
         boolean firstLine = true;
@@ -101,10 +113,20 @@ public class EventFactory extends MatchableFactory<Event> implements
                 date = date.substring(0, date.indexOf("^"));
 
             try {
-                event.addDate(LocalDate.parse(date, formatter));
+                LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+                //check date against user input parameters
+                if (filterByDates) {
+                    if (localDate.isAfter(toDate) || localDate.isBefore(fromDate)) {
+                        return null;
+                    }
+                }
+                event.addDate(localDate);
             } catch (DateTimeParseException e) {
                 //System.out.println(values[0] + " " + date);
+                return null;
             }
+
+
 
             //50.5833^^http://www.w3.org/2001/XMLSchema#float	3.225^^http://www.w3.org/2001/XMLSchema#float
             //event.setLat(Double.valueOf(values[3].substring(0, values[3].indexOf("^"))));

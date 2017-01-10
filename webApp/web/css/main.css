@@ -1,67 +1,37 @@
-
-h4 {
-    margin-top: 25px;
-}
-.row {
-    margin-bottom: 20px;
-}
-.row .row {
-    margin-top: 10px;
-    margin-bottom: 0;
-}
-[class*="col-"] {
-    padding-top: 15px;
-    padding-bottom: 15px;
-
-}
-#userInputID {
-    border: 1px solid #ddd;
-}
-
-hr {
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    /* width: 960px;
-    height: 500px;*/
     position: relative;
     padding-top: 50px;
 }
 .container {
-    height: calc(100%-50px)
-}
-#canvas-svg {
+    height: calc(100% - 50px)
 }
 .land {
- fill: #222;
+    fill: #222;
 }
 .boundary {
- fill: none;
- stroke: #fff;
- stroke-width: 1px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1px;
 }
-#tooltip-container {
- position: absolute;
- background-color: #fff;
- color: #000;
- padding: 10px;
-
- display: none;
-}
-.tooltip_key {
- font-weight: bold;
-}
-.tooltip_value {
- margin-left: 20px;
- float: right;
-}
-
 #wrongInputID {
     display: none;
 }
 #noDbSelectedID {
     display: none;
 }
+#userInputID {
+    border: 1px solid #ddd;
+}
+
+div.tooltip {
+    position: absolute;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightgrey;
+    border: 1px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+

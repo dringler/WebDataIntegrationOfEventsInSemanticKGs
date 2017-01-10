@@ -225,21 +225,22 @@ function mapInit() {
         //d3.json(str, function(data) {
         //  data.forEach(function(d) {
         var jsonObject = JSON.parse(str);
-        console.log(jsonObject.coordinates);
-        var jsonCoordinates = [parseFloat(jsonObject.coordinates[0].second), parseFloat(jsonObject.coordinates[0].first)]
+        console.log(jsonObject);
+        //var jsonCoordinates = [parseFloat(jsonObject.coordinates[0].second), parseFloat(jsonObject.coordinates[0].first)]
+        var jsonCoordinates = [parseFloat(jsonObject[0].coordinates[0].second), parseFloat(jsonObject[0].coordinates[0].first)]
         console.log(projection(jsonCoordinates))
 
         //remove points
         svg.selectAll("circle").remove();
         //draw point
         svg.selectAll("circle")
-            .data([jsonObject])
+            .data(jsonObject)
             .enter()
             .append("circle")
             //.attr("cx", function(d) { return projection(d.coordinates[0].second); })
             //.attr("cy", function(d) { return projection(d.coordinates[0].first); })
             .attr("r", "3px")
-            .style("fill", "red")
+            .style("fill", "darkorange")
             .attr("transform", function (d) {
                 return "translate(" + projection([
                         d.coordinates[0].second,
@@ -247,11 +248,15 @@ function mapInit() {
                     ]) + ")"})
 
             //tooltip
-            .on("mousemove", function (d) {
+            .on("mouseover", function (d) {
                 div.transition()
-                    .duration(1)
-                    .style("opacity", .9);
-                div.html("id: " + d.identifier + "<br>first label: " + d.labels[0] + "<br>first date: " + d.dates[0].year +"-" + d.dates[0].monthValue + "-" +  d.dates[0].dayOfMonth)
+                    .duration(200)
+                    .style("opacity", 1);
+                div.html("id: " + d.identifier +
+                        "<br>first label: " + d.labels[0] +
+                        "<br>first date: " + d.dates[0].year +"-" + d.dates[0].monthValue + "-" +  d.dates[0].dayOfMonth +
+                        "<br> first coordinates: " + d.coordinates[0].first + ", " + d.coordinates[0].second
+                    )
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })

@@ -17,6 +17,8 @@
  */
 package de.uni_mannheim.informatik.wdi.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -101,7 +103,7 @@ public class DefaultRecordFactory extends MatchableFactory<DefaultRecord> {
 	}
 
 	@Override
-	public DefaultRecord createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator) {
+	public DefaultRecord createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
 		return null;
 	}
 

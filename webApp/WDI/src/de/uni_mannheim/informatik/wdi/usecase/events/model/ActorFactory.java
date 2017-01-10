@@ -22,6 +22,8 @@ import org.w3c.dom.Node;
 
 import de.uni_mannheim.informatik.wdi.model.MatchableFactory;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 /**
@@ -61,7 +63,7 @@ public class ActorFactory extends MatchableFactory<Actor> {
 	}
 
 	@Override
-	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator) {
+	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
 		return null;
 	}
 

@@ -18,6 +18,8 @@
 package de.uni_mannheim.informatik.wdi.model;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -124,7 +126,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		}
 	}
 
-	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator) throws IOException {
+	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) throws IOException {
 		//tab separated, skip header row
 		CSVReader reader = new CSVReader(new FileReader(dataSource), '\t', '\"' , 1);
 
@@ -142,24 +144,36 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 			//RecordType record = modelFactory.createModelFromTSVline(lineValues, dataSource.getName());
 		}
 
-
+		int errorCounter = 0;
 		//create events for each instance uri
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
-			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName(), separator);
+
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName(), separator, filterByDates, dateTimeFormatter, fromDate, toDate);
 
 			if (record != null) {
 				addRecord(record);
 			} else {
-				System.out.println(String.format("Could not generate entry for ", lineValues.toString()));
+				//System.out.println(String.format("Could not generate entry for " + instance));
+				errorCounter += 1;
 			}
 		}
-
+		System.out.println(errorCounter + " instances were not converted to a valid event record due to missing or wrong properties");
 		//DefaultSchemaElement[]
 		addAttributes(getRandomRecord().getDefaultSchemaElements());
 	}
-
-	public void loadFromInstancesHashMap(HashMap<String, HashSet<String[]>> instances, MatchableFactory<RecordType> modelFactory, char separator) {
+	/**
+	 * Read event instances from HashMap and create records.
+	 * @param instances
+	 * @param modelFactory
+	 * @param separator
+	 * @param filterByDates true if created records should be in specified time frame (false for reading the gold standards)
+	 * @param dateTimeFormatter
+	 * @param fromDate
+	 * @param toDate
+	 * @return
+	 */
+	public void loadFromInstancesHashMap(HashMap<String, HashSet<String[]>> instances, MatchableFactory<RecordType> modelFactory, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
 		/*HashMap<String, HashSet<String[]>> instances = new HashMap<>();
 		String[] lineValues = new String[7];
 		while (resultSet.hasNext()) {
@@ -183,7 +197,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		//create events for each instance uri
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
-			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), "dbpedia", separator);
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), "dbpedia", separator, filterByDates, dateTimeFormatter, fromDate, toDate);
 
 			if (record != null) {
 				addRecord(record);

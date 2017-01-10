@@ -17,6 +17,8 @@
  */
 package de.uni_mannheim.informatik.wdi.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,14 +57,17 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 
 	/**
 	 * creates a RecordType record from multiple TSV lines
-	 *
-	 * @param gatheredValues
+	 *  @param gatheredValues
 	 *            the List of lines containing the values
 	 * @param separator
-	 * @return
-	 */
+	 * @param filterByDates
+	 * @param dateTimeFormatter
+	 * @param fromDate
+	 * @param toDate
+	 * @return RecordType
+	 * */
 	public abstract RecordType createModelFromMultpleTSVline(HashSet<String[]> gatheredValues,
-															 String proveranaceInfo, char separator);
+															 String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate);
 
 	/**
 	 * returns a value from a child node of the first parameter. The child not

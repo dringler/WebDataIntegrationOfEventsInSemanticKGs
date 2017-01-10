@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.EventFactory;
@@ -7,16 +8,23 @@ import org.apache.jena.query.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.Events_IdentityResolution_Main;
 import de.uni_mannheim.informatik.wdi.usecase.events.Events_DataFusion_Main;
 import org.apache.jena.query.ResultSet;
+import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Daniel Ringler
  * Created on 13/10/16.
  */
 public class QueryProcessor {
+
+    final static Logger logger = Logger.getLogger(QueryProcessor.class);
     /**
      Get user parameters from Web App and trigger the Data Integration Process
      @param useLocalData
@@ -28,15 +36,19 @@ public class QueryProcessor {
      @return JSON to update the D3.JS chart
      */
     public String getUserData(boolean useLocalData, boolean d, boolean y, String cat, String fD, String tD) throws Exception {
-        System.out.println("DATA RECEIVED");
-        //System.out.println(cat);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate fromDate = LocalDate.parse(fD, dateTimeFormatter);
+        LocalDate toDate = LocalDate.parse(tD, dateTimeFormatter);
         char separator = '+';
+
         //user parameters received, start data integration process
         FusableDataSet<Event, DefaultSchemaElement> dataSetD = new FusableDataSet<>();
         FusableDataSet<Event, DefaultSchemaElement> dataSetY = new FusableDataSet<>();
         FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = null;
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         //use dynamic data
         if (!useLocalData) {
@@ -47,13 +59,13 @@ public class QueryProcessor {
                 //step 1: data collection
                 instancesD = dataCollection(d, false, cat, fD, tD);
                 //step 2: data translation
-                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator);
+                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate);
             }
             if (y) {
                 //step 1: data collection
                 instancesY = dataCollection(false, y, cat, fD, tD);
                 //step 2: data translation
-                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator);
+                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate);
             }
 
 
@@ -62,11 +74,11 @@ public class QueryProcessor {
             //step 1+2: data collection and translation
             if (d) {
                 dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
-                        new EventFactory(), "events/event", separator);
+                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate);
             }
             if (y) {
                 dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),
-                        new EventFactory(), "events/event", separator);
+                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate);
             }
         }
 
@@ -80,7 +92,7 @@ public class QueryProcessor {
 
         //step 4: data fusion
             if (correspondences.size() > 0) {
-                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator);
+                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator, dateTimeFormatter, fromDate, toDate);
             } else {
                 System.out.println("no correspondences found");
             }
@@ -99,17 +111,28 @@ public class QueryProcessor {
                 System.out.println(jsonInString);
             }
         }
-        // convert data to JSON?
 
-        //return results
-        String jsonInString = mapper.writeValueAsString(fusedDataSet.getRandomRecord());
-        System.out.println(jsonInString);
+        // convert data to JSON
+
+        /*List<Event> sampleEventList= Stream.of(
+                fusedDataSet.getRandomRecord(),
+                fusedDataSet.getRandomRecord(),
+                fusedDataSet.getRandomRecord(),
+                fusedDataSet.getRandomRecord()
+        ).collect(Collectors.toList());
+        */
+        List<Event> eventList = fusedDataSet.getRecords()
+                .stream()
+                .collect(Collectors.toList());
+
+        String jsonInString = mapper.writeValueAsString(eventList);
+
         return jsonInString;
     }
 
     /**
      Data Collection Process
-     @param  d query DBpedia (boolean)
+     @param d query DBpedia (boolean)
      @param y query YAGO (boolean)
      @param cat category to query
      @param fD fromDate (String)
@@ -204,3 +227,4 @@ public class QueryProcessor {
     }
 
 }
+

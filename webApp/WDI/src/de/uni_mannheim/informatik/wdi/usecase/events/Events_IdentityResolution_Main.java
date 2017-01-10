@@ -18,6 +18,8 @@
 package de.uni_mannheim.informatik.wdi.usecase.events;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,7 +28,6 @@ import java.util.List;
 import de.uni_mannheim.informatik.wdi.matching.LinearCombinationMatchingRule;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEngine;
 import de.uni_mannheim.informatik.wdi.matching.blocking.BlockingKeyGenerator;
-import de.uni_mannheim.informatik.wdi.matching.blocking.NoBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.StandardBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.StaticBlockingKeyGenerator;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEvaluator;
@@ -57,6 +58,9 @@ public class Events_IdentityResolution_Main {
 
 	public static void main(String[] args) throws Exception {
 		char separator = '+';
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		LocalDate fromDate = LocalDate.MIN;
+		LocalDate toDate = LocalDate.MAX;
 		// loading data
 		/*DefaultDataSet<Movie, DefaultSchemaElement> dataAcademyAwards = new DefaultDataSet<>();
 		dataAcademyAwards.loadFromXML(new File(
@@ -68,11 +72,11 @@ public class Events_IdentityResolution_Main {
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
 		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1.tsv"),
-				new EventFactory(), "events/event", separator);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
 		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1.tsv"),
-				new EventFactory(), "events/event", separator);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
 
 
 		// create a matching rule

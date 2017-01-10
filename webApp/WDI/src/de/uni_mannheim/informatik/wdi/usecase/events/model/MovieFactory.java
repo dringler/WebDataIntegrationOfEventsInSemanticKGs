@@ -17,6 +17,8 @@
  */
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -76,7 +78,7 @@ public class MovieFactory extends MatchableFactory<Movie> implements
 	}
 
 	@Override
-	public Movie createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator) { return null;}
+	public Movie createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) { return null;}
 
 
 	@Override

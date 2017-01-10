@@ -23,13 +23,13 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
     private List<String> uris = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
-    private List<LocalDate> dates = new ArrayList<>();;
-    private List<Pair<Double, Double>> coordinates = new ArrayList<>();;
+    private List<LocalDate> dates = new ArrayList<>();
+    private List<Pair<Double, Double>> coordinates = new ArrayList<>();
     //private List<String> cities;
     //private List<String> countries;
-    private List<Location> locations = new ArrayList<>();;
-    private List<String> participants = new ArrayList<>();;
-    private List<String> sames = new ArrayList<>();;
+    private List<Location> locations = new ArrayList<>();
+    private List<String> participants = new ArrayList<>();
+    private List<String> sames = new ArrayList<>();
 
     public Event(String identifier, String provenance) {
         super(identifier, provenance);
