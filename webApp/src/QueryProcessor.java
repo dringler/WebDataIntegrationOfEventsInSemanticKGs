@@ -11,12 +11,10 @@ import org.apache.jena.query.ResultSet;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Daniel Ringler
@@ -30,12 +28,17 @@ public class QueryProcessor {
      @param useLocalData
      @param d query DBpedia (boolean)
      @param y query YAGO (boolean)
-     @param cat category to query
+     @param keyword keyword search for the labels
      @param fD fromDate (String)
      @param tD toDate (String)
      @return JSON to update the D3.JS chart
      */
-    public String getUserData(boolean useLocalData, boolean d, boolean y, String cat, String fD, String tD) throws Exception {
+    public String getUserData(boolean useLocalData, boolean d, boolean y, String keyword, String fD, String tD) throws Exception {
+
+        boolean applyKeywordSearch = false;
+        if (!keyword.equals("")) {
+            applyKeywordSearch = true;
+        }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
         LocalDate fromDate = LocalDate.parse(fD, dateTimeFormatter);
@@ -52,20 +55,20 @@ public class QueryProcessor {
 
         //use dynamic data
         if (!useLocalData) {
-            HashMap<String, HashSet<String[]>> instancesD = new HashMap<>();
-            HashMap<String, HashSet<String[]>> instancesY = new HashMap<>();
+            HashMap<String, HashSet<String[]>> instancesD;
+            HashMap<String, HashSet<String[]>> instancesY;
 
             if (d) {
                 //step 1: data collection
-                instancesD = dataCollection(d, false, cat, fD, tD);
+                instancesD = dataCollection(d, false, applyKeywordSearch, keyword, fD, tD);
                 //step 2: data translation
-                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate);
+                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate, false, null);
             }
             if (y) {
                 //step 1: data collection
-                instancesY = dataCollection(false, y, cat, fD, tD);
+                instancesY = dataCollection(false, y, applyKeywordSearch, keyword, fD, tD);
                 //step 2: data translation
-                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate);
+                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate, false, null);
             }
 
 
@@ -74,11 +77,11 @@ public class QueryProcessor {
             //step 1+2: data collection and translation
             if (d) {
                 dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
-                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate);
+                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate, applyKeywordSearch, keyword);
             }
             if (y) {
                 dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),
-                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate);
+                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate, applyKeywordSearch, keyword);
             }
         }
 
@@ -92,7 +95,7 @@ public class QueryProcessor {
 
         //step 4: data fusion
             if (correspondences.size() > 0) {
-                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator, dateTimeFormatter, fromDate, toDate);
+                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator, dateTimeFormatter, fromDate, toDate, keyword);
             } else {
                 System.out.println("no correspondences found");
             }
@@ -132,14 +135,15 @@ public class QueryProcessor {
 
     /**
      Data Collection Process
-     @param d query DBpedia (boolean)
-     @param y query YAGO (boolean)
-     @param cat category to query
-     @param fD fromDate (String)
-     @param tD toDate (String)
      @return results from querying the public endpoints
+      * @param d query DBpedia (boolean)
+     * @param y query YAGO (boolean)
+     * @param applyKeywordSearch
+     * @param keyword keyword for the labels
+     * @param fD fromDate (String)
+     * @param tD toDate (String)
      */
-    public HashMap<String, HashSet<String[]>>  dataCollection(boolean d, boolean y, String cat, String fD, String tD) {
+    public HashMap<String, HashSet<String[]>>  dataCollection(boolean d, boolean y, boolean applyKeywordSearch, String keyword, String fD, String tD) {
         System.out.println("start data collection");
         String result = "";
         QueryString qs = new QueryString();
@@ -148,7 +152,7 @@ public class QueryProcessor {
         if (d) { // DBpedia
             String dbpedia = "http://dbpedia.org/sparql";
             System.out.println("Query " + dbpedia);
-            String queryString = qs.getDBpediaQueryString(cat, fD, tD);
+            String queryString = qs.getDBpediaQueryString(applyKeywordSearch, keyword, fD, tD);
 
             HashMap<String, HashSet<String[]>> instancesD = createWrapper(dbpedia, queryString);
             return instancesD;
@@ -163,7 +167,7 @@ public class QueryProcessor {
         if (y) { //YAGO
             String yago = "https://linkeddata1.calcul.u-psud.fr/sparql";
             System.out.println("Query " + yago);
-            String queryString = qs.getYagoQueryString(cat, fD, tD);
+            String queryString = qs.getYagoQueryString(applyKeywordSearch, keyword, fD, tD);
 
             HashMap<String, HashSet<String[]>> instancesY = createWrapper(yago, queryString);
             return instancesY;

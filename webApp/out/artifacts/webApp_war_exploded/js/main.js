@@ -11,8 +11,8 @@ function init() {
 
 $('#sendQueryID').on('click', function (e) {
     // useLocalData, DBpedia, YAGO, category, fromYear, toYear
-    var valueArray = [$('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#catID').val(), $('#fromYearID').val(), $('#toYearID').val()];// $('#wID').is(':checked'),
-    console.log(valueArray);
+    var valueArray = [$('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val()];// $('#wID').is(':checked'),
+    //console.log(valueArray);
 
 
     //check if at least one DB is selected
@@ -27,9 +27,9 @@ $('#sendQueryID').on('click', function (e) {
         if ((dateFormat.test($('#fromYearID').val()) || $('#fromYearID').val() === "") && (dateFormat.test($('#toYearID').val()) || $('#toYearID').val() === "")) {
             // DB selected and valid date format or empty
             document.getElementById("wrongInputID").style.display = "none";
-            QueryProcessor.getUserData($('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#catID').val(), $('#fromYearID').val(), $('#toYearID').val(), {//$('#wID').is(':checked'),
+            QueryProcessor.getUserData($('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val(), {//$('#wID').is(':checked'),
                 callback: function(str) {
-                    console.log(str);
+                    //console.log(str);
                     myMap.insertEvents(str);
                 }
             });

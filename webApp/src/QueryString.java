@@ -5,16 +5,18 @@
 public class QueryString {
 
     // TO DO: remove limit in queries
+    // ADD FILTERS FOR KEYWORDS IN LABELS
 
 
     /**
      Get a string to query the DBpedia endpoint
-     @param  cat category
-     @param fD fromDate range
-     @param tD toDate range
      @return String to query the public DBpedia endpoint at http://dbpedia.org/sparql
+      * @param applyKeywordSearch
+     * @param  keyword
+     * @param fD fromDate range
+     * @param tD toDate range
      */
-    public String getDBpediaQueryString(String cat, String fD, String tD) {
+    public String getDBpediaQueryString(boolean applyKeywordSearch, String keyword, String fD, String tD) {
 
         /*String queryString = "PREFIX  dbo:  <http://dbpedia.org/ontology/>\n" +
                 "PREFIX  dbp:  <http://dbpedia.org/property/>\n" +
@@ -61,12 +63,13 @@ public class QueryString {
     }
     /**
      Get a string to query the YAGO endpoint
-     @param  cat category
-     @param fD fromDate range
-     @param tD toDate range
      @return String to query the public YAGO endpoint at https://linkeddata1.calcul.u-psud.fr/sparql
+      * @param applyKeywordSearch
+     * @param  keyword
+     * @param fD fromDate range
+     * @param tD toDate range
      */
-    public String getYagoQueryString(String cat, String fD, String tD) {
+    public String getYagoQueryString(boolean applyKeywordSearch, String keyword, String fD, String tD) {
         /*String queryString = "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
                 "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
                 "SELECT ?uri ?date ?location WHERE {\n" +

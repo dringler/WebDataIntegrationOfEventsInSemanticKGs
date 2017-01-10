@@ -222,16 +222,17 @@ function mapInit() {
     });
 
     this.insertEvents = function(str) {
+        //remove points
+        svg.selectAll("circle").remove();
         //d3.json(str, function(data) {
         //  data.forEach(function(d) {
         var jsonObject = JSON.parse(str);
-        console.log(jsonObject);
+        //console.log(jsonObject);
         //var jsonCoordinates = [parseFloat(jsonObject.coordinates[0].second), parseFloat(jsonObject.coordinates[0].first)]
-        var jsonCoordinates = [parseFloat(jsonObject[0].coordinates[0].second), parseFloat(jsonObject[0].coordinates[0].first)]
-        console.log(projection(jsonCoordinates))
+        //var jsonCoordinates = [parseFloat(jsonObject[0].coordinates[0].second), parseFloat(jsonObject[0].coordinates[0].first)]
+        //console.log(projection(jsonCoordinates))
 
-        //remove points
-        svg.selectAll("circle").remove();
+
         //draw point
         svg.selectAll("circle")
             .data(jsonObject)

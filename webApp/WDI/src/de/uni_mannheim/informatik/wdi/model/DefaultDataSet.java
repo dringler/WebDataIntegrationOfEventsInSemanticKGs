@@ -126,7 +126,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		}
 	}
 
-	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) throws IOException {
+	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) throws IOException {
 		//tab separated, skip header row
 		CSVReader reader = new CSVReader(new FileReader(dataSource), '\t', '\"' , 1);
 
@@ -149,7 +149,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
 
-			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName(), separator, filterByDates, dateTimeFormatter, fromDate, toDate);
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), dataSource.getName(), separator, filterByDates, dateTimeFormatter, fromDate, toDate, filterByKeyword, keyword);
 
 			if (record != null) {
 				addRecord(record);
@@ -173,7 +173,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	 * @param toDate
 	 * @return
 	 */
-	public void loadFromInstancesHashMap(HashMap<String, HashSet<String[]>> instances, MatchableFactory<RecordType> modelFactory, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
+	public void loadFromInstancesHashMap(HashMap<String, HashSet<String[]>> instances, MatchableFactory<RecordType> modelFactory, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) {
 		/*HashMap<String, HashSet<String[]>> instances = new HashMap<>();
 		String[] lineValues = new String[7];
 		while (resultSet.hasNext()) {
@@ -197,7 +197,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		//create events for each instance uri
 		for (String instance : instances.keySet()) {
 			//get HashSet of instanceLines
-			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), "dbpedia", separator, filterByDates, dateTimeFormatter, fromDate, toDate);
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), "dbpedia", separator, filterByDates, dateTimeFormatter, fromDate, toDate, filterByKeyword, keyword);
 
 			if (record != null) {
 				addRecord(record);

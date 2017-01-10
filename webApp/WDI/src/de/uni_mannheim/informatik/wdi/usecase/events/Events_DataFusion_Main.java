@@ -56,32 +56,33 @@ public class Events_DataFusion_Main {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 		LocalDate fromDate = LocalDate.MIN;
 		LocalDate toDate = LocalDate.MAX;
+		String keyword = "";
 
 		// Load the Data into FusableDataSet
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = new FusableDataSet<>();
 		fusableDataSetD.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY = new FusableDataSet<>();
 		fusableDataSetY.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = runDataFusion(fusableDataSetD,
 				fusableDataSetY,
 				null,
-				separator, dateTimeFormatter, fromDate, toDate);
+				separator, dateTimeFormatter, fromDate, toDate, keyword);
 
 	}
 
 	public static FusableDataSet<Event,DefaultSchemaElement> runDataFusion(FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD,
-																		   FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY,
-																		   ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences,
-																		   char separator,
-																		   DateTimeFormatter dateTimeFormatter,
-																		   LocalDate fromDate,
-																		   LocalDate toDate) throws IOException {
+                                                                           FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY,
+                                                                           ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences,
+                                                                           char separator,
+                                                                           DateTimeFormatter dateTimeFormatter,
+                                                                           LocalDate fromDate,
+                                                                           LocalDate toDate, String keyword) throws IOException {
 
 		//FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = (FusableDataSet<Event, DefaultSchemaElement>) dataSetD;
 		System.out.println("DBpedia Data Set Density Report:");
@@ -144,7 +145,7 @@ public class Events_DataFusion_Main {
 		// load the gold standard
 		DefaultDataSet<Event, DefaultSchemaElement> gs = new FusableDataSet<>();
 		gs.loadFromTSV(new File("../data/fused.tsv"),
-				new EventFactory(), "/events/event", separator, false, dateTimeFormatter, fromDate, toDate);
+				new EventFactory(), "/events/event", separator, false, dateTimeFormatter, fromDate, toDate, false, keyword);
 
 		//gs.splitMultipleValues(separator);
 		// evaluate

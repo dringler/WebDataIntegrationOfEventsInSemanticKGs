@@ -2,6 +2,7 @@ package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
 import de.uni_mannheim.informatik.wdi.model.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.w3c.dom.Node;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -84,9 +85,10 @@ public class EventFactory extends MatchableFactory<Event> implements
      * @param fromDate
      * @param toDate
      *
-     * @return Event
+     * @param filterByKeyword
+     *@param keyword @return Event
      */
-    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate) {
+    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) {
 
         Event event = null;
         boolean firstLine = true;
@@ -152,6 +154,15 @@ public class EventFactory extends MatchableFactory<Event> implements
                 Location location = new Location(values[6], provenanceInfo);
                 event.addLocation(location);
             }
+        }
+
+        //filter labels by keyword
+        if(filterByKeyword) {
+            if (!event.getLabels().stream().anyMatch(label -> label.trim().toLowerCase().contains(keyword.toLowerCase()))) {
+                return null;
+            } /*else {
+                System.out.println(keyword + " found for " + event.getLabels());
+            }*/
         }
 
         return event;

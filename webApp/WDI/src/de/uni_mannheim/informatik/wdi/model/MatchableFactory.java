@@ -64,10 +64,11 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 	 * @param dateTimeFormatter
 	 * @param fromDate
 	 * @param toDate
-	 * @return RecordType
+	 * @param filterByKeyword
+	 *@param keyword @return RecordType
 	 * */
 	public abstract RecordType createModelFromMultpleTSVline(HashSet<String[]> gatheredValues,
-															 String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate);
+															 String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword);
 
 	/**
 	 * returns a value from a child node of the first parameter. The child not

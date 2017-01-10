@@ -60,7 +60,7 @@
           <label><input type="checkbox" value="y" id="yID" checked>YAGO</label>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="catID">Category:</label>
           <select class="form-control" id="catID" name="catName">
             <option>cat1</option>
@@ -68,6 +68,10 @@
             <option>cat3</option>
             <option>cat4</option>
           </select>
+        </div>-->
+        <div class="form-group">
+          <label for="keywordID">Keyword Search for English Event Labels:</label>
+          <input type="text" class="form-control" id="keywordID" value="">
         </div>
         <div class="form-group">
           <label for="fromYearID">From Year:</label>

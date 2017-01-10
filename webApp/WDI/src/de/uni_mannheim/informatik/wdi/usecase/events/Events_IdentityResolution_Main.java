@@ -61,6 +61,8 @@ public class Events_IdentityResolution_Main {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 		LocalDate fromDate = LocalDate.MIN;
 		LocalDate toDate = LocalDate.MAX;
+        String keyword = "";
+
 		// loading data
 		/*DefaultDataSet<Movie, DefaultSchemaElement> dataAcademyAwards = new DefaultDataSet<>();
 		dataAcademyAwards.loadFromXML(new File(
@@ -72,11 +74,11 @@ public class Events_IdentityResolution_Main {
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
 		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, false, keyword);
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
 		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate);
+				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, false, keyword);
 
 
 		// create a matching rule
