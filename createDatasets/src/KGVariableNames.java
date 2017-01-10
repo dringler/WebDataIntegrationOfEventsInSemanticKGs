@@ -27,7 +27,7 @@ public class KGVariableNames {
         } else if (k==1) { //yago
             this.eventClass = "yago:wordnet_event_100029378";
             this.dateVar = "yago:happenedOnDate";
-            this.latVar = "yago:hasLatitude ";
+            this.latVar = "yago:hasLatitude";
             this.longVar = "yago:hasLongitude";
             this.label2Var = "skos:prefLabel";
             this.placeVar = "yago:happenedIn";

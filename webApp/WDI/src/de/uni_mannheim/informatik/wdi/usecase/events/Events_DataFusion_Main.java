@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
+import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.datafusion.evaluation.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.datafusion.fusers.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.*;
@@ -34,10 +35,6 @@ import de.uni_mannheim.informatik.wdi.datafusion.CorrespondenceSet;
 import de.uni_mannheim.informatik.wdi.datafusion.DataFusionEngine;
 import de.uni_mannheim.informatik.wdi.datafusion.DataFusionEvaluator;
 import de.uni_mannheim.informatik.wdi.datafusion.DataFusionStrategy;
-import de.uni_mannheim.informatik.wdi.model.DefaultDataSet;
-import de.uni_mannheim.informatik.wdi.model.DefaultSchemaElement;
-import de.uni_mannheim.informatik.wdi.model.FusableDataSet;
-import de.uni_mannheim.informatik.wdi.model.RecordGroupFactory;
 
 /**
  * Class containing the standard setup to perform a data fusion task, reading
@@ -164,7 +161,7 @@ public class Events_DataFusion_Main {
 		gs.loadFromTSV(new File("WDI/usecase/event/goldstandard/fused.tsv"),
 				new EventFactory(), "/events/event", separator);
 
-		gs.splitMultipleValues(separator);
+		//gs.splitMultipleValues(separator);
 		// evaluate
 		//DataFusionEvaluator<Movie, DefaultSchemaElement> evaluator = new DataFusionEvaluator<>(
 		//		strategy, new RecordGroupFactory<Movie, DefaultSchemaElement>());
@@ -177,4 +174,72 @@ public class Events_DataFusion_Main {
 
 	}
 
+	public static FusableDataSet<Event,DefaultSchemaElement> runDataFusion(FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD, FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY, ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences, char separator) throws IOException {
+
+		//FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = (FusableDataSet<Event, DefaultSchemaElement>) dataSetD;
+		System.out.println("DBpedia Data Set Density Report:");
+		fusableDataSetD.printDataSetDensityReport();
+
+		//FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY = (FusableDataSet<Event, DefaultSchemaElement>) dataSetY;
+		System.out.println("YAGO Data Set Density Report:");
+		fusableDataSetY.printDataSetDensityReport();
+
+		// Maintain Provenance
+		// Scores (e.g. from rating)
+		fusableDataSetD.setScore(1.0);
+		fusableDataSetY.setScore(1.0);
+
+		// Date (e.g. last update)
+		fusableDataSetD.setDate(DateTime.parse("2016-04-01"));
+		fusableDataSetY.setDate(DateTime.parse("2015-11-01"));
+
+		CorrespondenceSet<Event, DefaultSchemaElement> correspondencesSet = new CorrespondenceSet<>();
+		correspondencesSet
+				.loadCorrespondences(
+						correspondences,
+						fusableDataSetD, fusableDataSetY);
+						//dataSetD, dataSetY);
+		correspondencesSet.printGroupSizeDistribution();
+
+		DataFusionStrategy<Event, DefaultSchemaElement> strategy = new DataFusionStrategy<>(
+				new EventFactory());
+
+		strategy.addAttributeFuser(new DefaultSchemaElement("Label"), new EventLabelFuserAll(),
+				new EventLabelEvaluationRule());
+		strategy.addAttributeFuser(new DefaultSchemaElement("Date"), new EventDateFuserAll(),
+				new EventDateEvaluationRule());
+		strategy.addAttributeFuser(new DefaultSchemaElement("Coordinates"), new EventCoordinatesFuserFirst(),
+				new EventCoordinatesEvaluationRule());
+
+		DataFusionEngine<Event, DefaultSchemaElement> engine = new DataFusionEngine<>(strategy);
+		//FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = engine.run(correspondences, null);
+
+		// calculate cluster consistency
+		engine.printClusterConsistencyReport(correspondencesSet, null);
+
+		// run the fusion
+		FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = engine.run(correspondencesSet, null);
+
+		// write the result
+		//fusedDataSet.writeCSV(new File("WDI/usecase/event/output/fused.tsv"),new EventCSVFormatter());
+
+
+		// load the gold standard
+		DefaultDataSet<Event, DefaultSchemaElement> gs = new FusableDataSet<>();
+		gs.loadFromTSV(new File("../data/fused.tsv"),
+				new EventFactory(), "/events/event", separator);
+
+		//gs.splitMultipleValues(separator);
+		// evaluate
+		//DataFusionEvaluator<Movie, DefaultSchemaElement> evaluator = new DataFusionEvaluator<>(
+		//		strategy, new RecordGroupFactory<Movie, DefaultSchemaElement>());
+		DataFusionEvaluator<Event, DefaultSchemaElement> evaluator = new DataFusionEvaluator<>(
+				strategy, new RecordGroupFactory<Event, DefaultSchemaElement>());
+		evaluator.setVerbose(true);
+		double accuracy = evaluator.evaluate(fusedDataSet, gs, null);
+
+		System.out.println(String.format("Accuracy: %.2f", accuracy));
+
+		return fusedDataSet;
+	}
 }

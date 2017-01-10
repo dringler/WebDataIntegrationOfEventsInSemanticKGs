@@ -31,5 +31,6 @@
         <jarDirectory url="file://$MODULE_DIR$/WDI/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="WDI" />
   </component>
 </module>

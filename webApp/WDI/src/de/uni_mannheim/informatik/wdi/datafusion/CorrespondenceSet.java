@@ -28,11 +28,8 @@ import java.util.Map;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import de.uni_mannheim.informatik.wdi.model.Fusable;
-import de.uni_mannheim.informatik.wdi.model.FusableDataSet;
-import de.uni_mannheim.informatik.wdi.model.Matchable;
-import de.uni_mannheim.informatik.wdi.model.RecordGroup;
-import de.uni_mannheim.informatik.wdi.model.RecordGroupFactory;
+import de.uni_mannheim.informatik.wdi.model.*;
+import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 
 /**
  * Represents a set of correspondences (from the identity resolution)
@@ -194,6 +191,59 @@ public class CorrespondenceSet<RecordType extends Matchable & Fusable<SchemaElem
 			System.err.println(String.format("Skipped %,d records (not found in provided dataset)", skipped));
 		}
 	}
+	public void loadCorrespondences(ResultSet<Correspondence<RecordType, SchemaElementType>> correspondences,
+									FusableDataSet<RecordType, SchemaElementType> first,
+									FusableDataSet<RecordType, SchemaElementType> second) {
+
+
+
+
+		//while ((values = reader.readNext()) != null) {
+		for (Correspondence<RecordType, SchemaElementType> correspondence : correspondences.get()) {
+
+			// check if the ids exist in the provided datasets
+			if (first.getRecord(correspondence.getFirstRecord().getIdentifier()) == null) {
+				System.err.println(String.format(
+						"Record %s not found in first dataset", correspondence.getFirstRecord().getIdentifier()));
+				continue;
+			}
+			if (second.getRecord(correspondence.getSecondRecord().getIdentifier()) == null) {
+				System.err.println(String.format(
+						"Record %s not found in second dataset", correspondence.getSecondRecord().getIdentifier()));
+				continue;
+			}
+
+			// check if the ids already belong to any groups
+			RecordGroup<RecordType, SchemaElementType> grp1 = recordIndex.get(correspondence.getFirstRecord().getIdentifier());
+			RecordGroup<RecordType, SchemaElementType> grp2 = recordIndex.get(correspondence.getSecondRecord().getIdentifier());
+
+			if (grp1 == null && grp2 == null) {
+				// no existing groups, create a new one
+				RecordGroup<RecordType, SchemaElementType> grp = groupFactory.createRecordGroup();
+				grp.addRecord(correspondence.getFirstRecord().getIdentifier(), first);
+				grp.addRecord(correspondence.getSecondRecord().getIdentifier(), second);
+				recordIndex.put(correspondence.getFirstRecord().getIdentifier(), grp);
+				recordIndex.put(correspondence.getSecondRecord().getIdentifier(), grp);
+				groups.add(grp);
+			} else if (grp1 != null && grp2 == null) {
+				// one existing group, add to this group
+				grp1.addRecord(correspondence.getSecondRecord().getIdentifier(), second);
+				recordIndex.put(correspondence.getSecondRecord().getIdentifier(), grp1);
+			} else if (grp1 == null && grp2 != null) {
+				// one existing group, add to this group
+				grp2.addRecord(correspondence.getFirstRecord().getIdentifier(), first);
+				recordIndex.put(correspondence.getFirstRecord().getIdentifier(), grp2);
+			} else {
+				// two existing groups, merge
+				grp1.mergeWith(grp2);
+
+				for (String id : grp2.getRecordIds()) {
+					recordIndex.put(id, grp1);
+				}
+			}
+		}
+
+	}
 	
 	/**
 	 * returns the groups of records which are the same according to the
@@ -278,5 +328,6 @@ public class CorrespondenceSet<RecordType extends Matchable & Fusable<SchemaElem
 		}
 
 	}
+
 
 }

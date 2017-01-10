@@ -95,6 +95,7 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 		this.secondBlockingFunction = secondBlockingFunction == null ? blockingFunction : secondBlockingFunction;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see de.uni_mannheim.informatik.wdi.matching.blocking.Blocker#runBlocking(de.uni_mannheim.informatik.wdi.model.DataSet, de.uni_mannheim.informatik.wdi.model.DataSet, de.uni_mannheim.informatik.wdi.model.ResultSet, de.uni_mannheim.informatik.wdi.matching.MatchingEngine)
 	 */

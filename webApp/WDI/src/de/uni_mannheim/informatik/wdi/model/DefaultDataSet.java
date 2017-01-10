@@ -159,6 +159,46 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		addAttributes(getRandomRecord().getDefaultSchemaElements());
 	}
 
+	public void loadFromInstancesHashMap(HashMap<String, HashSet<String[]>> instances, MatchableFactory<RecordType> modelFactory, char separator) {
+		/*HashMap<String, HashSet<String[]>> instances = new HashMap<>();
+		String[] lineValues = new String[7];
+		while (resultSet.hasNext()) {
+			lineValues[0] = sol.getResource("uri").getURI();//.substring(28);
+			lineValues[1] = sol.getLiteral("label").toString();
+			lineValues[2] = sol.getLiteral("date").toString();
+			lineValues[3] = sol.getLiteral("lat").toString();
+			lineValues[4] = sol.getLiteral("long").toString();
+			lineValues[5] = "same";
+			lineValues[6] = "place";
+
+			if (instances.containsKey(lineValues[0])) {
+				instances.get(lineValues[0]).add(lineValues);
+			} else {
+				HashSet<String[]> lineValuesSet = new HashSet<>();
+				lineValuesSet.add(lineValues);
+				instances.put(lineValues[0], lineValuesSet);
+			}
+		}*/
+
+		//create events for each instance uri
+		for (String instance : instances.keySet()) {
+			//get HashSet of instanceLines
+			RecordType record = modelFactory.createModelFromMultpleTSVline(instances.get(instance), "dbpedia", separator);
+
+			if (record != null) {
+				addRecord(record);
+			} else {
+				System.out.println(String.format("Could not generate entry for ", instance));
+			}
+		}
+
+		//DefaultSchemaElement[]
+		addAttributes(getRandomRecord().getDefaultSchemaElements());
+
+
+
+
+	}
 
 
 	/**
@@ -347,10 +387,12 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	/**
 	 * Split multiple values for the attributes
 	 */
-	public void splitMultipleValues(char separator) {
+	/*public void splitMultipleValues(char separator) {
 		for (RecordType record : records.values()) {
 
 		}
 
-	}
+	}*/
+
+
 }

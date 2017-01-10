@@ -23,7 +23,7 @@
 
 </head>
 
-<body>
+<body onload="init();">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -44,15 +44,20 @@
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="userInputID">
       <form>
+        <label>Data Source:</label>
+        <div class="checkbox">
+          <label><input type="checkbox" value="localData" id="localDataID" checked>Use local data</label>
+        </div>
+
         <label>Databases:</label>
         <div class="checkbox">
           <label><input type="checkbox" value="d" id="dID" checked>DBpedia</label>
         </div>
-        <div class="checkbox">
+        <!--<div class="checkbox">
           <label><input type="checkbox" value="w" id="wID">Wikidata</label>
-        </div>
+        </div>-->
         <div class="checkbox">
-          <label><input type="checkbox" value="y" id="yID">YAGO</label>
+          <label><input type="checkbox" value="y" id="yID" checked>YAGO</label>
         </div>
 
         <div class="form-group">
@@ -65,11 +70,11 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="fromYearID">From year:</label>
+          <label for="fromYearID">From Year:</label>
           <input type="text" class="form-control" id="fromYearID" value="1980-01-01">
         </div>
         <div class="form-group">
-          <label for="toYearID">To year:</label>
+          <label for="toYearID">To Year:</label>
           <input type="text" class="form-control" id="toYearID" value="1990-01-01">
         </div>
         <button type="button" class="btn btn-default" id="sendQueryID">Send Query</button>
@@ -98,7 +103,7 @@
 
 <script type="text/javascript" src="/dwr/engine.js"></script>
 <script type="text/javascript" src="/dwr/util.js"></script>
-<script type="text/javascript" src="/dwr/interface/Demo.js"></script>
+<!--<script type="text/javascript" src="/dwr/interface/Demo.js"></script>-->
 <script type="text/javascript" src="/dwr/interface/QueryProcessor.js"></script>
 
 
