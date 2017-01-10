@@ -11,7 +11,7 @@ public abstract class MultiBlockingKeyGenerator<RecordType extends Matchable> im
 	/**
 	 * Returns the blocking key for the given record
 	 * 
-	 * @param entity
+	 * @param instance
 	 * @return
 	 */
 	

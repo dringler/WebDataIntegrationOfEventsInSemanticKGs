@@ -37,7 +37,7 @@ public abstract class BlockingKeyGenerator<RecordType extends Matchable> impleme
 	/**
 	 * Returns the blocking key for the given record
 	 * 
-	 * @param entity
+	 * @param instance
 	 * @return
 	 */
 	public abstract String getBlockingKey(RecordType instance);

@@ -71,7 +71,7 @@ public abstract class Blocker<RecordType extends Matchable, SchemaElementType ex
 	 *            the first data set
 	 * @param dataset2
 	 *            the second data set
-	 * @param blockedPairs
+	 * @param blocked
 	 *            the list of pairs that resulted from the blocking
 	 */
 	protected void calculatePerformance(DataSet<RecordType, SchemaElementType> dataset1,

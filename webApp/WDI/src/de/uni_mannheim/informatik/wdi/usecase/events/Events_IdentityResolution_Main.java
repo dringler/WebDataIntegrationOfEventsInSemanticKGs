@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.uni_mannheim.informatik.wdi.matching.LinearCombinationMatchingRule;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEngine;
+import de.uni_mannheim.informatik.wdi.matching.blocking.BlockingKeyGenerator;
 import de.uni_mannheim.informatik.wdi.matching.blocking.NoBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.StandardBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.StaticBlockingKeyGenerator;
@@ -55,6 +56,7 @@ import de.uni_mannheim.informatik.wdi.usecase.events.model.MovieFactory;
 public class Events_IdentityResolution_Main {
 
 	public static void main(String[] args) throws Exception {
+		char separator = '+';
 		// loading data
 		/*DefaultDataSet<Movie, DefaultSchemaElement> dataAcademyAwards = new DefaultDataSet<>();
 		dataAcademyAwards.loadFromXML(new File(
@@ -65,12 +67,12 @@ public class Events_IdentityResolution_Main {
 				new MovieFactory(), "/movies/movie");
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
-		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
-				new EventFactory(), "events/event");
+		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1.tsv"),
+				new EventFactory(), "events/event", separator);
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
-		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
-				new EventFactory(), "events/event");
+		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1.tsv"),
+				new EventFactory(), "events/event", separator);
 
 
 		// create a matching rule
@@ -81,7 +83,17 @@ public class Events_IdentityResolution_Main {
 		matchingRule.addComparator(new EventDateComparator(), 0.2);
 
 		// create a blocker (blocking strategy)
-		NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
+		//NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
+		BlockingKeyGenerator<Event> firstLabel = new BlockingKeyGenerator<Event>() {
+			@Override
+			public String getBlockingKey(Event event) {
+				for (String label : event.getLabels()) {
+					return label;
+				}
+				return null;
+			}
+		};
+		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
 
 		// Initialize Matching Engine
 		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
@@ -340,6 +352,65 @@ public class Events_IdentityResolution_Main {
 							correspondence.getSecondRecord().getDate()
 									.toString("YYYY-MM-DD")));
 		}
+	}
+
+	public static ResultSet<Correspondence<Event, DefaultSchemaElement>> runIdentityResolution(DefaultDataSet<Event, DefaultSchemaElement> dataSetD, DefaultDataSet<Event, DefaultSchemaElement> dataSetY, char separator) throws Exception {
+		// create a matching rule
+		LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(
+				0.7);
+		// add comparators
+		matchingRule.addComparator(new EventLabelComparatorLevenshtein(), 0.8);
+		matchingRule.addComparator(new EventDateComparator(), 0.2);
+
+		// create a blocker (blocking strategy)
+		//NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
+		BlockingKeyGenerator<Event> firstLabel = new BlockingKeyGenerator<Event>() {
+			@Override
+			public String getBlockingKey(Event event) {
+				for (String label : event.getLabels()) {
+					return label;
+				}
+				return null;
+			}
+		};
+		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
+
+		// Initialize Matching Engine
+		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
+
+		// Execute the matching
+		ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(
+				dataSetD, dataSetY, null, matchingRule,
+				blocker);
+
+		// write the correspondences to the output file
+		/*engine.writeCorrespondences(
+				correspondences.get(),
+				new File(
+						"WDI/usecase/event/output/dbpedia_2_yago_correspondences_s.csv"));
+		*/
+		// print the correspondences to console
+		// printCorrespondences(correspondences);
+
+		// load the gold standard (test set)
+		MatchingGoldStandard gsTest = new MatchingGoldStandard();
+		gsTest.loadFromCSVFile(new File(
+				//"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
+				"../data/dbpedia_2_yago_s.csv"));
+
+		// evaluate your result
+		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
+		Performance perfTest = evaluator.evaluateMatching(correspondences.get(),
+				gsTest);
+
+		// print the evaluation result
+		System.out.println("DBpedia <-> YAGO");
+		System.out
+				.println(String.format(
+						"Precision: %.4f\nRecall: %.4f\nF1: %.4f",
+						perfTest.getPrecision(), perfTest.getRecall(),
+						perfTest.getF1()));
+	return correspondences;
 	}
 
 }
