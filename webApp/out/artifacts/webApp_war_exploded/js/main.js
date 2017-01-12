@@ -1,5 +1,5 @@
 /**
- * Created by curtis on 13/10/16.
+ * Created by Daniel on 13/10/16.
  */
 
 var dateFormat = /^\d{4}[-]\d{2}[-]\d{2}$/;

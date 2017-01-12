@@ -80,15 +80,25 @@ public class EventFactory extends MatchableFactory<Event> implements
      * @param gatheredValues
      * @param provenanceInfo
      * @param separator
-     * @param filterByDates
      * @param dateTimeFormatter
+     * @param filterFrom
      * @param fromDate
+     * @param filterTo
      * @param toDate
-     *
      * @param filterByKeyword
-     *@param keyword @return Event
+     * @param keyword
+     * @return Event
      */
-    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) {
+    public Event createModelFromMultpleTSVline(HashSet<String[]> gatheredValues,
+                                               String provenanceInfo,
+                                               char separator,
+                                               DateTimeFormatter dateTimeFormatter,
+                                               boolean filterFrom,
+                                               LocalDate fromDate,
+                                               boolean filterTo,
+                                               LocalDate toDate,
+                                               boolean filterByKeyword,
+                                               String keyword) {
 
         Event event = null;
         boolean firstLine = true;
@@ -117,8 +127,14 @@ public class EventFactory extends MatchableFactory<Event> implements
             try {
                 LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
                 //check date against user input parameters
-                if (filterByDates) {
-                    if (localDate.isAfter(toDate) || localDate.isBefore(fromDate)) {
+                if (filterFrom) { //&& filterTo) {
+                    //if (localDate.isAfter(toDate) || localDate.isBefore(fromDate)) {
+                    if (localDate.isBefore(fromDate)) {
+                        return null;
+                    }
+                }
+                if (filterTo) {
+                    if (localDate.isAfter(toDate)) {
                         return null;
                     }
                 }

@@ -5,18 +5,18 @@
 public class QueryString {
 
     // TO DO: remove limit in queries
-    // ADD FILTERS FOR KEYWORDS IN LABELS
-
 
     /**
-     Get a string to query the DBpedia endpoint
-     @return String to query the public DBpedia endpoint at http://dbpedia.org/sparql
-      * @param applyKeywordSearch
+     * Get a string to query the DBpedia endpoint
+     * @param applyKeywordSearch
      * @param  keyword
+     * @param filterFrom
      * @param fD fromDate range
+     * @param filterTo
      * @param tD toDate range
+     * @return String to query the public DBpedia endpoint at http://dbpedia.org/sparql
      */
-    public String getDBpediaQueryString(boolean applyKeywordSearch, String keyword, String fD, String tD) {
+    public String getDBpediaQueryString(boolean applyKeywordSearch, String keyword, boolean filterFrom, String fD, boolean filterTo, String tD) {
 
         /*String queryString = "PREFIX  dbo:  <http://dbpedia.org/ontology/>\n" +
                 "PREFIX  dbp:  <http://dbpedia.org/property/>\n" +
@@ -43,6 +43,7 @@ public class QueryString {
                 "PREFIX  dbo:  <http://dbpedia.org/ontology/>\n" +
                         "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
                         "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
                         "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n" +
                 "SELECT ?uri ?label ?date ?lat ?long  WHERE {\n" + //?same ?place
                 "?uri a dbo:Event ;\n" +
@@ -52,24 +53,50 @@ public class QueryString {
                 " geo:long ?long .\n"+
                // " owl:sameAs ?same ;\n" +
                // " dbo:place ?place .\n";
-
                 "FILTER langMatches( lang(?label), 'EN' )\n";
 
+        //date filter
+        if (filterFrom || filterTo) {
+            queryString = queryString + addDateFilter(filterFrom, fD, filterTo, tD);
+        }
+        if (applyKeywordSearch) {
+            queryString = queryString + addKeywordFilter(keyword);
+        }
 
-        queryString = queryString + "} LIMIT 10";
+
+        queryString = queryString + "} LIMIT 1000";
 
         return queryString;
         //return removeQuotation(queryStringQ);
     }
+
+    private String addKeywordFilter(String keyword) {
+        return "FILTER ( ( regex(str(?label), \'" +  keyword + "\', \'i\') ) )";
+    }
+
+    private String addDateFilter(boolean filterFrom, String fD, boolean filterTo, String tD) {
+
+        if (filterFrom && filterTo) {
+            return "FILTER ( ( ?date > \'" + fD +  "\'^^xsd:date ) && ( ?date < \'" + tD  + "\'^^xsd:date ) )\n";
+        } else if (filterFrom && !filterTo) {
+            return "FILTER ( ( ?date > \'" + fD +  "\'^^xsd:date ) )\n";
+        } else if (!filterFrom && filterTo) {
+            return "FILTER ( ( ?date < \'" + tD +  "\'^^xsd:date ) )\n";
+        }
+        return null;
+    }
+
     /**
-     Get a string to query the YAGO endpoint
-     @return String to query the public YAGO endpoint at https://linkeddata1.calcul.u-psud.fr/sparql
-      * @param applyKeywordSearch
+     * Get a string to query the YAGO endpoint
+     * @param applyKeywordSearch
      * @param  keyword
+     * @param filterFrom
      * @param fD fromDate range
+     * @param filterTo
      * @param tD toDate range
+     * @return String to query the public YAGO endpoint at https://linkeddata1.calcul.u-psud.fr/sparql
      */
-    public String getYagoQueryString(boolean applyKeywordSearch, String keyword, String fD, String tD) {
+    public String getYagoQueryString(boolean applyKeywordSearch, String keyword, boolean filterFrom, String fD, boolean filterTo, String tD) {
         /*String queryString = "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
                 "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
                 "SELECT ?uri ?date ?location WHERE {\n" +
@@ -93,6 +120,7 @@ public class QueryString {
         String queryString = "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
                 "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
                 "SELECT ?uri ?label ?date ?lat ?long  WHERE {\n" + //?same ?place
                 "?uri a yago:wordnet_event_100029378 ;\n" +
                 " rdfs:label ?label ;\n" +
@@ -101,9 +129,19 @@ public class QueryString {
                 " yago:hasLongitude ?long .\n"+
                 // " owl:sameAs ?same ;\n" +
                 // " dbo:place ?place .\n";
-
                 "FILTER langMatches( lang(?label), 'ENG' )\n";
-        queryString = queryString + "} OFFSET 4730 LIMIT 100";
+
+        //date filter
+        if (filterFrom || filterTo) {
+            queryString = queryString + addDateFilter(filterFrom, fD, filterTo, tD);
+        }
+        if (applyKeywordSearch) {
+            queryString = queryString + addKeywordFilter(keyword);
+        }
+
+        queryString = queryString + "} " +
+                //"OFFSET 4730 " +
+                "LIMIT 1000";
 
         return queryString;
     }

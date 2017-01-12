@@ -63,7 +63,7 @@ public class ActorFactory extends MatchableFactory<Actor> {
 	}
 
 	@Override
-	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) {
+	public Actor createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator, DateTimeFormatter dateTimeFormatter, boolean filterFrom, LocalDate fromDate, boolean filterTo, LocalDate toDate, boolean filterByKeyword, String keyword) {
 		return null;
 	}
 

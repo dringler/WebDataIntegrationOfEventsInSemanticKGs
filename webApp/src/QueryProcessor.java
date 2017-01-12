@@ -39,10 +39,19 @@ public class QueryProcessor {
         if (!keyword.equals("")) {
             applyKeywordSearch = true;
         }
+        boolean filterFrom = checkDateFilter(fD);
+        boolean filterTo = checkDateFilter(tD);
+
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-        LocalDate fromDate = LocalDate.parse(fD, dateTimeFormatter);
-        LocalDate toDate = LocalDate.parse(tD, dateTimeFormatter);
+        LocalDate fromDate = null;
+        if (filterFrom) {
+            fromDate = LocalDate.parse(fD, dateTimeFormatter);
+        }
+        LocalDate toDate = null;
+        if (filterTo) {
+            toDate = LocalDate.parse(tD, dateTimeFormatter);
+        }
         char separator = '+';
 
         //user parameters received, start data integration process
@@ -60,15 +69,15 @@ public class QueryProcessor {
 
             if (d) {
                 //step 1: data collection
-                instancesD = dataCollection(d, false, applyKeywordSearch, keyword, fD, tD);
+                instancesD = dataCollection(d, false, applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
                 //step 2: data translation
-                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate, false, null);
+                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
             if (y) {
                 //step 1: data collection
-                instancesY = dataCollection(false, y, applyKeywordSearch, keyword, fD, tD);
+                instancesY = dataCollection(false, y, applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
                 //step 2: data translation
-                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, true, dateTimeFormatter, fromDate, toDate, false, null);
+                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
 
 
@@ -77,11 +86,11 @@ public class QueryProcessor {
             //step 1+2: data collection and translation
             if (d) {
                 dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
-                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate, applyKeywordSearch, keyword);
+                        new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
             if (y) {
                 dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),
-                        new EventFactory(), "events/event", separator, true, dateTimeFormatter, fromDate, toDate, applyKeywordSearch, keyword);
+                        new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
         }
 
@@ -134,16 +143,30 @@ public class QueryProcessor {
     }
 
     /**
-     Data Collection Process
-     @return results from querying the public endpoints
-      * @param d query DBpedia (boolean)
+     * Check dateString against empty values
+     * @param dateString
+     * @return boolean
+     */
+    private boolean checkDateFilter(String dateString) {
+        if(!dateString.equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Data Collection Process
+     * @param d query DBpedia (boolean)
      * @param y query YAGO (boolean)
      * @param applyKeywordSearch
      * @param keyword keyword for the labels
+     * @param filterFrom
      * @param fD fromDate (String)
+     * @param filterTo
      * @param tD toDate (String)
+     * @return results from querying the public endpoints
      */
-    public HashMap<String, HashSet<String[]>>  dataCollection(boolean d, boolean y, boolean applyKeywordSearch, String keyword, String fD, String tD) {
+    public HashMap<String, HashSet<String[]>>  dataCollection(boolean d, boolean y, boolean applyKeywordSearch, String keyword, boolean filterFrom, String fD, boolean filterTo, String tD) {
         System.out.println("start data collection");
         String result = "";
         QueryString qs = new QueryString();
@@ -152,7 +175,7 @@ public class QueryProcessor {
         if (d) { // DBpedia
             String dbpedia = "http://dbpedia.org/sparql";
             System.out.println("Query " + dbpedia);
-            String queryString = qs.getDBpediaQueryString(applyKeywordSearch, keyword, fD, tD);
+            String queryString = qs.getDBpediaQueryString(applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
 
             HashMap<String, HashSet<String[]>> instancesD = createWrapper(dbpedia, queryString);
             return instancesD;
@@ -167,7 +190,7 @@ public class QueryProcessor {
         if (y) { //YAGO
             String yago = "https://linkeddata1.calcul.u-psud.fr/sparql";
             System.out.println("Query " + yago);
-            String queryString = qs.getYagoQueryString(applyKeywordSearch, keyword, fD, tD);
+            String queryString = qs.getYagoQueryString(applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
 
             HashMap<String, HashSet<String[]>> instancesY = createWrapper(yago, queryString);
             return instancesY;

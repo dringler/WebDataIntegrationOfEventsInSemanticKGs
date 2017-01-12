@@ -78,7 +78,7 @@ public class MovieFactory extends MatchableFactory<Movie> implements
 	}
 
 	@Override
-	public Movie createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String provenanceInfo, char separator, boolean filterByDates, DateTimeFormatter dateTimeFormatter, LocalDate fromDate, LocalDate toDate, boolean filterByKeyword, String keyword) { return null;}
+	public Movie createModelFromMultpleTSVline(HashSet<String[]> gatheredValues, String proveranaceInfo, char separator, DateTimeFormatter dateTimeFormatter, boolean filterFrom, LocalDate fromDate, boolean filterTo, LocalDate toDate, boolean filterByKeyword, String keyword) { return null;}
 
 
 	@Override

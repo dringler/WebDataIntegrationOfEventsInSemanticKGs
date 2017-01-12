@@ -61,12 +61,12 @@ public class Events_DataFusion_Main {
 		// Load the Data into FusableDataSet
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = new FusableDataSet<>();
 		fusableDataSetD.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, true, keyword);
+				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY = new FusableDataSet<>();
 		fusableDataSetY.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
-				new EventFactory(), "events/event", separator, false, dateTimeFormatter, fromDate, toDate, true, keyword);
+				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = runDataFusion(fusableDataSetD,
@@ -145,7 +145,7 @@ public class Events_DataFusion_Main {
 		// load the gold standard
 		DefaultDataSet<Event, DefaultSchemaElement> gs = new FusableDataSet<>();
 		gs.loadFromTSV(new File("../data/fused.tsv"),
-				new EventFactory(), "/events/event", separator, false, dateTimeFormatter, fromDate, toDate, false, keyword);
+				new EventFactory(), "/events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
 
 		//gs.splitMultipleValues(separator);
 		// evaluate
