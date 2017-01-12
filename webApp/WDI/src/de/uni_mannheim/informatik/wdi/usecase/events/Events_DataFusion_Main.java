@@ -120,6 +120,8 @@ public class Events_DataFusion_Main {
 		DataFusionStrategy<Event, DefaultSchemaElement> strategy = new DataFusionStrategy<>(
 				new EventFactory());
 
+		strategy.addAttributeFuser(new DefaultSchemaElement("Uri"), new EventURIFuserAll(),
+				new EventURIEvaluationRule());
 		strategy.addAttributeFuser(new DefaultSchemaElement("Label"), new EventLabelFuserAll(),
 				new EventLabelEvaluationRule());
 		strategy.addAttributeFuser(new DefaultSchemaElement("Date"), new EventDateFuserAll(),

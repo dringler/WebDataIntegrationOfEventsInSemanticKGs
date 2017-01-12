@@ -19,6 +19,7 @@ package de.uni_mannheim.informatik.wdi.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -38,7 +39,15 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 	private static final long serialVersionUID = 1L;
 	private double score;
 	private DateTime date;
-	
+
+	/**
+	 * Get the set of all original IDs of the fused records
+	 * @return
+	 */
+	public Set<String> getOriginalIdsOfFusedRecords() {
+		return originalIdIndex.keySet();
+	}
+
 	private Map<String, RecordType> originalIdIndex = new HashMap<>();
 
 	/**

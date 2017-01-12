@@ -116,7 +116,12 @@ public class QueryProcessor {
 
             //combine data sets
             if (!includeOnlyFusedEvents) {
-                //...
+                //get all IDs of fused records
+                Set<String> fusedRecordIDs = fusedDataSet.getOriginalIdsOfFusedRecords();
+                //add unfused records from DBpedia
+                eventList.addAll(collectNotFusedRecords(dataSetD, fusedRecordIDs));
+                // unfused records from YAGO
+                eventList.addAll(collectNotFusedRecords(dataSetY, fusedRecordIDs));
             }
 
 
@@ -137,6 +142,20 @@ public class QueryProcessor {
         return jsonString;
     }
 
+    private List<Event> collectNotFusedRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet, Set<String> fusedRecordIDs) {
+        return fusableDataSet.getRecords()
+                .stream()
+                .filter(event -> !fusedRecordIDs.contains(event.getIdentifier()))
+                .collect(Collectors.toList());
+    }
+
+
+
+    /**
+     * Collect all records of the given {@link FusableDataSet}
+     * @param fusableDataSet
+     * @return List<Event>
+     */
     private List<Event> collectRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet) {
         return fusableDataSet.getRecords()
                 .stream()
