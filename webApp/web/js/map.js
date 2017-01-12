@@ -10,7 +10,7 @@ function mapInit() {
     d3.csv("csv/population.csv", function (err, data) {
         var config = {
             "data0": "Country (or dependent territory)", "data1": "Population",
-            "label0": "label 0", "label1": "label 1", "color0": "#99ccff", "color1": "#0050A1",
+            "label0": "label 0", "label1": "label 1", "color0": "#000000", "color1": "#000000",//"#99ccff", "color1": "#0050A1",
             "width": 960, "height": 960
         }
 
@@ -159,7 +159,7 @@ function mapInit() {
                 .attr("title", function (d) {
                     return d.properties.name;
                 })
-                .style("fill", config.color0/*function(d) {
+                .style("fill", "LightGrey"/*config.color0function(d) {
                  if (valueHash[d.properties.name]) {
                  var c = quantize((valueHash[d.properties.name]));
                  var color = colors[c].getColors();
@@ -245,7 +245,14 @@ function mapInit() {
             //.attr("cx", function(d) { return projection(d.coordinates[0].second); })
             //.attr("cy", function(d) { return projection(d.coordinates[0].first); })
             .attr("r", "3px")
-            .style("fill", "darkorange")
+            .style("fill", function(d) {
+                if (d.identifier.includes("+http://yago")) {
+                    //fused event
+                    return "DeepSkyBlue";
+                } else {
+                    return "DarkOrange";
+                }
+            })
             .attr("transform", function (d) {
                 return "translate(" + projection([
                         d.coordinates[0].second,
