@@ -1,6 +1,5 @@
 import org.apache.jena.query.*;
-import org.apache.jena.query.Query;
-import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 
@@ -11,10 +10,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Created by curtis on 06/12/16.
+ * Created by Daniel on 06/12/16.
  */
 public class createDatasetsMain {
     public static void main(String[] args) {
@@ -37,16 +35,15 @@ public class createDatasetsMain {
         org.apache.log4j.BasicConfigurator.configure();
         LogManager.getRootLogger().setLevel(Level.OFF); //set console logger off
 
-        String service;
-        boolean dbIsUp;
+
         int lineProgress = 500;
         //HashSet<String> xInstancesWithProperties;
 
         if (dbpedia) {
             k=0;
-            service = "http://dbpedia.org/sparql";
-            dbIsUp = testConnection(service);
-            if (dbIsUp) {
+            QueryObject dQ = new QueryObject("http://dbpedia.org/sparql");
+
+            if (dQ.testConnection()) {
                 //specify fileNames and csv header
                 fileName = "out/dbpedia-1.tsv";
                 header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";//\tlocation\tcity\tterritory";
@@ -60,27 +57,27 @@ public class createDatasetsMain {
                 KGVariableNames dbpediaVarNames = new KGVariableNames(k);
                 //get event instances from DBpedia
 
-                HashSet<String> eventInstances = getEventInstances(k, service, dbpediaVarNames, testing);
-                System.out.println(eventInstances.size() + " distinct instances received from " + service);
+                HashSet<String> eventInstances = getEventInstances(k, dQ, dbpediaVarNames, testing);
+                System.out.println(eventInstances.size() + " distinct instances received from " + dQ.getService());
                 //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
                 //System.out.println(eventInstances.size() + " distinct instances read from DBpedia table");
 
 
                 // 1 get and write event instances properties
-                getAndWriteEventInstancePropertiesToFile(k, service, dbpediaVarNames, eventInstances, fileName, header, lineProgress);
+                getAndWriteEventInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, eventInstances, fileName, header, lineProgress);
 
                 // 2 get and write second order file
                 if (secondOrderP) {
-                    getAndWritePlaceInstancePropertiesToFile(k, service, dbpediaVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
+                    getAndWritePlaceInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
                 }
             }
         }
         secondOrderFileNames.clear();
         if (yago) {
             k = 1;
-            service = "https://linkeddata1.calcul.u-psud.fr/sparql";
-            dbIsUp = testConnection(service);
-            if (dbIsUp) {
+
+            QueryObject yQ = new QueryObject("https://linkeddata1.calcul.u-psud.fr/sparql");
+            if (yQ.testConnection()) {
                 //specify fileNames and csv header
                 header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";
                 fileName = "out/yago-1.tsv";
@@ -90,15 +87,15 @@ public class createDatasetsMain {
 
                 KGVariableNames yagoVarNames = new KGVariableNames(k);
                 //get event instances from YAGO
-                HashSet<String> eventInstances = getEventInstances(k, service, yagoVarNames, testing);
-                System.out.println(eventInstances.size() + " distinct instances received from " + service);
+                HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
+                System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
 
                 // 1 get event instances properties
-                getAndWriteEventInstancePropertiesToFile(k, service, yagoVarNames, eventInstances, fileName, header, lineProgress);
+                getAndWriteEventInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, eventInstances, fileName, header, lineProgress);
 
                 // 2 get and write second order file
                 if (secondOrderP) {
-                    getAndWritePlaceInstancePropertiesToFile(k, service, yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
+                    getAndWritePlaceInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
                 }
 
 
@@ -136,17 +133,18 @@ public class createDatasetsMain {
     /**
      * get and write the place instance properties to file
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param queryObject
      * @param service sparql url
      * @param varNames
      * @param secondOrderFileNames
      * @param secondOrderHeader
      * @param lineProgress print message after lineProgress lines
      */
-    private static void getAndWritePlaceInstancePropertiesToFile(int k, String service, KGVariableNames varNames, List<String> secondOrderFileNames, String secondOrderHeader, int lineProgress, boolean testing) {
+    private static void getAndWritePlaceInstancePropertiesToFile(int k, QueryObject queryObject, String service, KGVariableNames varNames, List<String> secondOrderFileNames, String secondOrderHeader, int lineProgress, boolean testing) {
 
         for (String secondOrderFileName : secondOrderFileNames) {
             String propertyName = getPropertyName(secondOrderFileName);
-            HashSet<String> placeInstances = getPlaceInstances(k, service, varNames, propertyName, testing);
+            HashSet<String> placeInstances = getPlaceInstances(k, queryObject, varNames, propertyName, testing);
             System.out.println(placeInstances.size() + " distinct "+  propertyName + " instances received from " + service);
             int lineCounter = 0;
             int writtenLines = 0;
@@ -157,7 +155,7 @@ public class createDatasetsMain {
 
                 HashSet<String> placeInstancesProperties = new HashSet<>();
                 for (String placeInstance : placeInstances) {
-                    placeInstancesProperties.addAll(getPlaceInstanceProperties(k, service, varNames, placeInstance));
+                    placeInstancesProperties.addAll(getPlaceInstanceProperties(k, queryObject, varNames, placeInstance));
                     //write lines to file
                     placeInstancesProperties.forEach(writer2::println);
                     writtenLines += placeInstancesProperties.size();
@@ -186,6 +184,7 @@ public class createDatasetsMain {
     /**
      * get and write the event instance properties to file
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
+     * @param queryObject
      * @param service sparql url
      * @param varNames
      * @param eventInstances URIs of all distinct event instances
@@ -193,7 +192,7 @@ public class createDatasetsMain {
      * @param header
      * @param lineProgress print message after lineProgress lines
      */
-    private static void getAndWriteEventInstancePropertiesToFile(int k, String service, KGVariableNames varNames, HashSet<String> eventInstances, String fileName, String header, int lineProgress) {
+    private static void getAndWriteEventInstancePropertiesToFile(int k, QueryObject queryObject, String service, KGVariableNames varNames, HashSet<String> eventInstances, String fileName, String header, int lineProgress) {
         int lineCounter = 0;
         int writtenLines = 0;
         try {
@@ -205,7 +204,7 @@ public class createDatasetsMain {
             for (String instance : eventInstances) {
                 //get all properties for the instance
                 if (!instance.contains("\"")) {
-                    eventInstanceProperties.addAll(getInstanceProperties(k, service, varNames, instance));
+                    eventInstanceProperties.addAll(getInstanceProperties(k, queryObject, varNames, instance));
                     //write all lines to file
                     eventInstanceProperties.forEach(writer::println);
                     writtenLines += eventInstanceProperties.size();
@@ -240,11 +239,11 @@ public class createDatasetsMain {
      * Get all place instance properties. Might (optional) be the following:
      * geo:lat, geo:long, owl:sameAs.
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
-     * @param service sparql url
+     * @param queryObject
      * @param varNames
      *@param placeInstance URI of the instance  @return HashSet<String> including all instance properties
      */
-    private static HashSet<String> getPlaceInstanceProperties(int k, String service, KGVariableNames varNames, String placeInstance) {
+    private static HashSet<String> getPlaceInstanceProperties(int k, QueryObject queryObject, KGVariableNames varNames, String placeInstance) {
         //String geoNamesURL = "http://sws.geonames.org";
         //String otherKgURL = varNames.getOtherKgURL();
 
@@ -258,7 +257,7 @@ public class createDatasetsMain {
                 " OPTIONAL { <" + placeInstance +"> " + varNames.getLongVar() + " ?long }\n"+
                 " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }\n"+
                 " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' ) }";
-        ResultSet results = queryEndpoint(service, queryString);
+        ResultSet results = queryObject.queryEndpoint(queryString);
 
         //ResultSetFormatter.outputAsXML(System.out, results);
 
@@ -300,12 +299,12 @@ public class createDatasetsMain {
     /**
      * Get all distinct place instances that appear as place object for an event instance.
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
-     * @param service sparql url
+     * @param queryObject
      * @param varNames
      * @param propertyName
      * @return HashSet<String> including all place instance URIs
      */
-    private static HashSet<String> getPlaceInstances(int k, String service, KGVariableNames varNames, String propertyName, boolean testing) {
+    private static HashSet<String> getPlaceInstances(int k, QueryObject queryObject, KGVariableNames varNames, String propertyName, boolean testing) {
         HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
         queryString = queryString +
@@ -323,7 +322,7 @@ public class createDatasetsMain {
             queryString = queryString + " LIMIT 10";
         }
 
-        ResultSet results = queryEndpoint(service, queryString);
+        ResultSet results = queryObject.queryEndpoint(queryString);
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             if (qs.get("place").isURIResource()) {
@@ -340,10 +339,10 @@ public class createDatasetsMain {
      * Get all Instance properties
      * DBpedia: rdfs:label, dbo:date, and optionally: geo:lat, geo:long, owl:sameAs, dbo:place
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
-     * @param service sparql url
+     * @param queryObject
      * @param varNames
      */
-    private static HashSet<String> getInstanceProperties(int k, String service, KGVariableNames varNames, String instance) {
+    private static HashSet<String> getInstanceProperties(int k, QueryObject queryObject, KGVariableNames varNames, String instance) {
         //get variable names
         List<String> optionalProperties = new ArrayList<>();
         //optionalProperties.add("lat");
@@ -385,7 +384,7 @@ public class createDatasetsMain {
                 " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                 "}";
         //System.out.println(instance);
-        ResultSet results = queryEndpoint(service, queryString);
+        ResultSet results = queryObject.queryEndpoint(queryString);
 
         String resultString;
 
@@ -422,11 +421,11 @@ public class createDatasetsMain {
      * Get all distinct event instances that have the following attributes:
      * rdfs:label, dbo:date, geo:lat, geo:long
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
-     * @param service sparql url
+     * @param queryObject
      * @param varNames
      * @return HashSet<String> including all instance URIs
      */
-    private static HashSet<String> getEventInstances(int k, String service, KGVariableNames varNames, boolean testing) {
+    private static HashSet<String> getEventInstances(int k, QueryObject queryObject, KGVariableNames varNames, boolean testing) {
         HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
 
@@ -446,7 +445,8 @@ public class createDatasetsMain {
             queryString = queryString + " LIMIT 10";
         }
 
-        ResultSet results = queryEndpoint(service, queryString);
+        ResultSet results = queryObject.queryEndpoint(queryString);
+
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             if (qs.get("event").isURIResource()) {
@@ -489,61 +489,6 @@ public class createDatasetsMain {
         }
         return p;
     }
-    /**
-     * Query the SPARQL endpoint
-     * @param service sparql endpoint URL
-     * @param queryString  query to send to the endpoint
-     * @return ResultSet
-     */
-    private static ResultSet queryEndpoint(String service, String queryString) {
-        while (true) {
-            try {
-                Query query = QueryFactory.create(queryString);
-                QueryExecution qe = QueryExecutionFactory.sparqlService(service, query);
 
-                try {
-                    ResultSet results = qe.execSelect();
-                    ResultSet resultsCopy = ResultSetFactory.copyResults(results);
-                    qe.close();
-                    if (resultsCopy != null)
-                        return resultsCopy;
-                } catch (QueryExceptionHTTP http) {
-                    try {
-                        System.out.println("error while executing query. waiting for 5 seconds");
-                        TimeUnit.SECONDS.sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    qe.close();
-                }
 
-            } catch (QueryParseException e) {
-                System.out.println("Exception for : " + queryString);
-                return null;
-            }
-        }
-    }
-    /**
-     * Test the service connection
-     * @param service sparql url to test
-     * @return boolean (true if service is up)
-     */
-    public static boolean testConnection(String service) {
-        boolean isUp = false;
-        String queryTest = "ASK {}";
-
-        QueryExecution qeTest = QueryExecutionFactory.sparqlService(service, queryTest);
-
-        try {
-            if(qeTest.execAsk()) {
-                System.out.println(service + " is up");
-                isUp = true;
-            }
-        } catch (QueryExceptionHTTP e) {
-            System.out.println(service + " is down: " + e);
-        } finally {
-            qeTest.close();
-        }
-        return isUp;
-    }
 }
