@@ -9,6 +9,16 @@ function init() {
     myMap = new mapInit();
 }
 
+function checkDatabases() {
+    if ($('#dID').is(':checked') == true && $('#yID').is(':checked') == true) {
+        //show
+        document.getElementById("onlyFusedDivID").style.display = "block";
+    } else {
+        //hide
+        document.getElementById("onlyFusedDivID").style.display = "none";
+    }
+}
+
 $('#sendQueryID').on('click', function (e) {
     // useLocalData, DBpedia, YAGO, category, fromYear, toYear
     var valueArray = [$('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val()];// $('#wID').is(':checked'),
@@ -27,10 +37,15 @@ $('#sendQueryID').on('click', function (e) {
         if ((dateFormat.test($('#fromYearID').val()) || $('#fromYearID').val() === "") && (dateFormat.test($('#toYearID').val()) || $('#toYearID').val() === "")) {
             // DB selected and valid date format or empty
             document.getElementById("wrongInputID").style.display = "none";
-            QueryProcessor.getUserData($('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val(), {//$('#wID').is(':checked'),
+            myMap.clearEvents();
+            QueryProcessor.getUserData($('#localDataID').is(':checked'), $('#onlyFusedID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val(), {//$('#wID').is(':checked'),
                 callback: function(str) {
                     //console.log(str);
-                    myMap.insertEvents(str);
+                    if (str == null) {
+                        alert("jsonString is null");
+                    } else {
+                        myMap.insertEvents(str);
+                    }
                 }
             });
         } else {

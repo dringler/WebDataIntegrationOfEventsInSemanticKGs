@@ -23,7 +23,7 @@
 
 </head>
 
-<body onload="init();">
+<body onload="checkDatabases(); init();">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -48,18 +48,19 @@
         <div class="checkbox">
           <label><input type="checkbox" value="localData" id="localDataID" checked>Use local data</label>
         </div>
-
         <label>Databases:</label>
         <div class="checkbox">
-          <label><input type="checkbox" value="d" id="dID" checked>DBpedia</label>
+          <label><input type="checkbox" value="d" id="dID" onchange="checkDatabases();" checked>DBpedia</label>
         </div>
         <!--<div class="checkbox">
           <label><input type="checkbox" value="w" id="wID">Wikidata</label>
         </div>-->
         <div class="checkbox">
-          <label><input type="checkbox" value="y" id="yID" checked>YAGO</label>
+          <label><input type="checkbox" value="y" id="yID" onchange="checkDatabases();" checked>YAGO</label>
         </div>
-
+        <div class="checkbox" id="onlyFusedDivID">Options:<br>
+        <label><input type="checkbox" value="onlyFused" id="onlyFusedID" checked>Include only fused events</label>
+        </div>
         <!--<div class="form-group">
           <label for="catID">Category:</label>
           <select class="form-control" id="catID" name="catName">

@@ -64,7 +64,7 @@ public class QueryString {
         }
 
 
-        queryString = queryString + "} LIMIT 1000";
+        queryString = queryString + "}";// LIMIT 1000";
 
         return queryString;
         //return removeQuotation(queryStringQ);
@@ -139,9 +139,9 @@ public class QueryString {
             queryString = queryString + addKeywordFilter(keyword);
         }
 
-        queryString = queryString + "} " +
+        queryString = queryString + "}";// " +
                 //"OFFSET 4730 " +
-                "LIMIT 1000";
+                //"LIMIT 1000";
 
         return queryString;
     }

@@ -221,9 +221,13 @@ function mapInit() {
         d3.select(self.frameElement).style("height", (height * 2.3 / 3) + "px");
     });
 
-    this.insertEvents = function(str) {
+    this.clearEvents = function () {
         //remove points
         svg.selectAll("circle").remove();
+    };
+    this.insertEvents = function(str) {
+        //remove points
+        //svg.selectAll("circle").remove();
         //d3.json(str, function(data) {
         //  data.forEach(function(d) {
         var jsonObject = JSON.parse(str);
@@ -268,5 +272,6 @@ function mapInit() {
             })
             .classed("pin", true);
     };
+
 
 }

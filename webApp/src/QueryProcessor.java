@@ -24,16 +24,19 @@ public class QueryProcessor {
 
     final static Logger logger = Logger.getLogger(QueryProcessor.class);
     /**
-     Get user parameters from Web App and trigger the Data Integration Process
-     @param useLocalData
-     @param d query DBpedia (boolean)
-     @param y query YAGO (boolean)
-     @param keyword keyword search for the labels
-     @param fD fromDate (String)
-     @param tD toDate (String)
-     @return JSON to update the D3.JS chart
+     * Get user parameters from Web App and trigger the Data Integration Process
+     * @param useLocalData use local data or query the SPARQL endpoints
+     * @param includeOnlyFusedEvents
+     * @param d query DBpedia (boolean)
+     * @param y query YAGO (boolean)
+     * @param keyword keyword search for the labels
+     * @param fD fromDate (String)
+     * @param tD toDate (String)
+     * @return JSON to update the D3.JS chart
      */
-    public String getUserData(boolean useLocalData, boolean d, boolean y, String keyword, String fD, String tD) throws Exception {
+    public String getUserData(boolean useLocalData, boolean includeOnlyFusedEvents, boolean d, boolean y, String keyword, String fD, String tD) throws Exception {
+        String jsonString = null;
+        List<Event> eventList = null;
 
         boolean applyKeywordSearch = false;
         if (!keyword.equals("")) {
@@ -109,37 +112,35 @@ public class QueryProcessor {
                 System.out.println("no correspondences found");
             }
 
+            eventList = collectRecords(fusedDataSet);
+
             //combine data sets
+            if (!includeOnlyFusedEvents) {
+                //...
+            }
 
 
         } else {
             //return single data set
             if (d) {
-                String jsonInString = mapper.writeValueAsString(dataSetD);
-                System.out.println(jsonInString);
+                eventList = collectRecords(dataSetD);
             }
             if (y) {
-                String jsonInString = mapper.writeValueAsString(dataSetY);
-                System.out.println(jsonInString);
+                eventList = collectRecords(dataSetY);
             }
         }
 
         // convert data to JSON
+        jsonString = mapper.writeValueAsString(eventList);
 
-        /*List<Event> sampleEventList= Stream.of(
-                fusedDataSet.getRandomRecord(),
-                fusedDataSet.getRandomRecord(),
-                fusedDataSet.getRandomRecord(),
-                fusedDataSet.getRandomRecord()
-        ).collect(Collectors.toList());
-        */
-        List<Event> eventList = fusedDataSet.getRecords()
+
+        return jsonString;
+    }
+
+    private List<Event> collectRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet) {
+        return fusableDataSet.getRecords()
                 .stream()
                 .collect(Collectors.toList());
-
-        String jsonInString = mapper.writeValueAsString(eventList);
-
-        return jsonInString;
     }
 
     /**
