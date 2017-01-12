@@ -187,6 +187,23 @@ public class MatchingGoldStandard implements Serializable{
 	public void loadFromCSVFile(File file) throws IOException {
 		CSVReader reader = new CSVReader(new FileReader(file));
 
+		readCSVorTSVFile(reader);
+
+	}
+	/**
+	 * Loads a gold standard from a TSV file
+	 *
+	 * @param file
+	 * @throws IOException
+	 */
+	public void loadFromTSVFile(File file) throws IOException {
+		CSVReader reader = new CSVReader(new FileReader(file), '\t');
+
+		readCSVorTSVFile(reader);
+
+	}
+
+	private void readCSVorTSVFile(CSVReader reader) throws IOException {
 		String[] values = null;
 
 		while ((values = reader.readNext()) != null) {
@@ -214,6 +231,7 @@ public class MatchingGoldStandard implements Serializable{
 
 		printGSReport();
 	}
+
 
 	private void printGSReport() {
 		int numPositive = getPositiveExamples().size();

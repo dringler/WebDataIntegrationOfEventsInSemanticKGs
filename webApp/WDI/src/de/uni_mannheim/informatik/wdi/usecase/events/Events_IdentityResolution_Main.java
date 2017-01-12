@@ -400,9 +400,9 @@ public class Events_IdentityResolution_Main {
 
 		// load the gold standard (test set)
 		MatchingGoldStandard gsTest = new MatchingGoldStandard();
-		gsTest.loadFromCSVFile(new File(
+		gsTest.loadFromTSVFile(new File(
 				//"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
-				"../data/dbpedia_2_yago_s.csv"));
+				"../data/dbpedia_2_yago_s.tsv"));
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
