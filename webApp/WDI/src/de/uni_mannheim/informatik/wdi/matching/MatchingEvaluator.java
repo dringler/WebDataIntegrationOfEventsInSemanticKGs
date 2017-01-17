@@ -22,11 +22,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import de.uni_mannheim.informatik.wdi.model.Correspondence;
-import de.uni_mannheim.informatik.wdi.model.Matchable;
-import de.uni_mannheim.informatik.wdi.model.MatchingGoldStandard;
-import de.uni_mannheim.informatik.wdi.model.Pair;
-import de.uni_mannheim.informatik.wdi.model.Performance;
+import de.uni_mannheim.informatik.wdi.matching.blocking.BlockedMatchable;
+import de.uni_mannheim.informatik.wdi.model.*;
+import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 
 /**
  * Evaluates a set of {@link Correspondence}s against a
@@ -126,5 +124,4 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 
 		return new Performance(correct, matched, correct_max);
 	}
-
 }

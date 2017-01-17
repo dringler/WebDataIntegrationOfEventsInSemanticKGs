@@ -86,6 +86,7 @@
         <!--<button type="submit" class="btn btn-default">Submit</button>-->
         <div id="wrongInputID"><p class="text-danger">Wrong Input Format! Use yyyy-mm-dd or leave field empty.</p></div>
         <div id="noDbSelectedID"><p class="text-danger">No Database selected! Please select at least one Database.</p></div>
+        <div id="noEventsReceivedID"><p class="text-danger">No events received for the specified keyword and date ranges.</p></div>
       </form>
 
     </div>

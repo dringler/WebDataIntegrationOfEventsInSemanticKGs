@@ -20,6 +20,9 @@ body {
 #noDbSelectedID {
     display: none;
 }
+#noEventsReceivedID {
+    display: none;
+}
 #userInputID {
     border: 1px solid #ddd;
 }

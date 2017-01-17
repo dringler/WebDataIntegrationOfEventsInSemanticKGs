@@ -379,7 +379,7 @@ public class Events_IdentityResolution_Main {
 				return null;
 			}
 		};
-		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
+		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<>(firstLabel);
 
 		// Initialize Matching Engine
 		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
@@ -399,21 +399,20 @@ public class Events_IdentityResolution_Main {
 		// printCorrespondences(correspondences);
 
 		// load the gold standard (test set)
-		MatchingGoldStandard gsTest = new MatchingGoldStandard();
-		gsTest.loadFromTSVFile(new File(
+		MatchingGoldStandard gs = new MatchingGoldStandard();
+		gs.loadFromTSVFile(new File(
 				//"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
-				"../data/dbpedia_2_yago_s.tsv"));
+				"../data/dbpedia_2_yago.tsv"));
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
-		Performance perfTest = evaluator.evaluateMatching(correspondences.get(),
-				gsTest);
+		Performance perfTest = evaluator.evaluateMatching(correspondences.get(), gs);
 
 		// print the evaluation result
 		System.out.println("DBpedia <-> YAGO");
 		System.out
 				.println(String.format(
-						"Precision: %.4f\nRecall: %.4f\nF1: %.4f",
+						"Precision: %.4f\nRecall or Pair Completeness (PC): %.4f\nF1: %.4f",
 						perfTest.getPrecision(), perfTest.getRecall(),
 						perfTest.getF1()));
 	return correspondences;

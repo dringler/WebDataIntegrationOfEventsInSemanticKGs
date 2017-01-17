@@ -53,6 +53,7 @@ import de.uni_mannheim.informatik.wdi.utils.ProgressReporter;
  * 
  * @author Oliver Lehmberg (oli@dwslab.de)
  * @author Robert Meusel (robert@dwslab.de)
+ * @author Daniel Ringler
  * 
  * @param <RecordType>
  */
@@ -67,7 +68,7 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 	}
 	
 	protected DataProcessingEngine processingEngine;
-	
+
 	/**
 	 * Runs the Duplicate Detection on a given {@link DefaultDataSet}. In order to
 	 * reduce the number of internally compared {@link Record}s the functions

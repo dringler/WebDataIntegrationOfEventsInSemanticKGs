@@ -23,7 +23,7 @@ $('#sendQueryID').on('click', function (e) {
     // useLocalData, DBpedia, YAGO, category, fromYear, toYear
     var valueArray = [$('#localDataID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val()];// $('#wID').is(':checked'),
     //console.log(valueArray);
-
+    document.getElementById("noEventsReceivedID").style.display = "none";
 
     //check if at least one DB is selected
     if ($('#dID').is(':checked') == false && $('#yID').is(':checked') == false) { //&& $('#wID').is(':checked') == false
@@ -37,14 +37,21 @@ $('#sendQueryID').on('click', function (e) {
         if ((dateFormat.test($('#fromYearID').val()) || $('#fromYearID').val() === "") && (dateFormat.test($('#toYearID').val()) || $('#toYearID').val() === "")) {
             // DB selected and valid date format or empty
             document.getElementById("wrongInputID").style.display = "none";
+
             myMap.clearEvents();
             QueryProcessor.getUserData($('#localDataID').is(':checked'), $('#onlyFusedID').is(':checked'), $('#dID').is(':checked'), $('#yID').is(':checked'), $('#keywordID').val(), $('#fromYearID').val(), $('#toYearID').val(), {//$('#wID').is(':checked'),
                 callback: function(str) {
                     //console.log(str);
-                    if (str == null) {
-                        alert("jsonString is null");
+                    if (str == null || str === "null" || str === "") {
+                        //alert("No events received for the specified keyword and date ranges.");
+                        document.getElementById("noEventsReceivedID").style.display = "block";
                     } else {
-                        myMap.insertEvents(str);
+                        //try to insert events in map
+                        try {
+                            myMap.insertEvents(str);
+                        } catch(err) {
+                            alert(err);
+                        }
                     }
                 }
             });

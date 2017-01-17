@@ -199,7 +199,7 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 //				}
 //			}
 //		}
-		
+		//result.deduplicate();
 		calculatePerformance(dataset, dataset, result);
 		
 		return result;

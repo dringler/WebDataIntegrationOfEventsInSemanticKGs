@@ -160,7 +160,9 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		}
 		System.out.println(errorCounter + " instances were not converted to a valid event record due to missing or wrong properties");
 		//DefaultSchemaElement[]
-		addAttributes(getRandomRecord().getDefaultSchemaElements());
+		if (getSize() > 0) {
+			addAttributes(getRandomRecord().getDefaultSchemaElements());
+		}
 	}
 	/**
 	 * Read event instances from HashMap and create records.

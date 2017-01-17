@@ -97,6 +97,9 @@ public class QueryProcessor {
             }
         }
 
+        //check size of data sets (could be zero due to keyword search or date filters)
+        d = checkDataSetSize(dataSetD);
+        y = checkDataSetSize(dataSetY);
 
 
         //step 3: identity resolution
@@ -140,6 +143,13 @@ public class QueryProcessor {
 
 
         return jsonString;
+    }
+
+    private boolean checkDataSetSize(FusableDataSet<Event, DefaultSchemaElement> dataSet) {
+        if (dataSet.getSize() == 0) {
+            return false;
+        }
+        return true;
     }
 
     private List<Event> collectNotFusedRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet, Set<String> fusedRecordIDs) {
