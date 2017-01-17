@@ -4,14 +4,14 @@ import java.util.Set;
 /**
  * Created by Daniel on 17/01/17.
  */
-public class Place {
+public class Location {
     private String uri;
     private Set<String> labels;
     private Set<String> coordinatePairs;
     private Set<String> sames;
 
     //constructor
-    public Place(String uri) {
+    public Location(String uri) {
         this.uri = uri;
         this.labels = new HashSet<>();
         this.coordinatePairs = new HashSet<>();

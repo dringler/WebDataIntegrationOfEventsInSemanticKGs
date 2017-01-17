@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb584427-7cfb-45cb-893f-4c95e9bb62e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventXMLFormatter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/LocationXMLFormatter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/QueryProcessor.java" afterPath="$PROJECT_DIR$/src/QueryProcessor.java" />
-    </list>
+    <list default="true" id="fb584427-7cfb-45cb-893f-4c95e9bb62e4" name="Default" comment="" />
     <ignored path="webApp.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -147,8 +141,8 @@
           <file leaf-file-name="EventXMLFormatter.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventXMLFormatter.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="412">
-                  <caret line="41" column="9" lean-forward="false" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+                <state relative-caret-position="517">
+                  <caret line="48" column="52" lean-forward="false" selection-start-line="48" selection-start-column="52" selection-end-line="48" selection-end-column="52" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -1555,12 +1549,12 @@
       <workItem from="1484490960218" duration="185000" />
       <workItem from="1484560327511" duration="12932000" />
       <workItem from="1484665453894" duration="447000" />
-      <workItem from="1484679730129" duration="797000" />
+      <workItem from="1484679730129" duration="826000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="217818000" />
+    <option name="totallyTimeSpent" value="217847000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1293" y="-1039" width="1680" height="983" extended-state="0" />
@@ -2118,8 +2112,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/EventXMLFormatter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="41" column="9" lean-forward="false" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+        <state relative-caret-position="517">
+          <caret line="48" column="52" lean-forward="false" selection-start-line="48" selection-start-column="52" selection-end-line="48" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

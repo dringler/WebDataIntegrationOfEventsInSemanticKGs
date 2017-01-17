@@ -1,4 +1,3 @@
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,19 +50,19 @@ public class EventXMLFormatter {
                 addElements(doc, eventElement, "coordinates", event.getCoordinatePairs());
                 addElements(doc, eventElement, "same", event.getSames());
 
-                // add places hierarchy
-                Element root2ElementPlaces = doc.createElement("places");
+                // add location hierarchy
+                Element root2ElementPlaces = doc.createElement("locations");
                 eventElement.appendChild(root2ElementPlaces);
-                //ADD PLACES
-                for (Place place : event.getPlaces()) {
-                    Element placeElement = doc.createElement("place");
-                    root2ElementPlaces.appendChild(placeElement);
-                    placeElement.setAttribute("uri", place.getUri());
+                //ADD LOCATIONS
+                for (Location location : event.getLocations()) {
+                    Element locationElement = doc.createElement("location");
+                    root2ElementPlaces.appendChild(locationElement);
+                    locationElement.setAttribute("uri", location.getUri());
 
                     //ADD ELEMENTS: label, coordinates, sames
-                    addElements(doc, placeElement, "label", place.getLabels());
-                    addElements(doc, placeElement, "coordinates", place.getCoordinatePairs());
-                    addElements(doc, placeElement, "sames", place.getSames());
+                    addElements(doc, locationElement, "label", location.getLabels());
+                    addElements(doc, locationElement, "coordinates", location.getCoordinatePairs());
+                    addElements(doc, locationElement, "sames", location.getSames());
                 }
             }
 

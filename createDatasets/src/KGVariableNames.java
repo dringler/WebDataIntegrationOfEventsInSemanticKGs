@@ -8,7 +8,7 @@ public class KGVariableNames {
     private String latVar = "";
     private String longVar = "";
     //private String label2Var = "";
-    private String placeVar = "";
+    private String locationVar = "";
     //private String place2Var = "";
     private String enVar = "";
     //private String otherKgURLstart = "";
@@ -20,7 +20,7 @@ public class KGVariableNames {
             this.latVar = "geo:lat";
             this.longVar = "geo:long";
             //this.label2Var = "foaf:name";
-            this.placeVar = "dbo:place";
+            this.locationVar = "dbo:place";
             //this.place2Var = "dbo:location";
             this.enVar = "EN";
             //this.otherKgURLstart = "http://yago-knowledge.org";
@@ -30,8 +30,8 @@ public class KGVariableNames {
             this.latVar = "yago:hasLatitude";
             this.longVar = "yago:hasLongitude";
            // this.label2Var = "skos:prefLabel";
-            this.placeVar = "yago:isLocatedIn";
-            //this.placeVar = "yago:happenedIn";
+            this.locationVar = "yago:isLocatedIn";
+            //this.locationVar = "yago:happenedIn";
             //this.place2Var = "yago:isLocatedIn";
             this.enVar = "ENG";
             //this.otherKgURLstart = "http://dbpedia.org";
@@ -50,8 +50,8 @@ public class KGVariableNames {
     public String getLongVar() {
         return longVar;
     }
-    public String getPlaceVar() {
-        return placeVar;
+    public String getLocationVar() {
+        return locationVar;
     }
     public String getEnVar() {
         return enVar;

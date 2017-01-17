@@ -188,7 +188,7 @@
 
   <owl:ObjectProperty rdf:ID="hasLocation">
     <rdfs:domain rdf:resource="#OrganisedEvent"/>
-    <rdfs:range rdf:resource="#Place"/>
+    <rdfs:range rdf:resource="#Location"/>
     <rdfs:label>has location</rdfs:label>
     <!-- has inverse isLocationFor -->
   </owl:ObjectProperty>
@@ -418,44 +418,44 @@
     
 
 
-<owl:Class rdf:ID="Place">
+<owl:Class rdf:ID="Location">
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing"/>
-  <rdfs:label>Place</rdfs:label>
+  <rdfs:label>Location</rdfs:label>
 </owl:Class>
 
   <owl:Class rdf:ID="ConferenceVenuePlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Conference Venue Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Conference Venue Location</rdfs:label>
   </owl:Class>
 
   <owl:Class rdf:ID="MeetingRoomPlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Meeting Room Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Meeting Room Location</rdfs:label>
   </owl:Class>
 
   <owl:Class rdf:ID="CommunalPlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Communal Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Communal Location</rdfs:label>
   </owl:Class>
 
   <owl:Class rdf:ID="AccommodationPlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Accommodation Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Accommodation Location</rdfs:label>
   </owl:Class>
 
   <owl:Class rdf:ID="DrinkingPlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Drinking Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Drinking Location</rdfs:label>
   </owl:Class>
 
   <owl:Class rdf:ID="EatingPlace">
-    <rdfs:subClassOf rdf:resource="#Place"/>
-    <rdfs:label>Eating Place</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+    <rdfs:label>Eating Location</rdfs:label>
   </owl:Class>
 
 
   <owl:ObjectProperty rdf:ID="isLocationFor">
-    <rdfs:domain rdf:resource="#Place"/>
+    <rdfs:domain rdf:resource="#Location"/>
     <rdfs:range rdf:resource="#OrganisedEvent"/>
     <rdfs:label>is location of</rdfs:label>
   </owl:ObjectProperty>

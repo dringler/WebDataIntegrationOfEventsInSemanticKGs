@@ -10,7 +10,7 @@ public class Event {
     private Set<String> dates;
     private Set<String> coordinatePairs;
     private Set<String> sames;
-    private Set<Place> places;
+    private Set<Location> locations;
 
     public Event(String uri) {
         this.uri = uri;
@@ -18,7 +18,7 @@ public class Event {
         this.dates = new HashSet<>();
         this.coordinatePairs = new HashSet<>();
         this.sames = new HashSet<>();
-        this.places = new HashSet<>();
+        this.locations = new HashSet<>();
     }
 
     //getter
@@ -27,7 +27,7 @@ public class Event {
     public Set<String> getDates() {return dates;}
     public Set<String> getCoordinatePairs() {return coordinatePairs;}
     public Set<String> getSames() {return sames;}
-    public Set<Place> getPlaces() {return places;}
+    public Set<Location> getLocations() {return locations;}
 
     //setter
     public void setUri(String uri) {this.uri = uri;}
@@ -35,7 +35,7 @@ public class Event {
     public void setDates(Set<String> dates) {this.dates = dates;}
     public void setCoordinatePairs(Set<String> coordinatePairs) {this.coordinatePairs = coordinatePairs;}
     public void setSames(Set<String> sames) {this.sames = sames;}
-    public void setPlaces(Set<Place> places) {this.places = places;}
+    public void setLocations(Set<Location> locations) {this.locations = locations;}
 
     //adder
     public void addLabel(String label) {
@@ -52,8 +52,8 @@ public class Event {
         this.sames.add(same);
     }
 
-    public void addPlace(Place place) {
-        this.places.add(place);
+    public void addLocation(Location location) {
+        this.locations.add(location);
     }
 
 }

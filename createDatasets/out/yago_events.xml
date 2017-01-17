@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<events>
+  <event uri="http://yago-knowledge.org/resource/Cross-country_skiing_at_the_1960_Winter_Olympics_-_Women's_3_x_5_km_relay">
+    <label>Cross-country skiing at the 1960 Winter Olympics - Women's 3 x 5 km relay@eng</label>
+    <date>1960-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Chennai_Central_-_Visakhapatnam_Express">
+    <label>Chennai Central - Visakhapatnam Express@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Arizona_Bound_(1927_film)">
+    <label>Arizona Bound@eng</label>
+    <label>Arizona Bound (1927 film)@eng</label>
+    <same>http://dbpedia.org/resource/Arizona_Bound_(1927_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2013–14_Rugby-Bundesliga">
+    <label>2013–14 Rugby-Bundesliga@eng</label>
+    <label>2013-14 Rugby-Bundesliga@eng</label>
+    <same>http://dbpedia.org/resource/2013–14_Rugby-Bundesliga</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2016_AFC_Champions_League">
+    <label>2016 AFC Champions League@eng</label>
+    <date>2016-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2016_AFC_Champions_League</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2013_World_Cup_Taekwondo_Team_Championships">
+    <label>2013 World Cup Taekwondo Team Championships@eng</label>
+    <same>http://dbpedia.org/resource/2013_World_Cup_Taekwondo_Team_Championships</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Big_Ten_Men's_Ice_Hockey_Tournament">
+    <label>2014 Big Ten Men's Ice Hockey Tournament@eng</label>
+    <date>2014-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Controvento">
+    <label>Controvento@eng</label>
+    <same>http://dbpedia.org/resource/Controvento</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/A_Taste_of_Romance">
+    <label>A Taste of Romance@eng</label>
+    <same>http://dbpedia.org/resource/A_Taste_of_Romance</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Deva_(2002_film)">
+    <label>Deva (2002 film)@eng</label>
+    <label>Deva@eng</label>
+    <same>http://dbpedia.org/resource/Deva_(2002_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Asha_O_Bhalobasha">
+    <label>Asha O Bhalobasha@eng</label>
+    <same>http://dbpedia.org/resource/Asha_O_Bhalobasha</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2010_Thailand_floods">
+    <label>2010 Thailand floods@eng</label>
+    <date>2010-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2010_Thailand_floods</same>
+    <locations>
+      <location uri="http://yago-knowledge.org/resource/Thailand">
+        <label>Thailand@eng</label>
+        <label>112@eng</label>
+        <label>Kingdom of Siam@eng</label>
+        <sames>http://dbpedia.org/resource/Thailand</sames>
+        <sames>http://sws.geonames.org/1605651</sames>
+      </location>
+    </locations>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Crossing_South">
+    <label>Crossing South@eng</label>
+    <same>http://dbpedia.org/resource/Crossing_South</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/40th_G8_summit">
+    <label>40th G8 summit@eng</label>
+    <same>http://dbpedia.org/resource/40th_G8_summit</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Charles_Mary_Wentworth_(ship)">
+    <label>Charles Mary Wentworth@eng</label>
+    <label>Charles Mary Wentworth (ship)@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Singapore_Super_Series">
+    <label>2014 Singapore Super Series@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Tokyo_Marathon">
+    <label>2014 Tokyo Marathon@eng</label>
+    <same>http://dbpedia.org/resource/2014_Tokyo_Marathon</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/At_the_Gates_(video_game)">
+    <label>At the Gates@eng</label>
+    <label>At the Gates (video game)@eng</label>
+    <same>http://dbpedia.org/resource/At_the_Gates_(video_game)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_European_Cup_Winter_Throwing">
+    <label>2014 European Cup Winter Throwing@eng</label>
+    <same>http://dbpedia.org/resource/2014_European_Cup_Winter_Throwing</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2018–19_UEFA_Nations_League">
+    <label>2018–19 UEFA Nations League@eng</label>
+    <label>2018-19 UEFA Nations League@eng</label>
+    <date>2018-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Cosmonaut_(film)">
+    <label>Cosmonaut (film)@eng</label>
+    <label>Cosmonaut@eng</label>
+    <same>http://dbpedia.org/resource/Cosmonaut_(film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Chinnamanikkuyile">
+    <label>Chinnamanikkuyile@eng</label>
+    <same>http://dbpedia.org/resource/Chinnamanikkuyile</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Table_Tennis_European_Championships">
+    <label>2014 Table Tennis European Championships@eng</label>
+    <same>http://dbpedia.org/resource/2014_Table_Tennis_European_Championships</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/A_Kiss_In_A_Taxi">
+    <label>A Kiss In A Taxi@eng</label>
+    <same>http://dbpedia.org/resource/A_Kiss_In_A_Taxi</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Dakota_Skye">
+    <label>Dakota Skye@eng</label>
+    <same>http://dbpedia.org/resource/Dakota_Skye</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Because_of_That_War">
+    <label>Because of That War@eng</label>
+    <same>http://dbpedia.org/resource/Because_of_That_War</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Animal_Rescue_(film)">
+    <label>Animal Rescue@eng</label>
+    <label>Animal Rescue (film)@eng</label>
+    <same>http://dbpedia.org/resource/Animal_Rescue_(film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Concentration_(Australian_game_show)">
+    <label>Concentration@eng</label>
+    <label>Concentration (Australian game show)@eng</label>
+    <same>http://dbpedia.org/resource/Concentration_(Australian_game_show)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Censored_(film)">
+    <label>Censored@eng</label>
+    <label>Censored (film)@eng</label>
+    <same>http://dbpedia.org/resource/Censored_(film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/America_Abbayi">
+    <label>America Abbayi@eng</label>
+    <same>http://dbpedia.org/resource/America_Abbayi</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Ball_at_Savoy_(1936_film)">
+    <label>Ball at Savoy@eng</label>
+    <label>Ball at Savoy (1936 film)@eng</label>
+    <same>http://dbpedia.org/resource/Ball_at_Savoy_(1936_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Colorado_v._Spring">
+    <label>Colorado v. Spring@eng</label>
+    <date>1987-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Colorado_v._Spring</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/103rd_Grey_Cup">
+    <label>103rd Grey Cup@eng</label>
+    <date>2015-11-29^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/103rd_Grey_Cup</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Cellphone_surveillance">
+    <label>Cellphone surveillance@eng</label>
+    <same>http://dbpedia.org/resource/Cellphone_surveillance</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/1517_Hebron_pogrom">
+    <label>1517 Hebron pogrom@eng</label>
+    <same>http://dbpedia.org/resource/1517_Hebron_pogrom</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Choto_Bou">
+    <label>Choto Bou@eng</label>
+    <same>http://dbpedia.org/resource/Choto_Bou</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2015_ICC_World_Cricket_League_Division_Seven">
+    <label>2015 ICC World Cricket League Division Seven@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Battle_of_Pljevlja">
+    <label>Battle of Pljevlja@eng</label>
+    <date>1941-12-01^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Battle_of_Pljevlja</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2007_Arkansas_High_School_7A_Boys_Soccer_Season">
+    <label>2007 Arkansas High School 7A Boys Soccer Season@eng</label>
+    <same>http://dbpedia.org/resource/2007_Arkansas_High_School_7A_Boys_Soccer_Season</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Betrayer_(video_game)">
+    <label>Betrayer (video game)@eng</label>
+    <label>Betrayer@eng</label>
+    <date>2014-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Betrayer_(video_game)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/1989_African_U-16_Qualifying_for_World_Cup">
+    <label>1989 African U-16 Qualifying for World Cup@eng</label>
+    <date>1989-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Apan_Amar_Apan">
+    <label>Apan Amar Apan@eng</label>
+    <same>http://dbpedia.org/resource/Apan_Amar_Apan</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Any_Love_World_Tour">
+    <label>Any Love World Tour@eng</label>
+    <same>http://dbpedia.org/resource/Any_Love_World_Tour</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/A_Kiss_is_Just_a_Kiss">
+    <label>A Kiss is Just a Kiss@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Attention_–_A_Life_in_Extremes">
+    <label>Attention - A Life in Extremes@eng</label>
+    <label>Attention – A Life in Extremes@eng</label>
+    <same>http://dbpedia.org/resource/Attention_–_A_Life_in_Extremes</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Cross-country_skiing_at_the_1960_Winter_Olympics_-_Women's_10_km">
+    <label>Cross-country skiing at the 1960 Winter Olympics - Women's 10 km@eng</label>
+    <date>1960-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Carey_v_Hastie">
+    <label>Carey v Hastie@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Oso_mudslide">
+    <label>2014 Oso mudslide@eng</label>
+    <date>2014-03-22^^http://www.w3.org/2001/XMLSchema#date</date>
+    <coordinates>48.28256^^http://yago-knowledge.org/resource/degrees,-121.848^^http://yago-knowledge.org/resource/degrees</coordinates>
+    <same>http://dbpedia.org/resource/2014_Oso_mudslide</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/1991_African_U-17_Qualifying_for_World_Cup">
+    <label>1991 African U-17 Qualifying for World Cup@eng</label>
+    <date>1991-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Doomsday_(1928_film)">
+    <label>Doomsday@eng</label>
+    <label>Doomsday (1928 film)@eng</label>
+    <same>http://dbpedia.org/resource/Doomsday_(1928_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/A_Game_Chicken">
+    <label>A Game Chicken@eng</label>
+    <same>http://dbpedia.org/resource/A_Game_Chicken</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Amici_come_noi">
+    <label>Amici come noi@eng</label>
+    <same>http://dbpedia.org/resource/Amici_come_noi</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Jalisco_Open">
+    <label>2014 Jalisco Open@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Bremervörde_Gnattenbergswiesen_body">
+    <label>Bremervoerde Gnattenbergswiesen body@eng</label>
+    <label>Bremervörde Gnattenbergswiesen body@eng</label>
+    <same>http://dbpedia.org/resource/Bremervörde_Gnattenbergswiesen_body</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Amar_Prem_(1989_film)">
+    <label>Amar Prem@eng</label>
+    <label>Amar Prem (1989 film)@eng</label>
+    <same>http://dbpedia.org/resource/Amar_Prem_(1989_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/American_Truck_Simulator">
+    <label>American Truck Simulator@eng</label>
+    <same>http://dbpedia.org/resource/American_Truck_Simulator</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Andean-Amazonic_New_Year">
+    <label>Andean-Amazonic New Year@eng</label>
+    <same>http://dbpedia.org/resource/Andean-Amazonic_New_Year</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Bandhu_(2007_film)">
+    <label>Bandhu@eng</label>
+    <label>Bandhu (2007 film)@eng</label>
+    <same>http://dbpedia.org/resource/Bandhu_(2007_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2000_Dubai_Tennis_Championships_–_Singles">
+    <label>2000 Dubai Tennis Championships - Singles@eng</label>
+    <label>2000 Dubai Tennis Championships – Singles@eng</label>
+    <same>http://dbpedia.org/resource/2000_Dubai_Tennis_Championships_–_Singles</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Battle_of_Sacramento_(Kentucky)">
+    <label>Battle of Sacramento (Kentucky)@eng</label>
+    <label>Battle of Sacramento@eng</label>
+    <same>http://dbpedia.org/resource/Battle_of_Sacramento_(Kentucky)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/A_Farewell_to_Arms_(miniseries)">
+    <label>A Farewell to Arms@eng</label>
+    <label>A Farewell to Arms (miniseries)@eng</label>
+    <same>http://dbpedia.org/resource/A_Farewell_to_Arms_(miniseries)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_ConIFA_World_Football_Cup">
+    <label>2014 ConIFA World Football Cup@eng</label>
+    <label>2014 World Cup@eng</label>
+    <same>http://dbpedia.org/resource/2014_ConIFA_World_Football_Cup</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2013_Nollywood_Movies_Awards">
+    <label>2013 Nollywood Movies Awards@eng</label>
+    <date>2012-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2013_Nollywood_Movies_Awards</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Dominican_Republic_Handicap_Hurdle">
+    <label>Dominican Republic Handicap Hurdle@eng</label>
+    <same>http://dbpedia.org/resource/Dominican_Republic_Handicap_Hurdle</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2006_Winter_Olympics_torch_relay">
+    <label>2006 Winter Olympics torch relay@eng</label>
+    <date>2006-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2006_Winter_Olympics_torch_relay</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Battle_of_the_Himera_River_(446_BC)">
+    <label>Battle of the Himera River@eng</label>
+    <label>Battle of the Himera River (446 BC)@eng</label>
+    <date>-446-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Battle_of_the_Himera_River_(446_BC)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Blood_of_the_Beast">
+    <label>Blood of the Beast@eng</label>
+    <same>http://dbpedia.org/resource/Blood_of_the_Beast</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/1993_African_U-17_Qualifying_for_World_Cup">
+    <label>1993 African U-17 Qualifying for World Cup@eng</label>
+    <date>1993-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Canadian_Masters_Curling_Championships">
+    <label>2014 Canadian Masters Curling Championships@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Dominion_(TV_series)">
+    <label>Dominion@eng</label>
+    <label>Dominion (TV series)@eng</label>
+    <same>http://dbpedia.org/resource/Dominion_(TV_series)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_EurAsia_Cup">
+    <label>2014 EurAsia Cup@eng</label>
+    <same>http://dbpedia.org/resource/2014_EurAsia_Cup</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Aamar_Tumi">
+    <label>Aamar Tumi@eng</label>
+    <same>http://dbpedia.org/resource/Aamar_Tumi</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Seguros_Bolívar_Open_Medellín">
+    <label>2014 Seguros Bolivar Open Medellin@eng</label>
+    <label>2014 Seguros Bolívar Open Medellín@eng</label>
+    <same>http://dbpedia.org/resource/2014_Seguros_Bolívar_Open_Medellín</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Boom_Beach">
+    <label>Boom Beach@eng</label>
+    <date>2014-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Boom_Beach</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Garda_phone_recordings_controversy">
+    <label>2014 Garda phone recordings controversy@eng</label>
+    <same>http://dbpedia.org/resource/2014_Garda_phone_recordings_controversy</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Christian_Fashion_Week">
+    <label>Christian Fashion Week@eng</label>
+    <same>http://dbpedia.org/resource/Christian_Fashion_Week</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Aandhiyan_(1952_film)">
+    <label>Aandhiyan (1952 film)@eng</label>
+    <label>Aandhiyan@eng</label>
+    <same>http://dbpedia.org/resource/Aandhiyan_(1952_film)</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Banker_Bilo">
+    <label>Banker Bilo@eng</label>
+    <same>http://dbpedia.org/resource/Banker_Bilo</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Campaigning_in_the_Indian_general_election,_2014">
+    <label>Campaigning in the Indian general election, 2014@eng</label>
+    <label>Campaigning in the Indian general election@eng</label>
+    <date>2014-04-07^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/Campaigning_in_the_Indian_general_election,_2014</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_WIV_Provo_Premier_League">
+    <label>2014 WIV Provo Premier League@eng</label>
+    <same>http://dbpedia.org/resource/2014_WIV_Provo_Premier_League</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Bangkok_International_Motor_Show">
+    <label>Bangkok International Motor Show@eng</label>
+    <same>http://dbpedia.org/resource/Bangkok_International_Motor_Show</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2000_Dubai_Tennis_Championships">
+    <label>2000 Dubai Tennis Championships@eng</label>
+    <date>2000-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2000_Dubai_Tennis_Championships</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_The_Summit_League_Baseball_Tournament">
+    <label>2014 The Summit League Baseball Tournament@eng</label>
+    <date>2014-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2012_Green_Bay_Blizzard_season">
+    <label>2012 Green Bay Blizzard season@eng</label>
+    <date>2012-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2012_Green_Bay_Blizzard_season</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Amrapali_Express">
+    <label>Amrapali Express@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Alice_Kochen">
+    <label>Alice Kochen@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2015_ICC_World_Cricket_League_Division_Six">
+    <label>2015 ICC World Cricket League Division Six@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_County_Championship">
+    <label>2014 County Championship@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Boston_Brownstone_Fire">
+    <label>2014 Boston Brownstone Fire@eng</label>
+    <date>2014-03-26^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2014_Boston_Brownstone_Fire</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Seguros_Bolívar_Open_Barranquilla">
+    <label>2014 Seguros Bolivar Open Barranquilla@eng</label>
+    <label>2014 Seguros Bolívar Open Barranquilla@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_Ironman_World_Championship">
+    <label>2014 Ironman World Championship@eng</label>
+    <same>http://dbpedia.org/resource/2014_Ironman_World_Championship</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Doctors_of_infamy">
+    <label>Doctors of infamy@eng</label>
+    <same>http://dbpedia.org/resource/Doctors_of_infamy</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_ICC_World_Cricket_League_Division_Eight">
+    <label>2014 ICC World Cricket League Division Eight@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_National_Rugby_Championship">
+    <label>2014 National Rugby Championship@eng</label>
+    <date>2014-08-30^^http://www.w3.org/2001/XMLSchema#date</date>
+    <same>http://dbpedia.org/resource/2014_National_Rugby_Championship</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2014_NAIA_Men's_Division_II_Basketball_Tournament">
+    <label>2014 NAIA Men's Division II Basketball Tournament@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2015_Big_Ten_Conference_Men's_Basketball_Tournament">
+    <label>2015 Big Ten Conference Men's Basketball Tournament@eng</label>
+    <date>2015-##-##^^http://www.w3.org/2001/XMLSchema#date</date>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/2008_Arkansas_High_School_7A_Boys_Soccer_Season">
+    <label>2008 Arkansas High School 7A Boys Soccer Season@eng</label>
+    <same>http://dbpedia.org/resource/2008_Arkansas_High_School_7A_Boys_Soccer_Season</same>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Aura_Erbil">
+    <label>Aura Erbil@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Automobile_Centre_(Auckland)_Ltd_v_Facer">
+    <label>Automobile Centre (Auckland) Ltd v Facer@eng</label>
+    <label>Automobile Centre@eng</label>
+    <locations/>
+  </event>
+  <event uri="http://yago-knowledge.org/resource/Bharatiya_Janata_Party_campaign_for_Indian_general_election,_2014">
+    <label>Bharatiya Janata Party campaign for Indian general election, 2014@eng</label>
+    <label>Bharatiya Janata Party campaign for Indian general election@eng</label>
+    <same>http://dbpedia.org/resource/Bharatiya_Janata_Party_campaign_for_Indian_general_election,_2014</same>
+    <locations/>
+  </event>
+</events>

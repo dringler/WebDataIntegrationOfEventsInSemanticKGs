@@ -2,13 +2,7 @@ import org.apache.jena.query.*;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -21,7 +15,7 @@ public class createDatasetsMain {
         // PARAMETERS
         boolean testing = true;
 
-        boolean dbpedia = false;
+        boolean dbpedia = true;
         boolean yago = true;
         //boolean wikidata = false;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
@@ -40,7 +34,7 @@ public class createDatasetsMain {
 
         int lineProgress = 500;
 
-        header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace\tplaceLat\tplaceLong\tplaceSame";//\tlocation\tcity\tterritory";
+        header = "uri\tlabel\tdate\tlat\tlong\tsame\tlocation\tlocationLat\tlocationLong\tlocationsame";//\tlocation\tcity\tterritory";
 
         if (dbpedia) {
             k=0;
@@ -68,7 +62,7 @@ public class createDatasetsMain {
                 //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
                 //System.out.println(eventInstances.size() + " distinct instances read from DBpedia table");
                 
-                // get event instance properties including place properties
+                // get event instance properties including location properties
                 Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances);
                 
                 writeXML(dEvents, fileName);
@@ -101,7 +95,7 @@ public class createDatasetsMain {
                 HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
                 System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
 
-                // get event instance properties including place properties
+                // get event instance properties including location properties
                 Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances);
 
                 writeXML(yEvents, fileName);
@@ -156,11 +150,11 @@ public class createDatasetsMain {
         //set of all events
         Map<String, Event> eventMap = new HashMap<>(eventSetCapacity, loadFactor);
 
-        //set of all distinct placeURIs
-        Set<String> placeURIs = new HashSet<>(placeURICapacity, loadFactor);
+        //set of all distinct locationURIs
+        Set<String> locationURIs = new HashSet<>(placeURICapacity, loadFactor);
 
         //k: placeURI, v: Set of eventURIs
-        HashMap<String, Set<String>> placeWithEventsMap= new HashMap<>(placeURICapacity, loadFactor);
+        HashMap<String, Set<String>> locationWithEventsMap= new HashMap<>(placeURICapacity, loadFactor);
 
         // get properties for each event and add event to eventSet
         for (String eventURI : eventInstances) {
@@ -180,16 +174,16 @@ public class createDatasetsMain {
                     event.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
                 if (qs.contains("same"))
                     event.addSame(qs.get("same").toString());
-                if (qs.contains("place")) {
-                    String placeString = qs.get("place").toString();
-                    placeURIs.add(placeString);
-                    if (placeWithEventsMap.containsKey(placeString)) {
-                        placeWithEventsMap.get(placeString).add(eventURI);
+                if (qs.contains("location")) {
+                    String locationString = qs.get("location").toString();
+                    locationURIs.add(locationString);
+                    if (locationWithEventsMap.containsKey(locationString)) {
+                        locationWithEventsMap.get(locationString).add(eventURI);
                     } else {
                         //create new k,v pair
-                        HashSet<String> placeEvents = new HashSet<>();
-                        placeEvents.add(eventURI);
-                        placeWithEventsMap.put(placeString, placeEvents);
+                        HashSet<String> locationEvents = new HashSet<>();
+                        locationEvents.add(eventURI);
+                        locationWithEventsMap.put(locationString, locationEvents);
                     }
                 }
             }
@@ -199,30 +193,30 @@ public class createDatasetsMain {
         //done adding all direct properties to the events
         System.out.println(eventMap.size() + " events added to eventSet");
 
-        // for each place
-        for (String placeURI : placeURIs) {
-            Place place = new Place(placeURI);
-            //get place properties
-            ResultSet results = getPlaceInstancePropertiesResultSet(k, queryObject, varNames, placeURI);
+        // for each location
+        for (String locationURI : locationURIs) {
+            Location location = new Location(locationURI);
+            //get location properties
+            ResultSet results = getLocationInstancePropertiesResultSet(k, queryObject, varNames, locationURI);
             //process all results
             while (results.hasNext()) {
                 QuerySolution qs = results.next();
                 //english label always present
-                place.addLabel(qs.get("label").toString());
+                location.addLabel(qs.get("label").toString());
                 //add optional properties
                 if (qs.contains("lat") && qs.contains(("long")))
-                    place.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
+                    location.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
                 if (qs.contains("same"))
-                    place.addSame(qs.get("same").toString());
+                    location.addSame(qs.get("same").toString());
             }
-            //add place to all events with this place
-            for (String eventURI : placeWithEventsMap.get(placeURI)) {
-                eventMap.get(eventURI).addPlace(place);
+            //add location to all events with this location
+            for (String eventURI : locationWithEventsMap.get(locationURI)) {
+                eventMap.get(eventURI).addLocation(location);
             }
 
 
         }
-        System.out.println(placeURIs.size() + " places processed.");
+        System.out.println(locationURIs.size() + " locations processed.");
         return eventMap;
 
     }
@@ -246,7 +240,7 @@ public class createDatasetsMain {
     */
 
     /**
-     * get and write the place instance properties to file
+     * get and write the location instance properties to file
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
      * @param queryObject
      * @param service sparql url
@@ -259,7 +253,7 @@ public class createDatasetsMain {
 
         for (String secondOrderFileName : secondOrderFileNames) {
             String propertyName = getPropertyName(secondOrderFileName);
-            HashSet<String> placeInstances = getPlaceInstances(k, queryObject, varNames, propertyName, testing);
+            HashSet<String> placeInstances = getLocationInstances(k, queryObject, varNames, propertyName, testing);
             System.out.println(placeInstances.size() + " distinct "+  propertyName + " instances received from " + service);
             int lineCounter = 0;
             int writtenLines = 0;
@@ -270,7 +264,7 @@ public class createDatasetsMain {
 
                 HashSet<String> placeInstancesProperties = new HashSet<>();
                 for (String placeInstance : placeInstances) {
-                    placeInstancesProperties.addAll(getPlaceInstanceProperties(k, queryObject, varNames, placeInstance));
+                    placeInstancesProperties.addAll(getLocationInstanceProperties(k, queryObject, varNames, placeInstance));
                     //write lines to file
                     placeInstancesProperties.forEach(writer2::println);
                     writtenLines += placeInstancesProperties.size();
@@ -350,7 +344,7 @@ public class createDatasetsMain {
         return newLineCounterValue;
     }
 
-    private static ResultSet getPlaceInstancePropertiesResultSet(int k, QueryObject queryObject, KGVariableNames varNames, String placeURI) {
+    private static ResultSet getLocationInstancePropertiesResultSet(int k, QueryObject queryObject, KGVariableNames varNames, String placeURI) {
         String queryString = getQueryPrefix(k);
         queryString = queryString +
                 "SELECT ?label ?lat ?long ?same WHERE {\n" + //type, country, city, ...
@@ -363,20 +357,20 @@ public class createDatasetsMain {
         return queryObject.queryEndpoint(queryString);
     }
     /**
-     * Get all place instance properties. Might (optional) be the following:
+     * Get all location instance properties. Might (optional) be the following:
      * geo:lat, geo:long, owl:sameAs.
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
      * @param queryObject
      * @param varNames
-     *@param placeInstance URI of the instance  @return HashSet<String> including all instance properties
+     *@param locationInstance URI of the instance  @return HashSet<String> including all instance properties
      */
-    private static HashSet<String> getPlaceInstanceProperties(int k, QueryObject queryObject, KGVariableNames varNames, String placeInstance) {
+    private static HashSet<String> getLocationInstanceProperties(int k, QueryObject queryObject, KGVariableNames varNames, String locationInstance) {
         //String geoNamesURL = "http://sws.geonames.org";
         //String otherKgURL = varNames.getOtherKgURL();
 
         HashSet<String> resultSet = new HashSet<>();
 
-        ResultSet results = getPlaceInstancePropertiesResultSet(k, queryObject, varNames, placeInstance);
+        ResultSet results = getLocationInstancePropertiesResultSet(k, queryObject, varNames, locationInstance);
 
         //ResultSetFormatter.outputAsXML(System.out, results);
 
@@ -391,7 +385,7 @@ public class createDatasetsMain {
         boolean oneLineAdded = false;
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            resultString =  placeInstance + getAvailableOptionalProperties(qs, properties);
+            resultString =  locationInstance + getAvailableOptionalProperties(qs, properties);
 
             //only add sameAs if they link to yago, dbpedia, or geonames BUT add at least one line with lat&long if no sameAs link goes to yago, dbpedia, or geonames
             /*if (qs.contains("same")) {
@@ -416,25 +410,26 @@ public class createDatasetsMain {
     }
 
     /**
-     * Get all distinct place instances that appear as place object for an event instance.
+     * Get all distinct location instances that appear as location object for an event instance.
      * @param k 0:DBpedia, 1:YAGO, 2:Wikidata
      * @param queryObject
      * @param varNames
      * @param propertyName
-     * @return HashSet<String> including all place instance URIs
+     * @return HashSet<String> including all location instance URIs
      */
-    private static HashSet<String> getPlaceInstances(int k, QueryObject queryObject, KGVariableNames varNames, String propertyName, boolean testing) {
+    private static HashSet<String> getLocationInstances(int k, QueryObject queryObject, KGVariableNames varNames, String propertyName, boolean testing) {
         HashSet<String> instanceSet = new HashSet<>();
         String queryString = getQueryPrefix(k);
         queryString = queryString +
-                "SELECT DISTINCT ?place WHERE {\n" +
+                "SELECT DISTINCT ?location WHERE {\n" +
                 " ?event a " + varNames.getEventClass() + " .\n" +
                 " ?event rdfs:label ?label .\n" +
-                " ?event " + varNames.getDateVar() + " ?date .\n" +
+                " ?event " + varNames.getLocationVar() + " ?location .\n" +
+                //" ?event " + varNames.getDateVar() + " ?date .\n" +
                 //comment if optional
-                " ?event " + varNames.getLatVar() + "?lat .\n" +
-                " ?event " + varNames.getLongVar() + " ?long .\n" +
-                " ?event " + varNames.getPlaceVar(propertyName) + " ?place .\n" +
+                //" ?event " + varNames.getLatVar() + "?lat .\n" +
+                //" ?event " + varNames.getLongVar() + " ?long .\n" +
+                //" ?event " + varNames.getPlaceVar(propertyName) + " ?location .\n" +
                 " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                 "}";
         if (testing) {
@@ -444,8 +439,8 @@ public class createDatasetsMain {
         ResultSet results = queryObject.queryEndpoint(queryString);
         while (results.hasNext()) {
             QuerySolution qs = results.next();
-            if (qs.get("place").isURIResource()) {
-                instanceSet.add(qs.get("place").toString());
+            if (qs.get("location").isURIResource()) {
+                instanceSet.add(qs.get("location").toString());
                 //System.out.println(qs.get("event").toString());
             }
             //System.out.println(qs.get("count").toString());
@@ -496,7 +491,7 @@ public class createDatasetsMain {
         String queryString = getQueryPrefix(k);
 
         queryString = queryString +
-                "SELECT ?label ?date ?lat ?long ?same ?place";// ?location";
+                "SELECT ?label ?date ?lat ?long ?same ?location";
 
         /*if (k==0) {
             queryString = queryString + " ?city ?territory";
@@ -514,7 +509,7 @@ public class createDatasetsMain {
                 " OPTIONAL { <" + instance + "> " + varNames.getLatVar() + " ?lat }\n" +
                 " OPTIONAL { <" + instance + "> " + varNames.getLongVar() + " ?long }\n"+
                 " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n"+
-                " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n";
+                " OPTIONAL { <" + instance + "> " + varNames.getLocationVar() + " ?location }\n";
         // " OPTIONAL { <" + instance + "> " + varNames.getPlace2Var() + " ?location }\n";
 
       /*  if (k==0) {
@@ -570,7 +565,7 @@ public class createDatasetsMain {
                     "}";
 
         if (testing) {
-            queryString = queryString + " LIMIT 1000";
+            queryString = queryString + " LIMIT 200";
         }
 
         ResultSet results = queryObject.queryEndpoint(queryString);
