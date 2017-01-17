@@ -2,14 +2,16 @@ import org.apache.jena.query.*;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.FileReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Daniel on 06/12/16.
@@ -17,19 +19,19 @@ import java.util.Scanner;
 public class createDatasetsMain {
     public static void main(String[] args) {
         // PARAMETERS
-        boolean testing = false;
+        boolean testing = true;
 
-        boolean dbpedia = true;
+        boolean dbpedia = false;
         boolean yago = true;
-        boolean wikidata = false;
+        //boolean wikidata = false;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
 
         boolean secondOrderP = true; //second order can only be specified if getOptionalP is true
 
         String fileName;
-        List<String> secondOrderFileNames = new ArrayList<>();
+        //List<String> secondOrderFileNames = new ArrayList<>();
         String header;
-        String secondOrderHeader = "uri\tlabel\tlat\tlong\tsame";//"uri\ttype\tlat\tlong\tsame";
+        //String secondOrderHeader = "uri\tlabel\tlat\tlong\tsame";//"uri\ttype\tlat\tlong\tsame";
 
         //configure log4j
         org.apache.log4j.BasicConfigurator.configure();
@@ -37,7 +39,8 @@ public class createDatasetsMain {
 
 
         int lineProgress = 500;
-        //HashSet<String> xInstancesWithProperties;
+
+        header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace\tplaceLat\tplaceLong\tplaceSame";//\tlocation\tcity\tterritory";
 
         if (dbpedia) {
             k=0;
@@ -45,10 +48,13 @@ public class createDatasetsMain {
 
             if (dQ.testConnection()) {
                 //specify fileNames and csv header
-                fileName = "out/dbpedia-1.tsv";
-                header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";//\tlocation\tcity\tterritory";
+                fileName = "out/dbpedia_events.xml";
+                //fileName = "out/dbpedia-full.tsv";
+                //header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";//\tlocation\tcity\tterritory";
                 //secondOrderHeader = "uri\ttype\tlat\tlong\tsame";
-                secondOrderFileNames.add("out/dbpedia-2-place.tsv");
+
+                //secondOrderFileNames.add("out/dbpedia-2-place.tsv");
+
                 //secondOrderFileNames.add("out/dbpedia-2-location.tsv");
                 //secondOrderFileNames.add("out/dbpedia-2-city.tsv");
                 //secondOrderFileNames.add("out/dbpedia-2-territory.tsv");
@@ -61,28 +67,33 @@ public class createDatasetsMain {
                 System.out.println(eventInstances.size() + " distinct instances received from " + dQ.getService());
                 //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
                 //System.out.println(eventInstances.size() + " distinct instances read from DBpedia table");
-
+                
+                // get event instance properties including place properties
+                Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances);
+                
+                writeXML(dEvents, fileName);
 
                 // 1 get and write event instances properties
-                getAndWriteEventInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, eventInstances, fileName, header, lineProgress);
+                //getAndWriteEventInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, eventInstances, fileName, header, lineProgress);
 
                 // 2 get and write second order file
-                if (secondOrderP) {
+                /*if (secondOrderP) {
                     getAndWritePlaceInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
-                }
+                }*/
             }
         }
-        secondOrderFileNames.clear();
+        //secondOrderFileNames.clear();
         if (yago) {
             k = 1;
 
             QueryObject yQ = new QueryObject("https://linkeddata1.calcul.u-psud.fr/sparql");
             if (yQ.testConnection()) {
                 //specify fileNames and csv header
-                header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";
-                fileName = "out/yago-1.tsv";
+                //header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";
+                //fileName = "out/yago-full.tsv";
+                fileName = "out/yago_events.xml";
 
-                secondOrderFileNames.add("out/yago-2-happenedIn.tsv");
+               // secondOrderFileNames.add("out/yago-2-happenedIn.tsv");
                 //secondOrderFileNames.add("out/yago-2-isLocatedIn.tsv");
 
                 KGVariableNames yagoVarNames = new KGVariableNames(k);
@@ -90,13 +101,17 @@ public class createDatasetsMain {
                 HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
                 System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
 
+                // get event instance properties including place properties
+                Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances);
+
+                writeXML(yEvents, fileName);
                 // 1 get event instances properties
-                getAndWriteEventInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, eventInstances, fileName, header, lineProgress);
+                //getAndWriteEventInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, eventInstances, fileName, header, lineProgress);
 
                 // 2 get and write second order file
-                if (secondOrderP) {
+                /*if (secondOrderP) {
                     getAndWritePlaceInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
-                }
+                }*/
 
 
             }
@@ -115,6 +130,105 @@ public class createDatasetsMain {
 
     }
 
+    private static void writeXML(Map<String, Event> eventMap, String fileName) {
+        EventXMLFormatter xmlFormatter = new EventXMLFormatter();
+        boolean written = xmlFormatter.parseAndWriteXML(eventMap, fileName);
+        if (written)
+            System.out.println("results written to " + fileName);
+
+
+    }
+
+    private static Map<String, Event> getEventInstanceProperties(int k,
+                                                          QueryObject queryObject,
+                                                          KGVariableNames varNames,
+                                                         HashSet<String> eventInstances) {
+        float loadFactor = 0.9f;
+        //init set capacity: distinct URIS / loadFactor (little bit more)
+        int eventSetCapacity = 63035; //dbpedia: 56729 distinct events
+        int placeURICapacity = 10755; //dbpedia: 9677 distinct places
+
+        if (k==1) {
+            eventSetCapacity = 463640; //yago: 417272 distinct events
+            placeURICapacity = 11850; //yago: 10657 distinct places
+        }
+
+        //set of all events
+        Map<String, Event> eventMap = new HashMap<>(eventSetCapacity, loadFactor);
+
+        //set of all distinct placeURIs
+        Set<String> placeURIs = new HashSet<>(placeURICapacity, loadFactor);
+
+        //k: placeURI, v: Set of eventURIs
+        HashMap<String, Set<String>> placeWithEventsMap= new HashMap<>(placeURICapacity, loadFactor);
+
+        // get properties for each event and add event to eventSet
+        for (String eventURI : eventInstances) {
+            //create new event object
+            Event event = new Event(eventURI);
+            //get event properties
+            ResultSet results = getEventInstancePropertiesResultSet(k, queryObject, varNames, eventURI);
+
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                //english label always present
+                event.addLabel(qs.get("label").toString());
+                //others are optional
+                if (qs.contains("date"))
+                    event.addDate(qs.get("date").toString());
+                if (qs.contains("lat") && qs.contains(("long")))
+                    event.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
+                if (qs.contains("same"))
+                    event.addSame(qs.get("same").toString());
+                if (qs.contains("place")) {
+                    String placeString = qs.get("place").toString();
+                    placeURIs.add(placeString);
+                    if (placeWithEventsMap.containsKey(placeString)) {
+                        placeWithEventsMap.get(placeString).add(eventURI);
+                    } else {
+                        //create new k,v pair
+                        HashSet<String> placeEvents = new HashSet<>();
+                        placeEvents.add(eventURI);
+                        placeWithEventsMap.put(placeString, placeEvents);
+                    }
+                }
+            }
+            eventMap.put(eventURI, event);
+
+        }
+        //done adding all direct properties to the events
+        System.out.println(eventMap.size() + " events added to eventSet");
+
+        // for each place
+        for (String placeURI : placeURIs) {
+            Place place = new Place(placeURI);
+            //get place properties
+            ResultSet results = getPlaceInstancePropertiesResultSet(k, queryObject, varNames, placeURI);
+            //process all results
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                //english label always present
+                place.addLabel(qs.get("label").toString());
+                //add optional properties
+                if (qs.contains("lat") && qs.contains(("long")))
+                    place.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
+                if (qs.contains("same"))
+                    place.addSame(qs.get("same").toString());
+            }
+            //add place to all events with this place
+            for (String eventURI : placeWithEventsMap.get(placeURI)) {
+                eventMap.get(eventURI).addPlace(place);
+            }
+
+
+        }
+        System.out.println(placeURIs.size() + " places processed.");
+        return eventMap;
+
+    }
+
+
+/*
     private static HashSet<String> getEventInstancesFromDBpediaTable() {
         String fileName = "/Users/curtis/MT/DBpediaTables/EventInstanceURIs.csv";
         HashSet<String> eventInstanceURIs = new HashSet<>();
@@ -129,6 +243,7 @@ public class createDatasetsMain {
 
     return eventInstanceURIs;
     }
+    */
 
     /**
      * get and write the place instance properties to file
@@ -235,6 +350,18 @@ public class createDatasetsMain {
         return newLineCounterValue;
     }
 
+    private static ResultSet getPlaceInstancePropertiesResultSet(int k, QueryObject queryObject, KGVariableNames varNames, String placeURI) {
+        String queryString = getQueryPrefix(k);
+        queryString = queryString +
+                "SELECT ?label ?lat ?long ?same WHERE {\n" + //type, country, city, ...
+                "<" + placeURI +"> rdfs:label ?label .\n"+
+                //" OPTIONAL { <" + placeInstance +"> a ?type }\n"+
+                " OPTIONAL { <" + placeURI + "> " + varNames.getLatVar() + " ?lat }\n" +
+                " OPTIONAL { <" + placeURI +"> " + varNames.getLongVar() + " ?long }\n"+
+                " OPTIONAL { <" + placeURI +"> owl:sameAs ?same }\n"+
+                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' ) }";
+        return queryObject.queryEndpoint(queryString);
+    }
     /**
      * Get all place instance properties. Might (optional) be the following:
      * geo:lat, geo:long, owl:sameAs.
@@ -248,16 +375,8 @@ public class createDatasetsMain {
         //String otherKgURL = varNames.getOtherKgURL();
 
         HashSet<String> resultSet = new HashSet<>();
-        String queryString = getQueryPrefix(k);
-        queryString = queryString +
-                "SELECT ?label ?lat ?long ?same WHERE {\n" + //type, country, city, ...
-                " OPTIONAL { <" + placeInstance +"> rdfs:label ?label }\n"+
-                //" OPTIONAL { <" + placeInstance +"> a ?type }\n"+
-                " OPTIONAL { <" + placeInstance + "> " + varNames.getLatVar() + " ?lat }\n" +
-                " OPTIONAL { <" + placeInstance +"> " + varNames.getLongVar() + " ?long }\n"+
-                " OPTIONAL { <" + placeInstance +"> owl:sameAs ?same }\n"+
-                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' ) }";
-        ResultSet results = queryObject.queryEndpoint(queryString);
+
+        ResultSet results = getPlaceInstancePropertiesResultSet(k, queryObject, varNames, placeInstance);
 
         //ResultSetFormatter.outputAsXML(System.out, results);
 
@@ -319,7 +438,7 @@ public class createDatasetsMain {
                 " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                 "}";
         if (testing) {
-            queryString = queryString + " LIMIT 10";
+            queryString = queryString + " LIMIT 25";
         }
 
         ResultSet results = queryObject.queryEndpoint(queryString);
@@ -347,44 +466,16 @@ public class createDatasetsMain {
         List<String> optionalProperties = new ArrayList<>();
         //optionalProperties.add("lat");
         //optionalProperties.add("long");
-        optionalProperties.add("same");
-        optionalProperties.add("place");
+        //optionalProperties.add("same");
+        //optionalProperties.add("place");
         //optionalProperties.add("location");
 
         HashSet<String> resultSet = new HashSet<>();
-        String queryString = getQueryPrefix(k);
 
-        queryString = queryString +
-                "SELECT ?label ?date ?lat ?long ?same ?place";// ?location";
 
-        /*if (k==0) {
-            queryString = queryString + " ?city ?territory";
-            optionalProperties.add("city");
-            optionalProperties.add("territory");
-        }*/
+        ResultSet results = getEventInstancePropertiesResultSet(k, queryObject, varNames, instance);
 
-        queryString = queryString +
-                " WHERE {\n" +
-                " <" + instance + "> rdfs:label ?label .\n" +
-                " <" + instance + "> " + varNames.getDateVar() + " ?date .\n" +
-                " <" + instance + "> " + varNames.getLatVar() + " ?lat .\n" +
-                " <" + instance + "> " + varNames.getLongVar() + " ?long .\n"+
-                //" OPTIONAL { <" + instance + "> " + varNames.getLatVar() + " ?lat }\n" +
-                //" OPTIONAL { <" + instance + "> " + varNames.getLongVar() + " ?long }\n"+
-                " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n"+
-                " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n";
-               // " OPTIONAL { <" + instance + "> " + varNames.getPlace2Var() + " ?location }\n";
 
-      /*  if (k==0) {
-            queryString = queryString +
-                    " OPTIONAL { <" + instance + "> dbo:city ?city }\n"+
-                    " OPTIONAL { <" + instance + "> dbo:territory ?territory }\n";
-        }*/
-        queryString = queryString +
-                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
-                "}";
-        //System.out.println(instance);
-        ResultSet results = queryObject.queryEndpoint(queryString);
 
         String resultString;
 
@@ -399,6 +490,43 @@ public class createDatasetsMain {
         }
 
         return resultSet;
+    }
+
+    private static ResultSet getEventInstancePropertiesResultSet(int k, QueryObject queryObject, KGVariableNames varNames, String instance) {
+        String queryString = getQueryPrefix(k);
+
+        queryString = queryString +
+                "SELECT ?label ?date ?lat ?long ?same ?place";// ?location";
+
+        /*if (k==0) {
+            queryString = queryString + " ?city ?territory";
+            optionalProperties.add("city");
+            optionalProperties.add("territory");
+        }*/
+
+        queryString = queryString +
+                " WHERE {\n" +
+                " <" + instance + "> rdfs:label ?label .\n" +
+                //" <" + instance + "> " + varNames.getDateVar() + " ?date .\n" +
+                //" <" + instance + "> " + varNames.getLatVar() + " ?lat .\n" +
+                //" <" + instance + "> " + varNames.getLongVar() + " ?long .\n"+
+                " OPTIONAL { <" + instance + "> " + varNames.getDateVar() + " ?date }\n" +
+                " OPTIONAL { <" + instance + "> " + varNames.getLatVar() + " ?lat }\n" +
+                " OPTIONAL { <" + instance + "> " + varNames.getLongVar() + " ?long }\n"+
+                " OPTIONAL { <" + instance + "> owl:sameAs ?same }\n"+
+                " OPTIONAL { <" + instance + "> " + varNames.getPlaceVar() + " ?place }\n";
+        // " OPTIONAL { <" + instance + "> " + varNames.getPlace2Var() + " ?location }\n";
+
+      /*  if (k==0) {
+            queryString = queryString +
+                    " OPTIONAL { <" + instance + "> dbo:city ?city }\n"+
+                    " OPTIONAL { <" + instance + "> dbo:territory ?territory }\n";
+        }*/
+        queryString = queryString +
+                " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
+                "}";
+        //System.out.println(instance);
+        return queryObject.queryEndpoint(queryString);
     }
 
     /**
@@ -434,15 +562,15 @@ public class createDatasetsMain {
                     "SELECT DISTINCT ?event WHERE {\n" +
                     " ?event a " + varNames.getEventClass() + " .\n" +
                     " ?event rdfs:label ?label .\n" +
-                    " ?event " + varNames.getDateVar() +" ?date .\n" +
                 //comment if properties should be OPTIONAL
-                    " ?event " + varNames.getLatVar() + "?lat .\n" +
-                    " ?event " + varNames.getLongVar() + " ?long .\n" +
+                    //" ?event " + varNames.getDateVar() +" ?date .\n" +
+                    //" ?event " + varNames.getLatVar() + "?lat .\n" +
+                    //" ?event " + varNames.getLongVar() + " ?long .\n" +
                     " FILTER langMatches( lang(?label), \'" + varNames.getEnVar() + "\' )\n" +
                     "}";
 
         if (testing) {
-            queryString = queryString + " LIMIT 10";
+            queryString = queryString + " LIMIT 1000";
         }
 
         ResultSet results = queryObject.queryEndpoint(queryString);
@@ -450,7 +578,12 @@ public class createDatasetsMain {
         while (results.hasNext()) {
             QuerySolution qs = results.next();
             if (qs.get("event").isURIResource()) {
-                instanceSet.add(qs.get("event").toString());
+                String eventURI = qs.get("event").toString();
+                if (!eventURI.contains("\"")) {
+                    instanceSet.add(eventURI);
+                } else {
+                    System.out.println(eventURI + " could not be added as the URI contains quotes");
+                }
                 //System.out.println(qs.get("event").toString());
             }
             //System.out.println(qs.get("count").toString());
@@ -470,23 +603,24 @@ public class createDatasetsMain {
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                     //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
                     "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
-                    "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n" +
+                    "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n";
                     // "PREFIX georss: <http://www.georss.org/georss/>\n"+
-                    "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n";
+                    //"PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n";
 
         } else if (k==1) {
             p =     "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
                     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                     //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                    "PREFIX yago: <http://yago-knowledge.org/resource/>\n"+
-                    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
-        } else if (k==2) {
+                    "PREFIX yago: <http://yago-knowledge.org/resource/>\n";
+                    //"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
+        }
+        /*else if (k==2) {
             p =     "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                     //"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
                     "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" +
                     "PREFIX wd: <http://www.wikidata.org/entity/>\n" +
                     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n";
-        }
+        }*/
         return p;
     }
 

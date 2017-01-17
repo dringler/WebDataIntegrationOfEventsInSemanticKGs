@@ -3,15 +3,15 @@
  */
 public class KGVariableNames {
 
-    private  String eventClass = "";
+    private String eventClass = "";
     private String dateVar = "";
     private String latVar = "";
     private String longVar = "";
-    private String label2Var = "";
+    //private String label2Var = "";
     private String placeVar = "";
-    private String place2Var = "";
+    //private String place2Var = "";
     private String enVar = "";
-    private String otherKgURLstart = "";
+    //private String otherKgURLstart = "";
 
     public  KGVariableNames(int k) {
         if (k==0) { //dbpedia
@@ -19,21 +19,22 @@ public class KGVariableNames {
             this.dateVar = "dbo:date";
             this.latVar = "geo:lat";
             this.longVar = "geo:long";
-            this.label2Var = "foaf:name";
+            //this.label2Var = "foaf:name";
             this.placeVar = "dbo:place";
-            this.place2Var = "dbo:location";
+            //this.place2Var = "dbo:location";
             this.enVar = "EN";
-            this.otherKgURLstart = "http://yago-knowledge.org";
+            //this.otherKgURLstart = "http://yago-knowledge.org";
         } else if (k==1) { //yago
             this.eventClass = "yago:wordnet_event_100029378";
             this.dateVar = "yago:happenedOnDate";
             this.latVar = "yago:hasLatitude";
             this.longVar = "yago:hasLongitude";
-            this.label2Var = "skos:prefLabel";
-            this.placeVar = "yago:happenedIn";
-            this.place2Var = "yago:isLocatedIn";
+           // this.label2Var = "skos:prefLabel";
+            this.placeVar = "yago:isLocatedIn";
+            //this.placeVar = "yago:happenedIn";
+            //this.place2Var = "yago:isLocatedIn";
             this.enVar = "ENG";
-            this.otherKgURLstart = "http://dbpedia.org";
+            //this.otherKgURLstart = "http://dbpedia.org";
         }
     }
 
@@ -43,34 +44,25 @@ public class KGVariableNames {
     public String getDateVar() {
         return dateVar;
     }
-
     public String getLatVar() {
         return latVar;
     }
-
     public String getLongVar() {
         return longVar;
     }
-
-    public String getLabel2Var() {
-        return label2Var;
-    }
-
     public String getPlaceVar() {
         return placeVar;
     }
-    public String getPlace2Var() {
-        return place2Var;
-    }
-
     public String getEnVar() {
         return enVar;
     }
-
-    public String getOtherKgURL() {
-        return otherKgURLstart;
+    /*
+    public String getLabel2Var() { return label2Var; }
+    public String getPlace2Var() {
+        return place2Var;
     }
-
+    public String getOtherKgURL() { return otherKgURLstart; }
+    */
     public String getPlaceVar(String propertyName) {
         if (propertyName.equals("place") ||
                 propertyName.equals("location") ||
