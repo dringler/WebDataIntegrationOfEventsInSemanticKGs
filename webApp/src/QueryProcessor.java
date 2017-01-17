@@ -90,6 +90,8 @@ public class QueryProcessor {
             if (d) {
                 dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
                         new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                dataSetD.loadFromXML(new File("../data/dbpedia_events_sample_1000.xml"),
+                        new EventFactory(),"events/event");
             }
             if (y) {
                 dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),

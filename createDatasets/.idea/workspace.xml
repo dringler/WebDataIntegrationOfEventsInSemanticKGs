@@ -1,39 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3629c9fb-7291-4d97-b318-1c1daa5d8320" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Event.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/EventXMLFormatter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Place.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/createDatasets/KGVariableNames.class" afterPath="$PROJECT_DIR$/out/production/createDatasets/KGVariableNames.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/createDatasets/createDatasetsMain.class" afterPath="$PROJECT_DIR$/out/production/createDatasets/createDatasetsMain.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/QueryProcessor.class" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/QueryProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.class" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.class" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/WEB-INF/classes/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" afterPath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.class" afterPath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" afterPath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.class" afterPath="$PROJECT_DIR$/../webApp/out/production/WDI/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/production/webApp/QueryProcessor.class" afterPath="$PROJECT_DIR$/../webApp/out/production/webApp/QueryProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/KGVariableNames.java" afterPath="$PROJECT_DIR$/src/KGVariableNames.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/createDatasetsMain.java" afterPath="$PROJECT_DIR$/src/createDatasetsMain.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../webApp/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" afterPath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.java" afterPath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StandardBlocker.java" afterPath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StandardBlocker.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" afterPath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java" afterPath="$PROJECT_DIR$/../webApp/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/css/main.css" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/index.jsp" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/index.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/js/main.js" afterPath="$PROJECT_DIR$/../webApp/out/artifacts/webApp_war_exploded/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/src/QueryProcessor.java" afterPath="$PROJECT_DIR$/../webApp/src/QueryProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/web/css/main.css" afterPath="$PROJECT_DIR$/../webApp/web/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/web/index.jsp" afterPath="$PROJECT_DIR$/../webApp/web/index.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webApp/web/js/main.js" afterPath="$PROJECT_DIR$/../webApp/web/js/main.js" />
-    </list>
+    <list default="true" id="3629c9fb-7291-4d97-b318-1c1daa5d8320" name="Default" comment="" />
     <ignored path="createDatasets.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -59,8 +27,8 @@
           <file leaf-file-name="createDatasetsMain.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/createDatasetsMain.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3210">
-                  <caret line="214" column="40" lean-forward="true" selection-start-line="214" selection-start-column="40" selection-end-line="214" selection-end-column="40" />
+                <state relative-caret-position="495">
+                  <caret line="33" column="58" lean-forward="false" selection-start-line="33" selection-start-column="58" selection-end-line="33" selection-end-column="58" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -847,12 +815,12 @@
       <workItem from="1482248732941" duration="8094000" />
       <workItem from="1484252044106" duration="3686000" />
       <workItem from="1484665137675" duration="296000" />
-      <workItem from="1484665991706" duration="13321000" />
+      <workItem from="1484665991706" duration="13415000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89944000" />
+    <option name="totallyTimeSpent" value="90038000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1342" y="-1057" width="1920" height="1057" extended-state="6" />
@@ -879,7 +847,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2854251" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2854251" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1341,8 +1309,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/createDatasetsMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3210">
-          <caret line="214" column="40" lean-forward="true" selection-start-line="214" selection-start-column="40" selection-end-line="214" selection-end-column="40" />
+        <state relative-caret-position="495">
+          <caret line="33" column="58" lean-forward="false" selection-start-line="33" selection-start-column="58" selection-end-line="33" selection-end-column="58" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
