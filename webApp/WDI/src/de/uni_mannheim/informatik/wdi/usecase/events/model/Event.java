@@ -25,17 +25,18 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     private List<String> labels = new ArrayList<>();
     private List<LocalDate> dates = new ArrayList<>();
     private List<Pair<Double, Double>> coordinates = new ArrayList<>();
+    private List<String> sames = new ArrayList<>();
     //private List<String> cities;
     //private List<String> countries;
     private List<Location> locations = new ArrayList<>();
-    private List<String> participants = new ArrayList<>();
-    private List<String> sames = new ArrayList<>();
+    //private List<String> participants = new ArrayList<>();
+
 
     public Event(String identifier, String provenance) {
         super(identifier, provenance);
     }
 
-    private String[] attributeNames = {"URIs", "Labels", "Dates", "Lat", "Long", "Locations", "Participants", "Sames"};
+    private String[] attributeNames = {"URIs", "Labels", "Dates", "Lat", "Long", "Locations", "Sames"};//"Participants",
     public String[] getAttributeNames() {
         return attributeNames;
     }
@@ -94,11 +95,11 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         }*/
 
        //get participants
-        String allParticipants = "";
+        //String allParticipants = "";
 
         //get Sames
         String allSames = "";
-        String [] allValues = {allURIs, allLabels, allDates, allLat, allLong, allLocations, allParticipants, allSames};
+        String [] allValues = {allURIs, allLabels, allDates, allLat, allLong, allLocations, allSames};//allParticipants,
         return allValues;
     }
 
@@ -124,7 +125,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return locations;
     }
 
-    public List<String> getParticipants() {  return participants; }
+    //public List<String> getParticipants() {  return participants; }
 
     public List<String> getSames() {
         return sames;
@@ -142,7 +143,7 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     }
     public void setCoordinates(List<Pair<Double, Double>> coordinates) { this.coordinates = coordinates;  }
     public void setLocations(List<Location> locations) { this.locations = locations; }
-    public void setParticipants(List<String> participants) { this.participants = participants; }
+    //public void setParticipants(List<String> participants) { this.participants = participants; }
     public void setSames(List<String> sames) { this.sames = sames; }
 
     public void setSingleURI(String uri) {
@@ -165,7 +166,8 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
 
     public void setSingleCoordinates(Pair<Double, Double> p) {
         this.coordinates.clear();
-        this.coordinates.add(p);
+        if (p != null)
+            this.coordinates.add(p);
     }
 
 
@@ -205,10 +207,10 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
             this.locations.add(location);
     }
 
-    public void addParticipant(String participant) {
+    /*public void addParticipant(String participant) {
         if(!this.participants.contains(participant))
             this.participants.add(participant);
-    }
+    }*/
 
     public void addSame(String same) {
         if(!this.sames.contains(same))
@@ -255,11 +257,11 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
     //public static final DefaultSchemaElement CITIES = new DefaultSchemaElement("Cities");
     //public static final DefaultSchemaElement COUNTRIES = new DefaultSchemaElement("Countries");
     public static final DefaultSchemaElement LOCATIONS = new DefaultSchemaElement("Locations");
-    public static final DefaultSchemaElement PARTICIPANTS = new DefaultSchemaElement("Participants");
+    //public static final DefaultSchemaElement PARTICIPANTS = new DefaultSchemaElement("Participants");
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
     public DefaultSchemaElement[] getDefaultSchemaElements() {
-        DefaultSchemaElement [] allDefaultSchemaElements = {URIS, LABELS, DATES, COORDINATES, LOCATIONS, PARTICIPANTS, SAMES};
+        DefaultSchemaElement [] allDefaultSchemaElements = {URIS, LABELS, DATES, COORDINATES, LOCATIONS, SAMES};//PARTICIPANTS,
         return allDefaultSchemaElements;
     }
 
@@ -282,8 +284,8 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
             return countries!=null;*/
         else if (attribute==LOCATIONS)
             return locations.size()>0;
-        else if (attribute==PARTICIPANTS)
-            return participants.size()>0;
+        /*else if (attribute==PARTICIPANTS)
+            return participants.size()>0;*/
         else if (attribute==SAMES)
             return sames.size()>0;
         return false;

@@ -118,9 +118,11 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 					// add it to the data set
 					addRecord(record);
 				} else {
-					System.out.println(String.format(
-							"Could not generate entry for ", list.item(i)
-									.getTextContent()));
+                    Element e = (Element) list.item(i);
+                    String uri = e.getAttribute("uri");
+					System.out.println(//String.format(
+							"Could not generate entry for " + uri);
+                                    //list.item(i).getTextContent()));
 				}
 			}
 		}
@@ -207,7 +209,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 			if (record != null) {
 				addRecord(record);
 			} else {
-				System.out.println(String.format("Could not generate entry for ", instance));
+				System.out.println("Could not generate entry for " +  instance);
 			}
 		}
 

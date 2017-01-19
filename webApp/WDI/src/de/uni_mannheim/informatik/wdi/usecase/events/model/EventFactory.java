@@ -2,15 +2,11 @@ package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
 import de.uni_mannheim.informatik.wdi.model.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.w3c.dom.Node;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@link MatchableFactory} for {@link Event}s.
@@ -21,30 +17,127 @@ import java.util.List;
 public class EventFactory extends MatchableFactory<Event> implements
         FusableFactory<Event, DefaultSchemaElement> {
 
+    private DateTimeFormatter dateTimeFormatter;
+    private boolean filterFrom;
+    private LocalDate fromDate;
+    private boolean filterTo;
+    private LocalDate toDate;
+    private boolean applyKeywordSearch;
+    private String keyword;
+
+    //constructor
+    public EventFactory(DateTimeFormatter dateTimeFormatter,
+                        boolean filterFrom, LocalDate fromDate,
+                        boolean filterTo, LocalDate toDate,
+                        boolean applyKeywordSearch, String keyword) {
+        this.dateTimeFormatter = dateTimeFormatter;
+        this.filterFrom = filterFrom;
+        this.fromDate = fromDate;
+        this.filterTo = filterTo;
+        this.toDate = toDate;
+        this.applyKeywordSearch = applyKeywordSearch;
+        this.keyword = keyword;
+    }
 
     @Override
     public Event createModelFromElement(Node node, String provenanceInfo) {
-        String id = getValueFromChildElement(node, "id");
+        String uri = getAttributeValueFromNode(node, "uri");
+                //getValueFromChildElement(node, "event");
 
         // create the object with id and provenance information
-        Event event = new Event(id, provenanceInfo);
+        Event event = new Event(uri, provenanceInfo);
 
+        event.addURI(uri);
+        //get all labels, remove the language tag, add to event label list
+        List<String> labelList = getListFromChildElement(node, "label");
+        if (labelList != null) {
+            for (String label : labelList) {
+                if (label.contains("@"))
+                    label = label.substring(0, label.indexOf("@"));
+                event.addLabel(label);
+            }
 
-        event.addLabel(getValueFromChildElement(node, "labels"));
-        //event.setLat(Double.valueOf(getValueFromChildElement(node, "lat")));
-        //event.setLon(Double.valueOf(getValueFromChildElement(node, "lon")));
+            //filter labels by keyword
+            if(this.applyKeywordSearch) {
+                if (!event.getLabels().stream().anyMatch(label -> label.trim().toLowerCase().contains(this.keyword.toLowerCase()))) {
+                    //return null if keyword is not found in any label
+                    System.out.println(event.getLabels().toString() + " does not contain the keyword " + this.keyword + ". return null.");
+                    return null;
+                } else {
+                    System.out.println(event.getLabels().toString() + " contains the keyword " + this.keyword);
+                }
+            }
+        }
 
-        // convert the date string into a DateTime object
-        /*try {
-            String date = getValueFromChildElement(node, "date");
-            if (date != null) {
-                LocalDate dt = LocalDate.parse(date);
-                event.setDate(dt);
+        //try to convert dates into LocalDate object
+        try {
+            List<String> dateStrings= getListFromChildElement(node, "date");
+            if (dateStrings != null) {
+                List<LocalDate> localDates = new ArrayList<>();
+                for (String dateString : dateStrings) {
+                    if (dateString != null && !dateString.isEmpty()
+                            //incomplete date
+                            && !dateString.contains("##")
+                            //negative date
+                            && dateString.indexOf('-') != 0) {
+                        dateString = dateString.substring(0, dateString.indexOf("^"));
+                        LocalDate localDate = LocalDate.parse(dateString);//, dateTimeFormatter);
+                        localDates.add(localDate);
+                    }
+                }
+                if (this.filterFrom) { //&& filterTo) {
+                    //if (localDate.isAfter(toDate) || localDate.isBefore(fromDate)) {
+                    if (localDates.size() == 0 || localDates.stream().anyMatch(localDate -> localDate.isBefore(this.fromDate))) {
+                        System.out.println(localDates.toString() + " contains a date that is before " + this.fromDate + ". return null.");
+                        return null;
+                    } else {
+                        System.out.println(localDates.toString() + " contains a date that is not before " + this.fromDate);
+                    }
+                }
+                if (this.filterTo) {
+                    if (localDates.size() == 0 || localDates.stream().anyMatch(localDate -> localDate.isAfter(this.toDate))) {
+                        System.out.println(localDates.toString() + " contains a date that is after " + this.toDate + ". return null.");
+                        return null;
+                    } else {
+                        System.out.println(localDates.toString() + " contains a date that is not after " + this.toDate);
+                    }
+                }
+                event.setDates(localDates);
+            } else { //dateStrings == null
+                //no date available: return null if date should be filtered
+                if (this.filterFrom || this.filterTo) {
+                    return null;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        */
+
+        // get coordinates
+        List<String> coordinateStrings = getListFromChildElement(node, "coordinates");
+        if (coordinateStrings != null) {
+            for (String coordinateString : coordinateStrings) {
+                if (!coordinateString.contains("NAN")) { //check for NAN that can appear in DBpedia
+                    String[] coorindatePair = coordinateString.split(",");
+                    Pair<Double, Double> p = new Pair<>(
+                            Double.valueOf(coorindatePair[0].substring(0, coorindatePair[0].indexOf("^"))),
+                            Double.valueOf(coorindatePair[1].substring(0, coorindatePair[1].indexOf("^")))
+                    );
+                    event.addCoordinates(p);
+                }
+            }
+        }
+        // get owl:sameAs links
+        List<String> sameList = getListFromChildElement(node, "same");
+        if (sameList != null)
+            event.setSames(sameList);
+
+        // get location
+        List<Location> locations = getObjectListFromChildElement(node, "locations",
+                "location", new LocationFactory(), provenanceInfo);
+        if (locations != null)
+            event.setLocations(locations);
+
         return event;
     }
     public Event createModelFromTSVline(String[] values, String provenanceInfo) {

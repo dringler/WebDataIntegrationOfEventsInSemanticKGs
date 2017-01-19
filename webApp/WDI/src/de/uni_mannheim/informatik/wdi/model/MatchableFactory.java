@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -113,6 +114,21 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 	}
 
 	/**
+	 * returns a attribute value from a node. The child
+	 * must only have one value (lists will be ignored)
+	 *
+	 * @param node
+	 *            the node containing the data
+	 * @param attributeName
+	 * 				the name of the attribute
+	 * @return
+	 */
+	protected String getAttributeValueFromNode(Node node, String attributeName) {
+	    Element e = (Element) node;
+		return e.getAttribute(attributeName);
+	}
+
+	/**
 	 * returns a list of values from a child node of the first parameter. The
 	 * list values are expected to be atomic, i.e. no complex node structures
 	 * 
@@ -124,6 +140,8 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 	 */
 	protected List<String> getListFromChildElement(Node node, String childName) {
 
+        // prepare a list to hold all values
+        List<String> values = new ArrayList<>();
 		// get all child nodes
 		NodeList children = node.getChildNodes();
 
@@ -134,25 +152,15 @@ public abstract class MatchableFactory<RecordType extends Matchable> {
 			// check the node type and name
 			if (child.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE
 					&& child.getNodeName().equals(childName)) {
+                //add value
+                values.add(child.getTextContent().trim());
+            }
 
-				// prepare a list to hold all values
-				List<String> values = new ArrayList<>(child.getChildNodes()
-						.getLength());
-
-				// iterate the value nodes
-				for (int i = 0; i < child.getChildNodes().getLength(); i++) {
-					Node valueNode = child.getChildNodes().item(i);
-					String value = valueNode.getTextContent().trim();
-
-					// add the value
-					values.add(value);
-				}
-
-				return values;
-			}
 		}
+		if (values.size() == 0)
+		    return null;
+        return values;
 
-		return null;
 	}
 
 	/**

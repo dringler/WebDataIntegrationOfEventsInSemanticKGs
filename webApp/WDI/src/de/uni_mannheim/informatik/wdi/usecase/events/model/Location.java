@@ -5,22 +5,23 @@ import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.model.Record;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by curtis on 19/12/16.
+ * Created by Daniel Ringler on 19/12/16.
  */
 public class Location extends Record<DefaultSchemaElement> implements Serializable {
 
-    private List<String> labels;
+    private List<String> labels = new ArrayList<>();
     private List<String> types;
-    private List<Pair<Double, Double>> coordinates;
+    private List<Pair<Double, Double>> coordinates = new ArrayList<>();
     private List<String> countries;
     private List<String> cities;
     private boolean isACountry;
     private boolean isAState;
     private boolean isACity;
-    private List<String> sames;
+    private List<String> sames = new ArrayList<>();
 
     //countries, cities, capital ...
     //immer das spezifischste attribut mitnehmen (land < staat < stadt)
@@ -43,6 +44,10 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
         return sames;
     }
 
+    //SETTER
+    public void setLabels(List<String> labels) {this.labels = labels;}
+    public void setSames(List<String> sames) {this.sames = sames;}
+    public void setCoordinates(List<Pair<Double, Double>> coordinates) {this.coordinates = coordinates;}
 
     //ADDER
     public void addLabel(String label) {

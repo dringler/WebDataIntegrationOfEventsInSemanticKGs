@@ -1,5 +1,6 @@
 package de.uni_mannheim.informatik.wdi.usecase.events.model;
 
+import de.uni_mannheim.informatik.wdi.model.Pair;
 import de.uni_mannheim.informatik.wdi.model.XMLFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,6 +41,14 @@ public class EventXMLFormatter extends XMLFormatter<Event> {
                     date.toString(),
                     record.getMergedAttributeProvenance(Event.DATES), doc));
         }
+
+        for (Pair<Double, Double> coordinatesPair : record.getCoordinates()) {
+            event.appendChild(createTextElementWithProvenance("coordinates",
+                    coordinatesPair.toString(),
+                    record.getMergedAttributeProvenance(Event.COORDINATES), doc));
+        }
+
+
         for (String same : record.getSames()) {
             event.appendChild(createTextElementWithProvenance("same",
                     same,

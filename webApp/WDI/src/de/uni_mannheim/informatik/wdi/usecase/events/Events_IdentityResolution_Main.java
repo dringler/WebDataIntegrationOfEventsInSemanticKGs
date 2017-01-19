@@ -59,6 +59,9 @@ public class Events_IdentityResolution_Main {
 	public static void main(String[] args) throws Exception {
 		char separator = '+';
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		boolean filterFrom = false;
+		boolean filterTo = false;
+		boolean applyKeywordSearch = false;
 		LocalDate fromDate = LocalDate.MIN;
 		LocalDate toDate = LocalDate.MAX;
         String keyword = "";
@@ -74,11 +77,11 @@ public class Events_IdentityResolution_Main {
 		*/
 		DefaultDataSet<Event, DefaultSchemaElement> dataDBpedia = new DefaultDataSet<>();
 		dataDBpedia.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1.tsv"),
-				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
 
 		DefaultDataSet<Event, DefaultSchemaElement> dataYAGO = new DefaultDataSet<>();
 		dataYAGO.loadFromTSV(new File("WDI/usecase/event/input/yago-1.tsv"),
-				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
 
 
 		// create a matching rule

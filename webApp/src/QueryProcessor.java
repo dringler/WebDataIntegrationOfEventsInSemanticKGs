@@ -35,8 +35,8 @@ public class QueryProcessor {
      * @return JSON to update the D3.JS chart
      */
     public String getUserData(boolean useLocalData, boolean includeOnlyFusedEvents, boolean d, boolean y, String keyword, String fD, String tD) throws Exception {
-        String jsonString = null;
-        List<Event> eventList = null;
+        String jsonString;
+        List<Event> eventList = new ArrayList<>();
 
         boolean applyKeywordSearch = false;
         if (!keyword.equals("")) {
@@ -74,13 +74,13 @@ public class QueryProcessor {
                 //step 1: data collection
                 instancesD = dataCollection(d, false, applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
                 //step 2: data translation
-                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                dataSetD.loadFromInstancesHashMap(instancesD, new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
             if (y) {
                 //step 1: data collection
                 instancesY = dataCollection(false, y, applyKeywordSearch, keyword, filterFrom, fD, filterTo, tD);
                 //step 2: data translation
-                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                dataSetY.loadFromInstancesHashMap(instancesY, new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
 
 
@@ -88,58 +88,76 @@ public class QueryProcessor {
         } else { //use local sample data
             //step 1+2: data collection and translation
             if (d) {
-                dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
-                        new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
-                dataSetD.loadFromXML(new File("../data/dbpedia_events_sample_1000.xml"),
-                        new EventFactory(),"events/event");
+                //dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
+                 //       new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                dataSetD.loadFromXML(new File("../data/dbpedia_events_s_5.xml"),
+                        new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword),
+                        "events/event");//, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
             }
             if (y) {
-                dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),
-                        new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                //dataSetY.loadFromTSV(new File("../data/yago-1.tsv"),
+                 //       new EventFactory(), "events/event", separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                dataSetY.loadFromXML(new File("../data/yago_events_s_5.xml"),
+                        new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword),
+                        "events/event");
             }
         }
 
         //check size of data sets (could be zero due to keyword search or date filters)
-        d = checkDataSetSize(dataSetD);
-        y = checkDataSetSize(dataSetY);
+        boolean dHasItems = checkDataSetSize(dataSetD);
+        boolean yHasItems = checkDataSetSize(dataSetY);
 
 
         //step 3: identity resolution
-        if (d && y) {
+        if (d && y && dHasItems && yHasItems) {
 
             de.uni_mannheim.informatik.wdi.model.ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences =
                     Events_IdentityResolution_Main.runIdentityResolution(dataSetD, dataSetY, separator);
 
         //step 4: data fusion
             if (correspondences.size() > 0) {
-                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator, dateTimeFormatter, fromDate, toDate, keyword);
+                fusedDataSet = Events_DataFusion_Main.runDataFusion(dataSetD, dataSetY, correspondences, separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
+                if (fusedDataSet != null) {
+                    eventList.addAll(collectRecords(fusedDataSet));
+                }
             } else {
-                System.out.println("no correspondences found");
+                System.out.println("No correspondences found. Data fusion is not possible.");
+                // combine original data sets
+
             }
-
-            eventList = collectRecords(fusedDataSet);
-
-            //combine data sets
             if (!includeOnlyFusedEvents) {
-                //get all IDs of fused records
-                Set<String> fusedRecordIDs = fusedDataSet.getOriginalIdsOfFusedRecords();
-                //add unfused records from DBpedia
-                eventList.addAll(collectNotFusedRecords(dataSetD, fusedRecordIDs));
-                // unfused records from YAGO
-                eventList.addAll(collectNotFusedRecords(dataSetY, fusedRecordIDs));
+                //combine data sets
+                if (fusedDataSet != null) {
+                    //get all IDs of fused records
+                    Set<String> fusedRecordIDs = fusedDataSet.getOriginalIdsOfFusedRecords();
+                    //add unfused records from DBpedia
+                    eventList.addAll(collectNotFusedRecords(dataSetD, fusedRecordIDs));
+                    // unfused records from YAGO
+                    eventList.addAll(collectNotFusedRecords(dataSetY, fusedRecordIDs));
+                } else {
+                    //just add original data sets
+                    eventList.addAll(collectRecords(dataSetD));
+                    eventList.addAll(collectRecords(dataSetY));
+                }
             }
 
 
         } else {
-            //return single data set
-            if (d) {
-                eventList = collectRecords(dataSetD);
-            }
-            if (y) {
-                eventList = collectRecords(dataSetY);
+            if (!includeOnlyFusedEvents) {
+                //return single data set
+                if (d) {
+                    System.out.println("dataSetD has " + dataSetD.size() + " records in total");
+                    eventList.addAll(collectRecords(dataSetD));
+
+                }
+                if (y) {
+                    System.out.println("dataSetY has " + dataSetY.size() + " records in total");
+                    eventList.addAll(collectRecords(dataSetY));
+                }
             }
         }
 
+        System.out.println(eventList.size() + " of the records in the eventList have valid coordinates");
         // convert data to JSON
         jsonString = mapper.writeValueAsString(eventList);
 
@@ -157,20 +175,21 @@ public class QueryProcessor {
     private List<Event> collectNotFusedRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet, Set<String> fusedRecordIDs) {
         return fusableDataSet.getRecords()
                 .stream()
-                .filter(event -> !fusedRecordIDs.contains(event.getIdentifier()))
+                .filter(event -> !fusedRecordIDs.contains(event.getIdentifier()) && event.hasValue(Event.COORDINATES))
                 .collect(Collectors.toList());
     }
 
 
 
     /**
-     * Collect all records of the given {@link FusableDataSet}
+     * Collect all records of the given {@link FusableDataSet} that have valid coordinates
      * @param fusableDataSet
      * @return List<Event>
      */
     private List<Event> collectRecords(FusableDataSet<Event, DefaultSchemaElement> fusableDataSet) {
         return fusableDataSet.getRecords()
                 .stream()
+                .filter(event -> event.hasValue(Event.COORDINATES))
                 .collect(Collectors.toList());
     }
 

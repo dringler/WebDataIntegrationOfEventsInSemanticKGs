@@ -59,7 +59,7 @@
           <label><input type="checkbox" value="y" id="yID" onchange="checkDatabases();" checked>YAGO</label>
         </div>
         <div class="checkbox" id="onlyFusedDivID">Options:<br>
-        <label><input type="checkbox" value="onlyFused" id="onlyFusedID" checked>Include only fused events</label>
+        <label><input type="checkbox" value="onlyFused" id="onlyFusedID">Include only fused events</label>
         </div>
         <!--<div class="form-group">
           <label for="catID">Category:</label>
@@ -76,11 +76,11 @@
         </div>
         <div class="form-group">
           <label for="fromYearID">From Year:</label>
-          <input type="text" class="form-control" id="fromYearID" value="1980-01-01">
+          <input type="text" class="form-control" id="fromYearID" value="1980-01-01" placeholder="yyyy-mm-dd">
         </div>
         <div class="form-group">
           <label for="toYearID">To Year:</label>
-          <input type="text" class="form-control" id="toYearID" value="1990-01-01">
+          <input type="text" class="form-control" id="toYearID" value="1990-01-01" placeholder="yyyy-mm-dd">
         </div>
         <button type="button" class="btn btn-default" id="sendQueryID">Send Query</button>
         <!--<button type="submit" class="btn btn-default">Submit</button>-->

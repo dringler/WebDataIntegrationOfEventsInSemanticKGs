@@ -54,6 +54,9 @@ public class Events_DataFusion_Main {
 
 		char separator = '+';
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		boolean filterFrom = false;
+		boolean filterTo = false;
+		boolean applyKeywordSearch = false;
 		LocalDate fromDate = LocalDate.MIN;
 		LocalDate toDate = LocalDate.MAX;
 		String keyword = "";
@@ -61,28 +64,28 @@ public class Events_DataFusion_Main {
 		// Load the Data into FusableDataSet
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = new FusableDataSet<>();
 		fusableDataSetD.loadFromTSV(new File("WDI/usecase/event/input/dbpedia-1_s.tsv"),
-				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY = new FusableDataSet<>();
 		fusableDataSetY.loadFromTSV(new File("WDI/usecase/event/input/yago-1_s.tsv"),
-				new EventFactory(), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), "events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, true, keyword);
 
 
 		FusableDataSet<Event, DefaultSchemaElement> fusedDataSet = runDataFusion(fusableDataSetD,
 				fusableDataSetY,
 				null,
-				separator, dateTimeFormatter, fromDate, toDate, keyword);
+				separator, dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword);
 
 	}
 
 	public static FusableDataSet<Event,DefaultSchemaElement> runDataFusion(FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD,
-                                                                           FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY,
-                                                                           ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences,
-                                                                           char separator,
-                                                                           DateTimeFormatter dateTimeFormatter,
-                                                                           LocalDate fromDate,
-                                                                           LocalDate toDate, String keyword) throws IOException {
+																		   FusableDataSet<Event, DefaultSchemaElement> fusableDataSetY,
+																		   ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences,
+																		   char separator,
+																		   DateTimeFormatter dateTimeFormatter,
+																		   boolean filterFrom, LocalDate fromDate,
+																		   boolean filterTo, LocalDate toDate, boolean applyKeywordSearch, String keyword) throws IOException {
 
 		//FusableDataSet<Event, DefaultSchemaElement> fusableDataSetD = (FusableDataSet<Event, DefaultSchemaElement>) dataSetD;
 		System.out.println("DBpedia Data Set Density Report:");
@@ -118,7 +121,7 @@ public class Events_DataFusion_Main {
 		correspondencesSet.printGroupSizeDistribution();
 
 		DataFusionStrategy<Event, DefaultSchemaElement> strategy = new DataFusionStrategy<>(
-				new EventFactory());
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword));
 
 		strategy.addAttributeFuser(new DefaultSchemaElement("Uri"), new EventURIFuserAll(),
 				new EventURIEvaluationRule());
@@ -147,7 +150,7 @@ public class Events_DataFusion_Main {
 		// load the gold standard
 		DefaultDataSet<Event, DefaultSchemaElement> gs = new FusableDataSet<>();
 		gs.loadFromTSV(new File("../data/fused.tsv"),
-				new EventFactory(), "/events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
+				new EventFactory(dateTimeFormatter, filterFrom, fromDate, filterTo, toDate, applyKeywordSearch, keyword), "/events/event", separator, dateTimeFormatter, false, fromDate, false, toDate, false, keyword);
 
 		//gs.splitMultipleValues(separator);
 		// evaluate
