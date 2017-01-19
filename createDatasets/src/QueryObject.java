@@ -1,6 +1,7 @@
 import org.apache.jena.query.*;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +43,8 @@ public class QueryObject {
                         return resultsCopy;
                 } catch (QueryExceptionHTTP http) {
                     try {
-                        System.out.println("error while executing query. waiting for 5 seconds");
+                        System.out.println("error while executing query. waiting for 5 seconds. " + LocalDateTime.now());
+                        System.out.println(queryString);
                         TimeUnit.SECONDS.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

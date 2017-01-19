@@ -55,14 +55,16 @@ public class EventXMLFormatter {
                 eventElement.appendChild(root2ElementPlaces);
                 //ADD LOCATIONS
                 for (Location location : event.getLocations()) {
-                    Element locationElement = doc.createElement("location");
-                    root2ElementPlaces.appendChild(locationElement);
-                    locationElement.setAttribute("uri", location.getUri());
+                    if (location.getLabels().size() > 0) {
+                        Element locationElement = doc.createElement("location");
+                        root2ElementPlaces.appendChild(locationElement);
+                        locationElement.setAttribute("uri", location.getUri());
 
-                    //ADD ELEMENTS: label, coordinates, sames
-                    addElements(doc, locationElement, "label", location.getLabels());
-                    addElements(doc, locationElement, "coordinates", location.getCoordinatePairs());
-                    addElements(doc, locationElement, "sames", location.getSames());
+                        //ADD ELEMENTS: label, coordinates, sames
+                        addElements(doc, locationElement, "label", location.getLabels());
+                        addElements(doc, locationElement, "coordinates", location.getCoordinatePairs());
+                        addElements(doc, locationElement, "same", location.getSames());
+                    }
                 }
             }
 

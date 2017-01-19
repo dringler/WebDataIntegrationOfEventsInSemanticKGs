@@ -3,8 +3,7 @@ import org.apache.jena.query.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -13,9 +12,9 @@ import java.util.*;
 public class createDatasetsMain {
     public static void main(String[] args) {
         // PARAMETERS
-        boolean testing = true;
+        boolean testing = false;
 
-        boolean dbpedia = true;
+        boolean dbpedia = false;
         boolean yago = true;
         //boolean wikidata = false;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
@@ -57,15 +56,17 @@ public class createDatasetsMain {
                 KGVariableNames dbpediaVarNames = new KGVariableNames(k);
                 //get event instances from DBpedia
 
-                HashSet<String> eventInstances = getEventInstances(k, dQ, dbpediaVarNames, testing);
-                System.out.println(eventInstances.size() + " distinct instances received from " + dQ.getService());
+                //HashSet<String> eventInstances = getEventInstances(k, dQ, dbpediaVarNames, testing);
+                String eventInstancesFileName = "dEventInstanceURIs.csv";
+
+                HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);              System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
                 //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
-                //System.out.println(eventInstances.size() + " distinct instances read from DBpedia table");
+                System.out.println(eventInstances.size() + " distinct instances read.");
                 
                 // get event instance properties including location properties
-                Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances);
+ //               Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances);
                 
-                writeXML(dEvents, fileName);
+  //              writeXML(dEvents, fileName);
 
                 // 1 get and write event instances properties
                 //getAndWriteEventInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, eventInstances, fileName, header, lineProgress);
@@ -92,8 +93,27 @@ public class createDatasetsMain {
 
                 KGVariableNames yagoVarNames = new KGVariableNames(k);
                 //get event instances from YAGO
-                HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
-                System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
+                String eventInstancesFileName = "yEventInstanceURIs.csv";
+
+                //dynamic from SPARQL
+                //HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
+                //System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
+                //writeEventInstancesToCSV(eventInstances, eventInstancesFileName);
+
+                //testing
+                /*HashSet<String> eventInstances = new HashSet<>();
+                eventInstances.add("http://yago-knowledge.org/resource/Battle_of_Bouvines");
+                eventInstances.add("http://yago-knowledge.org/resource/Battle_of_Waterloo");
+                eventInstances.add("http://yago-knowledge.org/resource/1974_FIFA_World_Cup");
+                eventInstances.add("http://yago-knowledge.org/resource/ar/يا_أنا_يا_خالتي_(فيلم)");
+                eventInstances.add("http://yago-knowledge.org/resource/Benji's_Very_Own_Christmas_Story");
+                */
+
+                //from file
+                HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);
+                System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
+
+
 
                 // get event instance properties including location properties
                 Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances);
@@ -121,6 +141,49 @@ public class createDatasetsMain {
 
             }
         }*/
+
+    }
+
+    private static void writeEventInstancesToCSV(HashSet<String> eventInstances, String fileName) {
+        try {
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            int counter = 0;
+            for (String event : eventInstances) {
+                writer.println(event);
+                counter++;
+            }
+            writer.close();
+            System.out.println(counter + " lines written to " + fileName);
+        } catch (IOException e) {
+            System.out.println("error while writing to file " + fileName);
+        }
+    }
+    //417126 distinct events received that do not contain quotes
+    //416,924
+    private static HashSet<String> getEventInstancesFromFile(String fileName, boolean testing) {
+        HashSet<String> eventInstances = new HashSet<>(63100, 0.9f);
+        int lineCounter = 0;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (eventInstances.contains(line)) {
+                    System.out.println(line + " already contained in set");
+                }
+                eventInstances.add(line);
+                lineCounter++;
+                if (testing && lineCounter > 24)
+                    break;
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println(fileName + " not found");
+        }
+        System.out.println(lineCounter + " lines read");
+        return eventInstances;
 
     }
 
@@ -156,6 +219,7 @@ public class createDatasetsMain {
         //k: placeURI, v: Set of eventURIs
         HashMap<String, Set<String>> locationWithEventsMap= new HashMap<>(placeURICapacity, loadFactor);
 
+        int counter = 0;
         // get properties for each event and add event to eventSet
         for (String eventURI : eventInstances) {
             //create new event object
@@ -188,10 +252,15 @@ public class createDatasetsMain {
                 }
             }
             eventMap.put(eventURI, event);
-
+            counter++;
+            if ( counter % (float) (eventInstances.size()/100) == 0) {
+                System.out.println(
+                        ((float) counter / eventInstances.size()) +
+                        " of event Instances processed.");
+            }
         }
         //done adding all direct properties to the events
-        System.out.println(eventMap.size() + " events added to eventSet");
+        System.out.println(eventMap.size() + " events added to eventMap");
 
         // for each location
         for (String locationURI : locationURIs) {
@@ -574,11 +643,11 @@ public class createDatasetsMain {
             QuerySolution qs = results.next();
             if (qs.get("event").isURIResource()) {
                 String eventURI = qs.get("event").toString();
-                if (!eventURI.contains("\"")) {
+                if (!eventURI.contains("\"") && !eventURI.contains("`")) {
                     instanceSet.add(eventURI);
-                } else {
-                    System.out.println(eventURI + " could not be added as the URI contains quotes");
-                }
+                } //else {
+                   // System.out.println(eventURI + " could not be added as the URI contains quotes");
+                //}
                 //System.out.println(qs.get("event").toString());
             }
             //System.out.println(qs.get("count").toString());
