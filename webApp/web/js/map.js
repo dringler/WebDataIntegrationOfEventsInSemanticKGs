@@ -247,10 +247,17 @@ function mapInit() {
             .attr("r", "3px")
             .style("fill", function(d) {
                 if (d.identifier.includes("+http://yago")) {
-                    //fused event
-                    return "DeepSkyBlue";
+                    //fused event: red
+                    return "Red";
                 } else {
-                    return "DarkOrange";
+                    if (d.identifier.includes("http://dbpedia")) {
+                        //dbpedia: blue
+                        return "DeepSkyBlue";
+                    } else {
+                        //yago: yellow
+                        return "Gold"; //DarkOrange
+                    }
+                    return "Black"; //unexpected
                 }
             })
             .attr("transform", function (d) {
