@@ -1,4 +1,10 @@
 webApp/WDI/usecase/
 webApp/out/production/webApp/DataIntegrationFramework/usecase/movie
 createDatasets/d2y_sameAs.tsv
-createDatasets/EventinstanceURIs.csv
+createDatasets/dEventinstanceURIs.csv
+createDatasets/yEventinstanceURIs.csv
+createDatasets/out/artifacts
+createDatasets/out/dbpedia_events.xml
+createDatasets/out/dbpedia_events_test.xml
+createDatasets/out/yago_events.xml
+createDatasets/out/yago_events_test.xml
