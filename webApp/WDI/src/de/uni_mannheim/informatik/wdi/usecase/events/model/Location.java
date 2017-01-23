@@ -14,7 +14,7 @@ import java.util.List;
 public class Location extends Record<DefaultSchemaElement> implements Serializable {
 
     private List<String> labels = new ArrayList<>();
-    private List<String> types;
+    private List<String> types = new ArrayList<>();
     private List<Pair<Double, Double>> coordinates = new ArrayList<>();
     private List<String> countries;
     private List<String> cities;
@@ -75,24 +75,39 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
     public static final DefaultSchemaElement COORDINATES = new DefaultSchemaElement("Coordinates");
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
+
     /* (non-Javadoc)
      * @see de.uni_mannheim.informatik.wdi.model.Record#hasValue(java.lang.Object)
      */
     @Override
     public boolean hasValue(DefaultSchemaElement attribute) {
         if(attribute==LABELS)
-            return labels!=null;
+            return labels.size()>0;
         else if(attribute==TYPES)
-            return types!=null;
+            return types.size()>0;
         else if(attribute==COORDINATES)
-            return coordinates!=null;//!Double.isNaN(lon);
+            return coordinates.size()>0;//!Double.isNaN(lon);
         else if (attribute==SAMES)
-            return sames!=null;
+            return sames.size()>0;
         return false;
     }
 
     @Override
+    public int getNumberOfValues(DefaultSchemaElement attribute) {
+        if(attribute==LABELS)
+            return labels.size();
+        else if(attribute==TYPES)
+            return types.size();
+        else if(attribute==COORDINATES)
+            return coordinates.size();//!Double.isNaN(lon);
+        else if (attribute==SAMES)
+            return sames.size();
+        return 0;
+    }
+
+    @Override
     public DefaultSchemaElement[] getDefaultSchemaElements() {
-        return null;
+        DefaultSchemaElement [] allDefaultSchemaElements = {LABELS, COORDINATES, SAMES};//TYPES
+        return allDefaultSchemaElements;
     }
 }

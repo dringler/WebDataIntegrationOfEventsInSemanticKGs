@@ -21,6 +21,7 @@ package de.uni_mannheim.informatik.wdi.model;
  * Interface representing all fusable records
  * 
  * @author Oliver Lehmberg (oli@dwslab.de)
+ * @author Daniel Ringler
  * 
  */
 public interface Fusable<SchemaElementType> {
@@ -41,5 +42,14 @@ public interface Fusable<SchemaElementType> {
 	 * @return
 	 */
 	boolean hasValue(SchemaElementType attribute);
+
+
+	/**
+	 * Returns the number of attributes. Required for the calculation of
+	 * the attribute/value distribution
+	 * @param attribute
+	 * @return
+	 */
+	int getNumberOfValues(SchemaElementType attribute);
 
 }

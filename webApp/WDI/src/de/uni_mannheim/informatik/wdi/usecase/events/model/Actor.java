@@ -123,6 +123,17 @@ public class Actor extends Record<DefaultSchemaElement> implements Serializable 
 	}
 
 	@Override
+	public int getNumberOfValues(DefaultSchemaElement attribute) {
+		if(attribute==NAME && name!=null)
+			return 1;
+		else if(attribute==BIRTHPLACE && birthplace!=null)
+			return 1;
+		else if(attribute==BIRTHDATE && birthday!=null)
+			return 1;
+		return 0;
+	}
+
+	@Override
 	public DefaultSchemaElement[] getDefaultSchemaElements() {
 		return new DefaultSchemaElement[0];
 	}

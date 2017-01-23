@@ -17,11 +17,16 @@
  */
 package de.uni_mannheim.informatik.wdi.model;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
+import com.opencsv.CSVWriter;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 /**
  * {@link DefaultDataSet} class extended by functionalities for data fusion
@@ -200,6 +205,58 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 		return result;
 	}
 
+	private Map<SchemaElementType,Map<Integer, Integer>> getAttributeValueDistributions() {
+        Map<SchemaElementType, Map<Integer, Integer>> result = new HashMap<>();
+
+        boolean isFirst = true;
+
+        for (RecordType record : getRecords()) {
+
+            //for (SchemaElementType att : getAttributes()) {
+            for (DefaultSchemaElement defAtt : getDefaultAttributes()) {
+                SchemaElementType att = (SchemaElementType) defAtt;
+
+                if (isFirst) {
+                    //init HashMap
+                    Map<Integer,Integer> initCountMap = new HashMap<>();
+                    for (int i = 0; i<50; i++) {
+                        initCountMap.put(i, 0);
+                        result.put(att, initCountMap);
+                    }
+                }
+
+                Integer numOfValues = 0;
+                if (record.hasValue(att)) {
+                    numOfValues = record.getNumberOfValues(att);
+                }
+
+                    Map<Integer, Integer> countMap = result.get(att);
+                    if (countMap == null) {
+                        //init countMap
+                        countMap = new HashMap<>();
+                        countMap.put(numOfValues, 0);
+                        result.put(att, countMap);
+                    }
+                    Integer count = countMap.get(numOfValues);
+                    if (count == null) {
+                        //init count
+                        count = 0;
+                    }
+                    countMap.put(numOfValues, count + 1);
+
+                    /*Integer value = values.get(att);
+                    if (value == null) {
+                        value = 0;
+                    }
+                    values.put(att, value + 1);
+                    */
+            }//end for each defAtt
+            isFirst = false;
+        }//end for each record
+
+        return result;
+	}
+
 	/**
 	 * Calculates the density for all attributes of the records in this dataset
 	 * and prints the result to the console
@@ -214,5 +271,76 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
 					densities.get(att)));
 		}
 	}
+
+	public void printDataSetDensityDistributionReport(boolean writeToFile, String fileName) {
+
+		System.out.println("Attribute/Value distribution:");
+		Map<SchemaElementType, Map<Integer, Integer>> densities = getAttributeValueDistributions();
+		for (SchemaElementType att : densities.keySet()) {
+            Map<Integer, Integer> countMap = densities.get(att);
+		    String countMapString = getCountMapString(countMap);
+
+			System.out.println(//String.format("\t%s: %v", att.toString(),
+                    att.toString() + " " +
+					countMapString
+                    //densities.get(att).toString()
+            //)
+            );
+		}
+		if (writeToFile) {
+            writeAttributeValueDistributionToCSV(fileName, densities, getAttributeDensities());
+        }
+
+	}
+
+    private String getCountMapString(Map<Integer, Integer> countMap) {
+        String countMapString = "";
+        //tree for sorting the keys
+        Map<Integer, Integer> countTreeMap = new TreeMap<>(countMap);
+
+        for (Integer numOfValues : countTreeMap.keySet()) {
+            Integer recordCount = countTreeMap.get(numOfValues);
+            countMapString += numOfValues + ": " + recordCount + ", ";
+        }
+        if (countMapString.length()>0) {
+            countMapString = countMapString.substring(0, countMapString.length()-2);
+        }
+        return countMapString;
+    }
+
+    private void writeAttributeValueDistributionToCSV(String fileName, Map<SchemaElementType, Map<Integer, Integer>> densities, Map<SchemaElementType, Double> attDensities) {
+        try {
+            PrintWriter writer = new PrintWriter("/Users/curtis/git/MasterThesis/webApp/out/"+fileName, "UTF-8");
+            int counter = 0;
+            writer.println("DataSet density, " +  getDensity());
+            counter++;
+            writer.println("Attributes densities:");
+            counter++;
+            for (SchemaElementType att : attDensities.keySet()) {
+                writer.println(att.toString() +", " + attDensities.get(att));
+                counter++;
+            }
+
+
+            for (SchemaElementType att : densities.keySet()) {
+                writer.println(att);
+                counter++;
+                writer.println("bucket, recordCount for " + att);
+                counter++;
+                Map<Integer, Integer> countTreeMap = new TreeMap<>(densities.get(att));
+                for(Map.Entry<Integer, Integer> entry : countTreeMap.entrySet()) {
+                    writer.println(entry.getKey() + ", " + entry.getValue());
+                    counter++;
+                }
+                //String countMapString = getCountMapString(countMap);
+                //writer.println(countMapString);
+            }
+            writer.close();
+            System.out.println(counter + " lines written to " + fileName);
+        } catch (IOException e) {
+            System.out.println("error while writing to file " + fileName);
+        }
+	}
+
 
 }

@@ -63,7 +63,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	protected Map<String, RecordType> records;
 
 	public DefaultDataSet() {
-		records = new HashMap<>();
+		records = new HashMap<>(463460, 0.9f);
 	}
 
 	/**
@@ -85,6 +85,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 			MatchableFactory<RecordType> modelFactory, String recordPath)
 			throws ParserConfigurationException, SAXException, IOException,
 			XPathExpressionException {
+		int nullCounter = 0;
 		// create objects for reading the XML file
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
@@ -118,14 +119,21 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 					// add it to the data set
 					addRecord(record);
 				} else {
-                    Element e = (Element) list.item(i);
-                    String uri = e.getAttribute("uri");
-					System.out.println(//String.format(
-							"Could not generate entry for " + uri);
+					nullCounter++;
+//                    Element e = (Element) list.item(i);
+//                    String uri = e.getAttribute("uri");
+//					System.out.println(//String.format(
+//							"Could not generate entry for " + uri);
                                     //list.item(i).getTextContent()));
 				}
 			}
 		}
+        if (getSize() > 0) {
+            addAttributes(getRandomRecord().getDefaultSchemaElements());
+        }
+        if (nullCounter > 0) {
+            System.out.println(nullCounter + " records were not be added (date or keyword filter, parseError, etc.).");
+        }
 	}
 
 	public void loadFromTSV(File dataSource, MatchableFactory<RecordType> modelFactory, String recordPath, char separator, DateTimeFormatter dateTimeFormatter, boolean filterFrom, LocalDate fromDate, boolean filterTo, LocalDate toDate, boolean filterByKeyword, String keyword) throws IOException {

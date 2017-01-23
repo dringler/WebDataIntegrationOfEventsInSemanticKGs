@@ -17,6 +17,7 @@
  */
 package de.uni_mannheim.informatik.wdi.model;
 
+import javax.xml.validation.Schema;
 import java.io.Serializable;
 
 /**
@@ -57,4 +58,8 @@ public abstract class Record<SchemaElementType> implements Matchable, Fusable<Sc
 
 	@Override
 	public abstract boolean hasValue(SchemaElementType attribute);
+
+	@Override
+	public abstract int getNumberOfValues(SchemaElementType attribute);
+
 }

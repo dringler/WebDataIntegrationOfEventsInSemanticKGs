@@ -68,6 +68,17 @@ public class DefaultRecord extends Record<DefaultSchemaElement> {
 	}
 
 	@Override
+	public int getNumberOfValues(DefaultSchemaElement attribute) {
+	    int numberOfValues = 0;
+	    if (values.containsKey(attribute)) {
+	        numberOfValues = 1;
+        } else if (lists.containsKey(attribute)) {
+	        numberOfValues = lists.get(attribute).size();
+        }
+		return numberOfValues;
+	}
+
+	@Override
 	public DefaultSchemaElement[] getDefaultSchemaElements() {
 		return null;
 	}

@@ -146,6 +146,20 @@ public class Movie extends Record<DefaultSchemaElement> implements Serializable 
 	}
 
 	@Override
+	public int getNumberOfValues(DefaultSchemaElement attribute) {
+		if(attribute==TITLE && getTitle() != null && !getTitle().isEmpty())
+			return 1;
+		else if(attribute==DIRECTOR && getDirector() != null && !getDirector().isEmpty())
+			return 1;
+		else if(attribute==DATE && getDate() != null)
+			return 1;
+		else if(attribute==ACTORS && getActors() != null)
+			return getActors().size();
+		else
+			return 0;
+	}
+
+	@Override
 	public String toString() {
 		return String.format("[Movie: %s / %s / %s]", getTitle(),
 				getDirector(), getDate().toString());

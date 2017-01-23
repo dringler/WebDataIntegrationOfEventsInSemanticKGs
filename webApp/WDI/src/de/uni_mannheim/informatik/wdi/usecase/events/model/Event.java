@@ -291,6 +291,25 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return false;
     }
 
+    @Override
+    public int getNumberOfValues(DefaultSchemaElement attribute) {
+        if(attribute==URIS)
+            return uris.size();
+        if(attribute==LABELS)
+            return labels.size();
+        else if(attribute==DATES)
+            return dates.size();
+        else if(attribute==COORDINATES)
+            return coordinates.size();//!=null;//!Double.isNaN(lon);
+        else if (attribute==LOCATIONS)
+            return locations.size();
+        /*else if (attribute==PARTICIPANTS)
+            return participants.size()>0;*/
+        else if (attribute==SAMES)
+            return sames.size();
+        return 0;
+    }
+
     private Map<DefaultSchemaElement, Collection<String>> provenance = new HashMap<>();
     private Collection<String> recordProvenance;
 

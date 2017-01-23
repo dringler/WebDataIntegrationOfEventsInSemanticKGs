@@ -24,6 +24,11 @@ public class EventFactory extends MatchableFactory<Event> implements
     private LocalDate toDate;
     private boolean applyKeywordSearch;
     private String keyword;
+    private int dateNotParsedCounter;
+
+    public void printDateNotParsedCounter() {
+        System.out.println("dataSetD was loaded from XML. " + this.dateNotParsedCounter + " date attributes could not be parsed.");
+    }
 
     //constructor
     public EventFactory(DateTimeFormatter dateTimeFormatter,
@@ -37,6 +42,7 @@ public class EventFactory extends MatchableFactory<Event> implements
         this.toDate = toDate;
         this.applyKeywordSearch = applyKeywordSearch;
         this.keyword = keyword;
+        this.dateNotParsedCounter = 0;
     }
 
     @Override
@@ -61,10 +67,10 @@ public class EventFactory extends MatchableFactory<Event> implements
             if(this.applyKeywordSearch) {
                 if (!event.getLabels().stream().anyMatch(label -> label.trim().toLowerCase().contains(this.keyword.toLowerCase()))) {
                     //return null if keyword is not found in any label
-                    System.out.println(event.getLabels().toString() + " does not contain the keyword " + this.keyword + ". return null.");
+                    //System.out.println(event.getLabels().toString() + " does not contain the keyword " + this.keyword + ". return null.");
                     return null;
-                } else {
-                    System.out.println(event.getLabels().toString() + " contains the keyword " + this.keyword);
+                //} else {
+                    //System.out.println(event.getLabels().toString() + " contains the keyword " + this.keyword);
                 }
             }
         }
@@ -88,18 +94,18 @@ public class EventFactory extends MatchableFactory<Event> implements
                 if (this.filterFrom) { //&& filterTo) {
                     //if (localDate.isAfter(toDate) || localDate.isBefore(fromDate)) {
                     if (localDates.size() == 0 || localDates.stream().anyMatch(localDate -> localDate.isBefore(this.fromDate))) {
-                        System.out.println(localDates.toString() + " contains a date that is before " + this.fromDate + ". return null.");
+                        //System.out.println(localDates.toString() + " contains a date that is before " + this.fromDate + ". return null.");
                         return null;
-                    } else {
-                        System.out.println(localDates.toString() + " contains a date that is not before " + this.fromDate);
+                    //} else {
+                    //    System.out.println(localDates.toString() + " contains a date that is not before " + this.fromDate);
                     }
                 }
                 if (this.filterTo) {
                     if (localDates.size() == 0 || localDates.stream().anyMatch(localDate -> localDate.isAfter(this.toDate))) {
-                        System.out.println(localDates.toString() + " contains a date that is after " + this.toDate + ". return null.");
+                    //    System.out.println(localDates.toString() + " contains a date that is after " + this.toDate + ". return null.");
                         return null;
-                    } else {
-                        System.out.println(localDates.toString() + " contains a date that is not after " + this.toDate);
+                    //} else {
+                    //    System.out.println(localDates.toString() + " contains a date that is not after " + this.toDate);
                     }
                 }
                 event.setDates(localDates);
@@ -110,7 +116,8 @@ public class EventFactory extends MatchableFactory<Event> implements
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            this.dateNotParsedCounter++;
         }
 
         // get coordinates
