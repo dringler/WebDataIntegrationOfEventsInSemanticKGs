@@ -11,8 +11,8 @@ outputFile = '/Users/curtis/MT/DBpediaTables/EventInstanceURIs.csv'
 
 #keepColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
 #mandatoryColumns = ['URI', 'rdf-schema#label', 'date', 'wgs84_pos#lat', 'wgs84_pos#long']
-keepColumns = ['URI', 'rdf-schema#label', 'date']
-mandatoryColumns = ['URI', 'rdf-schema#label', 'date']
+keepColumns = ['URI', 'rdf-schema#label']
+mandatoryColumns = ['URI', 'rdf-schema#label']
 saveColumns = ['URI']
 
 f = pd.read_csv(inputFile, skiprows=[1,2,3], usecols=keepColumns)

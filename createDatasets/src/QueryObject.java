@@ -43,9 +43,9 @@ public class QueryObject {
                         return resultsCopy;
                 } catch (QueryExceptionHTTP http) {
                     try {
-                        System.out.println("error while executing query. waiting for 5 seconds. " + LocalDateTime.now());
+                        System.out.println("error while executing query. waiting for 60 seconds. " + LocalDateTime.now());
                         System.out.println(queryString);
-                        TimeUnit.SECONDS.sleep(5);
+                        TimeUnit.SECONDS.sleep(60);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

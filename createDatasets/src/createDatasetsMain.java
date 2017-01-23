@@ -12,7 +12,7 @@ import java.util.*;
 public class createDatasetsMain {
     public static void main(String[] args) {
         // PARAMETERS
-        boolean testing = false;
+        boolean testing = true;
 
         boolean dbpedia = false;
         boolean yago = true;
@@ -64,7 +64,7 @@ public class createDatasetsMain {
                 System.out.println(eventInstances.size() + " distinct instances read.");
                 
                 // get event instance properties including location properties
- //               Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances);
+ //               Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances, testing);
                 
   //              writeXML(dEvents, fileName);
 
@@ -95,13 +95,10 @@ public class createDatasetsMain {
                 //get event instances from YAGO
                 String eventInstancesFileName = "yEventInstanceURIs.csv";
 
-                //dynamic from SPARQL
-                //HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
-                //System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
-                //writeEventInstancesToCSV(eventInstances, eventInstancesFileName);
-
-                //testing
+                //read event instances
+                //a) testing
                 /*HashSet<String> eventInstances = new HashSet<>();
+                fileName = "out/yago_events_test.xml";
                 eventInstances.add("http://yago-knowledge.org/resource/Battle_of_Bouvines");
                 eventInstances.add("http://yago-knowledge.org/resource/Battle_of_Waterloo");
                 eventInstances.add("http://yago-knowledge.org/resource/1974_FIFA_World_Cup");
@@ -109,14 +106,21 @@ public class createDatasetsMain {
                 eventInstances.add("http://yago-knowledge.org/resource/Benji's_Very_Own_Christmas_Story");
                 */
 
-                //from file
+                //b) dynamic from SPARQL
+                //HashSet<String> eventInstances = getEventInstances(k, yQ, yagoVarNames, testing);
+                //System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
+                //writeEventInstancesToCSV(eventInstances, eventInstancesFileName);
+
+
+
+                //c) from file
                 HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);
                 System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
 
 
 
                 // get event instance properties including location properties
-                Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances);
+                Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances, testing);
 
                 writeXML(yEvents, fileName);
                 // 1 get event instances properties
@@ -172,8 +176,8 @@ public class createDatasetsMain {
                 }
                 eventInstances.add(line);
                 lineCounter++;
-                if (testing && lineCounter > 24)
-                    break;
+                //if (testing && lineCounter > 24)
+                //    break;
             }
             reader.close();
         } catch (FileNotFoundException e) {
@@ -199,7 +203,8 @@ public class createDatasetsMain {
     private static Map<String, Event> getEventInstanceProperties(int k,
                                                           QueryObject queryObject,
                                                           KGVariableNames varNames,
-                                                         HashSet<String> eventInstances) {
+                                                         HashSet<String> eventInstances,
+                                                                 boolean testing) {
         float loadFactor = 0.9f;
         //init set capacity: distinct URIS / loadFactor (little bit more)
         int eventSetCapacity = 63035; //dbpedia: 56729 distinct events
@@ -214,7 +219,7 @@ public class createDatasetsMain {
         Map<String, Event> eventMap = new HashMap<>(eventSetCapacity, loadFactor);
 
         //set of all distinct locationURIs
-        Set<String> locationURIs = new HashSet<>(placeURICapacity, loadFactor);
+        HashSet<String> locationURIs = new HashSet<>(placeURICapacity, loadFactor);
 
         //k: placeURI, v: Set of eventURIs
         HashMap<String, Set<String>> locationWithEventsMap= new HashMap<>(placeURICapacity, loadFactor);
@@ -222,71 +227,113 @@ public class createDatasetsMain {
         int counter = 0;
         // get properties for each event and add event to eventSet
         for (String eventURI : eventInstances) {
-            //create new event object
-            Event event = new Event(eventURI);
-            //get event properties
-            ResultSet results = getEventInstancePropertiesResultSet(k, queryObject, varNames, eventURI);
-
-            while (results.hasNext()) {
-                QuerySolution qs = results.next();
-                //english label always present
-                event.addLabel(qs.get("label").toString());
-                //others are optional
-                if (qs.contains("date"))
-                    event.addDate(qs.get("date").toString());
-                if (qs.contains("lat") && qs.contains(("long")))
-                    event.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
-                if (qs.contains("same"))
-                    event.addSame(qs.get("same").toString());
-                if (qs.contains("location")) {
-                    String locationString = qs.get("location").toString();
-                    locationURIs.add(locationString);
-                    if (locationWithEventsMap.containsKey(locationString)) {
-                        locationWithEventsMap.get(locationString).add(eventURI);
-                    } else {
-                        //create new k,v pair
-                        HashSet<String> locationEvents = new HashSet<>();
-                        locationEvents.add(eventURI);
-                        locationWithEventsMap.put(locationString, locationEvents);
+            if (!testing) {
+                //create new event object
+                Event event = new Event(eventURI);
+                //get event properties
+                ResultSet results = getEventInstancePropertiesResultSet(k, queryObject, varNames, eventURI);
+                if (results != null) {
+                    while (results.hasNext()) {
+                        QuerySolution qs = results.next();
+                        //english label always present
+                        event.addLabel(qs.get("label").toString());
+                        //others are optional
+                        if (qs.contains("date"))
+                            event.addDate(qs.get("date").toString());
+                        if (qs.contains("lat") && qs.contains(("long")))
+                            event.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
+                        if (qs.contains("same"))
+                            event.addSame(qs.get("same").toString());
+                        if (qs.contains("location")) {
+                            String locationString = qs.get("location").toString();
+                            locationURIs.add(locationString);
+                            if (locationWithEventsMap.containsKey(locationString)) {
+                                locationWithEventsMap.get(locationString).add(eventURI);
+                            } else {
+                                //create new k,v pair
+                                HashSet<String> locationEvents = new HashSet<>();
+                                locationEvents.add(eventURI);
+                                locationWithEventsMap.put(locationString, locationEvents);
+                            }
+                        }
                     }
+                    eventMap.put(eventURI, event);
+
+
+                } else {
+                    System.out.println("results==null for " + eventURI);
+                }
+            } else {
+                //testing
+                ResultSet results = testURI(k, queryObject, eventURI);
+                if (results == null) {
+                    System.out.println(eventURI + " returns no results");
                 }
             }
-            eventMap.put(eventURI, event);
             counter++;
-            if ( counter % (float) (eventInstances.size()/100) == 0) {
-                System.out.println(
-                        ((float) counter / eventInstances.size()) +
-                        " of event Instances processed.");
-            }
+            printProgress(counter, eventInstances);
         }
         //done adding all direct properties to the events
         System.out.println(eventMap.size() + " events added to eventMap");
 
+
         // for each location
+        counter = 0;
         for (String locationURI : locationURIs) {
-            Location location = new Location(locationURI);
-            //get location properties
-            ResultSet results = getLocationInstancePropertiesResultSet(k, queryObject, varNames, locationURI);
-            //process all results
-            while (results.hasNext()) {
-                QuerySolution qs = results.next();
-                //english label always present
-                location.addLabel(qs.get("label").toString());
-                //add optional properties
-                if (qs.contains("lat") && qs.contains(("long")))
-                    location.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
-                if (qs.contains("same"))
-                    location.addSame(qs.get("same").toString());
-            }
-            //add location to all events with this location
-            for (String eventURI : locationWithEventsMap.get(locationURI)) {
-                eventMap.get(eventURI).addLocation(location);
-            }
+            if (!testing) {
+                Location location = new Location(locationURI);
+                //get location properties
+                ResultSet results = getLocationInstancePropertiesResultSet(k, queryObject, varNames, locationURI);
+                //process all results
+                if (results != null) {
+                    while (results.hasNext()) {
+                        QuerySolution qs = results.next();
+                        //english label always present
+                        location.addLabel(qs.get("label").toString());
+                        //add optional properties
+                        if (qs.contains("lat") && qs.contains(("long")))
+                            location.addCoordinatePair(qs.get("lat").toString() + "," + qs.get("long").toString());
+                        if (qs.contains("same"))
+                            location.addSame(qs.get("same").toString());
+                    }
+                }
 
-
+                //add location to all events with this location
+                for (String eventURI : locationWithEventsMap.get(locationURI)) {
+                    eventMap.get(eventURI).addLocation(location);
+                }
+            } else {
+                //testing
+                ResultSet results = testURI(k, queryObject, locationURI);
+                if (results == null) {
+                    System.out.println(locationURI + " returns no results");
+                }
+            }
+            counter++;
+            printProgress(counter, locationURIs);
         }
         System.out.println(locationURIs.size() + " locations processed.");
         return eventMap;
+
+    }
+
+    private static void printProgress(int counter, HashSet<String> eventInstances) {
+        if (counter % (float) (eventInstances.size() / 100) == 0) {
+            System.out.println(
+                    ((float) counter / eventInstances.size()) +
+                            " of event Instances processed.");
+        }
+    }
+
+    //test if JENA is able to process the URI
+    private static ResultSet testURI(int k, QueryObject queryObject, String uri) {
+        String queryString = getQueryPrefix(k);
+
+        queryString = queryString +
+                "SELECT ?label WHERE {\n" +
+                "<" + uri +"> rdfs:label ?label .\n" +
+                "}";
+        return queryObject.queryEndpoint(queryString);
 
     }
 
