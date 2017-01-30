@@ -12,6 +12,8 @@ public class Event {
     private Set<String> sames;
     private Set<Location> locations;
 
+    public Event(){};
+
     public Event(String uri) {
         this.uri = uri;
         this.labels = new HashSet<>();
@@ -44,16 +46,39 @@ public class Event {
     public void addDate(String date) {
         this.dates.add(date);
     }
-    public void addCoordinatePair(String coordinatePair) {
-        this.coordinatePairs.add(coordinatePair);
-
-    }
+    public void addCoordinatePair(String coordinatePair) { this.coordinatePairs.add(coordinatePair); }
     public void addSame(String same) {
         this.sames.add(same);
     }
-
     public void addLocation(Location location) {
         this.locations.add(location);
+    }
+
+    //check properties
+    public boolean hasLabel() {
+        if (this.labels.size()>0)
+            return true;
+        return false;
+    }
+    public boolean hasDate() {
+        if (this.dates.size()>0)
+            return true;
+        return false;
+    }
+    public boolean hasCoordinatePair() {
+        if (this.coordinatePairs.size()>0)
+            return true;
+        return false;
+    }
+    public boolean hasSame() {
+        if (this.sames.size()>0)
+            return true;
+        return false;
+    }
+    public boolean hasLocation() {
+        if (this.locations.size()>0)
+            return true;
+        return false;
     }
 
 }

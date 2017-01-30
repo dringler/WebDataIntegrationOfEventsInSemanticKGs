@@ -11,6 +11,7 @@ public class Location {
     private Set<String> sames;
 
     //constructor
+    public Location(){};
     public Location(String uri) {
         this.uri = uri;
         this.labels = new HashSet<>();
@@ -39,6 +40,23 @@ public class Location {
     }
     public void addSame(String same) {
         this.sames.add(same);
+    }
+
+    public boolean hasLabel() {
+        if (this.labels.size()>0)
+            return true;
+        return false;
+    }
+
+    public boolean hasCoordinatePair() {
+        if (this.coordinatePairs.size()>0)
+            return true;
+        return false;
+    }
+    public boolean hasSame() {
+        if (this.sames.size()>0)
+            return true;
+        return false;
     }
 
 }

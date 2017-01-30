@@ -14,7 +14,7 @@ public class createDatasetsMain {
         // PARAMETERS
         boolean testing = true;
 
-        boolean dbpedia = false;
+        boolean dbpedia = true;
         boolean yago = true;
         //boolean wikidata = false;
         int k; //0 for DBpedia, 1 for YAGO, 2 for Wikidata
@@ -23,7 +23,7 @@ public class createDatasetsMain {
 
         String fileName;
         //List<String> secondOrderFileNames = new ArrayList<>();
-        String header;
+        //String header;
         //String secondOrderHeader = "uri\tlabel\tlat\tlong\tsame";//"uri\ttype\tlat\tlong\tsame";
 
         //configure log4j
@@ -31,23 +31,35 @@ public class createDatasetsMain {
         LogManager.getRootLogger().setLevel(Level.OFF); //set console logger off
 
 
-        int lineProgress = 500;
+        //int lineProgress = 500;
+        //header = "uri\tlabel\tdate\tlat\tlong\tsame\tlocation\tlocationLat\tlocationLong\tlocationsame";//\tlocation\tcity\tterritory";
 
-        header = "uri\tlabel\tdate\tlat\tlong\tsame\tlocation\tlocationLat\tlocationLong\tlocationsame";//\tlocation\tcity\tterritory";
+        boolean returnMap = true;
+        boolean filterDirectSameAsLinksOnly = true;
 
         if (dbpedia) {
             k=0;
+            fileName = "out/dbpedia_events";
+
+
+
+            Map<String, Event> dEvents = getEventInstancePropertiesFromXMLAndWriteNT(k, fileName, returnMap, filterDirectSameAsLinksOnly);
+
+            //Map<String, Event> dEvents = getEventInstancePropertiesFromXML(k, fileName, dbpediaVarNames, testing);
+            if (returnMap) {
+                writeXML(dEvents, fileName + "_directLinks");
+            }
+
+
             QueryObject dQ = new QueryObject("http://dbpedia.org/sparql");
 
             if (dQ.testConnection()) {
                 //specify fileNames and csv header
-                fileName = "out/dbpedia_events.xml";
+
                 //fileName = "out/dbpedia-full.tsv";
                 //header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";//\tlocation\tcity\tterritory";
                 //secondOrderHeader = "uri\ttype\tlat\tlong\tsame";
-
                 //secondOrderFileNames.add("out/dbpedia-2-place.tsv");
-
                 //secondOrderFileNames.add("out/dbpedia-2-location.tsv");
                 //secondOrderFileNames.add("out/dbpedia-2-city.tsv");
                 //secondOrderFileNames.add("out/dbpedia-2-territory.tsv");
@@ -59,14 +71,18 @@ public class createDatasetsMain {
                 //HashSet<String> eventInstances = getEventInstances(k, dQ, dbpediaVarNames, testing);
                 String eventInstancesFileName = "dEventInstanceURIs.csv";
 
-                HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);              System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
-                //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
-                System.out.println(eventInstances.size() + " distinct instances read.");
+                //HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);              System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
+                    //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
+                //System.out.println(eventInstances.size() + " distinct instances read.");
                 
                 // get event instance properties including location properties
+                //a) from SPARQL
  //               Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances, testing);
-                
+
+
   //              writeXML(dEvents, fileName);
+                //writeNT(k, dEvents, fileName);
+
 
                 // 1 get and write event instances properties
                 //getAndWriteEventInstancePropertiesToFile(k, dQ, dQ.getService(), dbpediaVarNames, eventInstances, fileName, header, lineProgress);
@@ -80,13 +96,21 @@ public class createDatasetsMain {
         //secondOrderFileNames.clear();
         if (yago) {
             k = 1;
+            fileName = "out/yago_events";
+
+            //Map<String, Event> yEvents = getEventInstancePropertiesFromXML(k, fileName, yagoVarNames, testing);
+
+            Map<String, Event> yEvents = getEventInstancePropertiesFromXMLAndWriteNT(k, fileName, returnMap, filterDirectSameAsLinksOnly);
+
+            if (returnMap) {
+                writeXML(yEvents, fileName + "_directLinks");
+            }
 
             QueryObject yQ = new QueryObject("https://linkeddata1.calcul.u-psud.fr/sparql");
             if (yQ.testConnection()) {
                 //specify fileNames and csv header
                 //header = "uri\tlabel\tdate\tlat\tlong\tsame\tplace";
                 //fileName = "out/yago-full.tsv";
-                fileName = "out/yago_events.xml";
 
                // secondOrderFileNames.add("out/yago-2-happenedIn.tsv");
                 //secondOrderFileNames.add("out/yago-2-isLocatedIn.tsv");
@@ -111,18 +135,18 @@ public class createDatasetsMain {
                 //System.out.println(eventInstances.size() + " distinct instances received from " + yQ.getService());
                 //writeEventInstancesToCSV(eventInstances, eventInstancesFileName);
 
-
-
                 //c) from file
-                HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);
-                System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
-
-
+                //HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);
+                //System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
 
                 // get event instance properties including location properties
-                Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances, testing);
+                //a) from SPARQL
+                //Map<String, Event> yEvents = getEventInstanceProperties(k, yQ, yagoVarNames, eventInstances, testing);
+                //b) from XML file
 
-                writeXML(yEvents, fileName);
+                //writeXML(yEvents, fileName);
+                //writeNT(k, yEvents, fileName);
+
                 // 1 get event instances properties
                 //getAndWriteEventInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, eventInstances, fileName, header, lineProgress);
 
@@ -130,21 +154,27 @@ public class createDatasetsMain {
                 /*if (secondOrderP) {
                     getAndWritePlaceInstancePropertiesToFile(k, yQ, yQ.getService(), yagoVarNames, secondOrderFileNames, secondOrderHeader, lineProgress, testing);
                 }*/
-
-
             }
-
-
         }
+    }
 
-        /*if (wikidata) {
-            k = 2;
-            service = "https://query.wikidata.org/sparql";
-            dbIsUp = testConnection(service);
-            if (dbIsUp) {
+    private static Map<String,Event> getEventInstancePropertiesFromXMLAndWriteNT(int k, String fileName, boolean returnMap, boolean filterDirectSameAsLinksOnly) {
+        EventXMLFormatter xmlFormatter = new EventXMLFormatter();
+        return xmlFormatter.readXML(k, fileName, returnMap, true, filterDirectSameAsLinksOnly);
 
-            }
-        }*/
+    }
+
+    private static void writeNT(int k, Map<String, Event> eventMap, String fileName) {
+        fileName = fileName + ".nt";
+        EventNTFormatter ntFormatter = new EventNTFormatter(k, fileName);
+        boolean written = ntFormatter.writeNTFromMap(eventMap);
+        if (written)
+            System.out.println("results written to " + fileName);
+    }
+
+    private static Map<String,Event> getEventInstancePropertiesFromXML(int k, String fileName, KGVariableNames dbpediaVarNames, boolean testing, boolean filterDirectSameAsLinksOnly) {
+        EventXMLFormatter xmlFormatter = new EventXMLFormatter();
+        return xmlFormatter.readXML(k, fileName, true, false, filterDirectSameAsLinksOnly);
 
     }
 
@@ -192,12 +222,11 @@ public class createDatasetsMain {
     }
 
     private static void writeXML(Map<String, Event> eventMap, String fileName) {
+        fileName = fileName + ".xml";
         EventXMLFormatter xmlFormatter = new EventXMLFormatter();
         boolean written = xmlFormatter.parseAndWriteXML(eventMap, fileName);
         if (written)
             System.out.println("results written to " + fileName);
-
-
     }
 
     private static Map<String, Event> getEventInstanceProperties(int k,
