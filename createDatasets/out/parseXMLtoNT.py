@@ -34,8 +34,7 @@ def parseXMLtoNT(inputFile, outputFile, rdfType, rdfsLabel, owlSameAs, eventClas
 			coordinatePair = coordinates.text.strip().split(',')
 			f.write(eventUri + ' ' + latProperty + ' ' + inBrackets(coordinatePair[0]) + ' .\n')
 			f.write(eventUri + ' ' + longProperty + ' ' + inBrackets(coordinatePair[1]) + ' .\n')
-		
-			
+				
 		eventCounter += 1
 		if (eventCounter % lineProgress == 0):
 			print ('{} events processed'.format(eventCounter))
