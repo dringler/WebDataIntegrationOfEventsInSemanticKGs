@@ -4,6 +4,7 @@ import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.dataanalysis.EventAnalyzer;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.EventFactory;
+import de.uni_mannheim.informatik.wdi.utils.WDI_BlockingFramework_Combiner;
 import org.apache.jena.query.*;
 
 import de.uni_mannheim.informatik.wdi.usecase.events.Events_IdentityResolution_Main;
@@ -67,7 +68,7 @@ public class QueryProcessor {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         //DATA ANALYSIS
-        if (true) {
+        if (false) {
             EventAnalyzer eventAnalyzer = new EventAnalyzer();
             if (false) {
                 //load first dataset
@@ -107,7 +108,7 @@ public class QueryProcessor {
                 }
 
 
-            } else { //use local sample data
+            } else { //use local data
                 //step 1+2: data collection and translation
                 if (d) {
                     //dataSetD.loadFromTSV(new File("../data/dbpedia-1.tsv"),
@@ -133,6 +134,12 @@ public class QueryProcessor {
             //step 3: identity resolution
             if (d && y && dHasItems && yHasItems) {
 
+                //BLOCKING FRAMEWORK
+                WDI_BlockingFramework_Combiner blockingFramework = new WDI_BlockingFramework_Combiner();
+                blockingFramework.runBlocking(dataSetD, dataSetY, "../data/sameAs_combined.tsv");//dbpedia_2_yago_s.tsv
+
+
+                //WDI FRAMEWORK
                 de.uni_mannheim.informatik.wdi.model.ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences =
                         Events_IdentityResolution_Main.runIdentityResolution(dataSetD, dataSetY, separator);
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/BlockingFramework/BlockingFramework.iml" filepath="$PROJECT_DIR$/BlockingFramework/BlockingFramework.iml" />
       <module fileurl="file://$PROJECT_DIR$/WDI/WDI.iml" filepath="$PROJECT_DIR$/WDI/WDI.iml" />
       <module fileurl="file://$PROJECT_DIR$/webApp.iml" filepath="$PROJECT_DIR$/webApp.iml" />
     </modules>

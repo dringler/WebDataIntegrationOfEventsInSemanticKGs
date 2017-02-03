@@ -1,5 +1,7 @@
-webApp/WDI/usecase/
+webApp/WDI/usecase
+webApp/BlockingFramework
 webApp/out/production/webApp/DataIntegrationFramework/usecase/movie
+webApp/out/production/BlockingFramework
 createDatasets/d2y_sameAs.tsv
 createDatasets/dEventinstanceURIs.csv
 createDatasets/yEventinstanceURIs.csv
@@ -9,3 +11,6 @@ createDatasets/SILK/data
 createDatasets/SILK/100
 createDatasets/SILK/500
 createDatasets/SILK/1000
+createDatasets/SILK/1000_hq
+createDatasets/SILK/100_hq
+createDatasets/SILK/500_hq

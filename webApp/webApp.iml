@@ -32,5 +32,16 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="WDI" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/BlockingFramework/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/BlockingFramework/libB" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="BlockingFramework" />
   </component>
 </module>

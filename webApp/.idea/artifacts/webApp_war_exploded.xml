@@ -7,6 +7,8 @@
         <element id="directory" name="classes">
           <element id="module-output" name="webApp" />
           <element id="module-output" name="WDI" />
+          <element id="module-output" name="BlockingFramework" />
+          <element id="dir-copy" path="$PROJECT_DIR$/BlockingFramework/lib" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="lib" />
@@ -19,6 +21,18 @@
           <element id="file-copy" path="$PROJECT_DIR$/WDI/lib/secondstring-20120620.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WDI/lib/hamcrest-core-1.3-javadoc.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WDI/lib/hamcrest-core-1.3-sources.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/weka.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/JInsect.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/jaxb-api.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/jaxws-api.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/OpenJGraph.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/commons-io-2.4.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/SentenceSplitter.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/lucene-core-4.0.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/commons-codec-1.10.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/jgrapht-core-0.9.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/lucene-spatial-4.0.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/BlockingFramework/lib/lucene-analyzers-common-4.0.0.jar" />
         </element>
       </element>
     </root>

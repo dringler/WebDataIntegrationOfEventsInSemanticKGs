@@ -405,7 +405,7 @@ public class Events_IdentityResolution_Main {
 		MatchingGoldStandard gs = new MatchingGoldStandard();
 		gs.loadFromTSVFile(new File(
 				//"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
-				"../data/dbpedia_2_yago.tsv"));
+				"../data/sameAs_combined.tsv")); //dbpedia_2_yago.tsv
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
