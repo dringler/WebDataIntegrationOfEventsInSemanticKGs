@@ -62,27 +62,37 @@ def printAll(s, d):
 	for k,v in d:
 		print ('{}: {}'.format(k,v))
 
-def parseXML(inputFile, ownPrefix, otherPrefix, isDBpedia):
-	print('parse {}'.format(inputFile))
+def addEvent(event, ownPrefix, otherPrefix, isDBpedia):
+	uri = event.get('uri').encode('utf-8', 'ignore')
+	if (ownPrefix in uri):
+		linkList = []
+		for same in event.findall('same'):
+			if (otherPrefix in same.text):
+				linkList.append(same.text.encode('utf-8', 'ignore'))
+		URIsWithLinks[uri] = linkList
+		if (isDBpedia):
+			dURIsWithLinks[uri] = linkList
+			dURIset.add(uri)
+		else:
+			yURIsWithLinks[uri] = linkList
+			yURIset.add(uri)
+
+def parseXML(inputFile, ownPrefix, otherPrefix, isDBpedia, highQualityPairsOnly):
+	print('parsing {}'.format(inputFile))
 	parser = ET.XMLParser(encoding='utf-8')
 	tree = ET.parse(inputFile, parser=parser)
 	root = tree.getroot()
-	print('file parsed')
+	print('{} parsed. adding events.'.format(inputFile))
 	eventCounter = 0
 	for event in root.findall('event'):
-		uri = event.get('uri').encode('utf-8', 'ignore')
-		if (ownPrefix in uri):
-			linkList = []
-			for same in event.findall('same'):
-				if (otherPrefix in same.text):
-					linkList.append(same.text.encode('utf-8', 'ignore'))
-			URIsWithLinks[uri] = linkList
-			if (isDBpedia):
-				dURIsWithLinks[uri] = linkList
-				dURIset.add(uri)
+		if(highQualityPairsOnly):
+			#check for tags
+			if ((event.find('date') is None) or (event.find('coordinates') is None) or (event.find('same') is None)):
+				root.remove(event)
 			else:
-				yURIsWithLinks[uri] = linkList
-				yURIset.add(uri)
+				addEvent(event, ownPrefix, otherPrefix, isDBpedia)
+		else:
+			addEvent(event, ownPrefix, otherPrefix, isDBpedia)
 		eventCounter += 1
 		#if (eventCounter > 1000):
 		#	break
@@ -327,15 +337,20 @@ def parseXMLtoNTandCreateGoldStandard(s, urisWithLinkDict, urisWithoutLinkDict, 
 
 #params
 numberOfItems = 1000
+highQualityPairsOnly = True
+hq = ''
+if (highQualityPairsOnly):
+	hq = '_hq_'
 print(sys.getdefaultencoding())
 dPrefix = 'http://dbpedia.org/resource/'
 yPrefix = 'http://yago-knowledge.org/resource/'
 #dbpedia
 inputFileXML = 'data/dbpedia_events.xml'
-dTree = parseXML(inputFileXML, dPrefix, yPrefix, True)
+#parseXML(inputFile, ownPrefix, otherPrefix, isDBpedia, highQualityPairsOnly):
+dTree = parseXML(inputFileXML, dPrefix, yPrefix, True, highQualityPairsOnly)
 #yago
 inputFileXML = 'data/yago_events.xml'
-yTree = parseXML(inputFileXML, yPrefix, dPrefix, False)
+yTree = parseXML(inputFileXML, yPrefix, dPrefix, False, highQualityPairsOnly)
 
 #specify the number of items to receive
 URIsWithLink_LowSim, URIsWithLink_Random = getSimPairsThatHaveLinks(numberOfItems, dPrefix, yPrefix) #b, c, and e
@@ -352,9 +367,9 @@ URIsWithoutLink_HighSim, URIsWithoutLink_Random = getSimPairsThatDoNotHaveLinks(
 # create NT file and gold standard
 #a,b,e,f -> combine: ef, ea, bf, ba
 # first letter: r(andom), l(ow), h(high), second letter: L(ink), N(o link)
-parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+'-rL_rN', URIsWithLink_Random, URIsWithoutLink_Random, dTree, yTree)#ef
-parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+'-rL_hN', URIsWithLink_Random, URIsWithoutLink_HighSim, dTree, yTree)#ea
-parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+'-lL_rN', URIsWithLink_LowSim, URIsWithoutLink_Random, dTree, yTree)#bf
-parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+'-lL_hN', URIsWithLink_LowSim, URIsWithoutLink_HighSim, dTree, yTree)#ba
+parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+hq+'-rL_rN', URIsWithLink_Random, URIsWithoutLink_Random, dTree, yTree)#ef
+parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+hq+'-rL_hN', URIsWithLink_Random, URIsWithoutLink_HighSim, dTree, yTree)#ea
+parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+hq+'-lL_rN', URIsWithLink_LowSim, URIsWithoutLink_Random, dTree, yTree)#bf
+parseXMLtoNTandCreateGoldStandard(str(numberOfItems)+hq+'-lL_hN', URIsWithLink_LowSim, URIsWithoutLink_HighSim, dTree, yTree)#ba
 
 
