@@ -65,8 +65,8 @@ longProperty = "<http://www.w3.org/2003/01/geo/wgs84_pos#long>";
 #outputFile = 'dbpedia_events_s.nt'
 
 #inputFile = 'dbpedia_events_directLinksOnly.xml'
-inputFile = 'dbpedia_events_directLinksOnly_100.xml'
-outputFile = 'dbpedia_events_directLinksOnly_100_tldll.nt'
+inputFile = 'data/dbpedia_events.xml'
+outputFile = 'data/dbpedia_events.nt'
 
 parseXMLtoNT(inputFile, outputFile, rdfType, rdfsLabel, owlSameAs, eventClass, dateProperty, latProperty, longProperty)#, locationProperty)
 
@@ -82,8 +82,8 @@ longProperty = "<http://yago-knowledge.org/resource/hasLongitude>";
 #outputFile = 'yago_events_s.nt'
 
 #inputFile = 'yago_events_directLinksOnly.xml'
-inputFile = 'yago_events_directLinksOnly_100.xml'
-outputFile = 'yago_events_directLinksOnly_100_tldll.nt'
+inputFile = 'data/yago_events.xml'
+outputFile = 'data/yago_events.nt'
 
 parseXMLtoNT(inputFile, outputFile, rdfType, rdfsLabel, owlSameAs, eventClass, dateProperty, latProperty, longProperty)#, locationProperty)
 
