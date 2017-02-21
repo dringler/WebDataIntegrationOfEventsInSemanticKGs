@@ -129,7 +129,7 @@ public class Events_IdentityResolution_Main {
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
 		Performance perfTest = evaluator.evaluateMatching(correspondences.get(),
-				gsTest);
+				gsTest, false);
 
 		// print the evaluation result
 		System.out.println("DBpedia <-> YAGO");
@@ -226,7 +226,7 @@ public class Events_IdentityResolution_Main {
 		// evaluate your result
 		MatchingEvaluator<Movie, DefaultSchemaElement> evaluator = new MatchingEvaluator<Movie, DefaultSchemaElement>(true);
 		Performance perfTest = evaluator.evaluateMatching(correspondences.get(),
-				gsTest);
+				gsTest, false);
 
 		// print the evaluation result
 		System.out.println("Academy Awards <-> Actors");
@@ -305,8 +305,8 @@ public class Events_IdentityResolution_Main {
 		// evaluate the result
 		MatchingEvaluator<Movie, DefaultSchemaElement> evaluator = new MatchingEvaluator<>(true);
 		Performance perfTest = evaluator.evaluateMatching(correspondences.get(),
-				gsTest);
-		Performance perf2 = evaluator.evaluateMatching(correspondences2.get(), gs2);
+				gsTest, false);
+		Performance perf2 = evaluator.evaluateMatching(correspondences2.get(), gs2, false);
 
 		// print the evaluation result
 		System.out.println("Academy Awards <-> Actors");
@@ -409,13 +409,13 @@ public class Events_IdentityResolution_Main {
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);
-		Performance perfTest = evaluator.evaluateMatching(correspondences.get(), gs);
+		Performance perfTest = evaluator.evaluateMatching(correspondences.get(), gs, false);
 
 		// print the evaluation result
 		System.out.println("DBpedia <-> YAGO");
 		System.out
 				.println(String.format(
-						"Precision: %.4f\nRecall or Pair Completeness (PC): %.4f\nF1: %.4f",
+						"Precision: %.4f\nRecall: %.4f\nF1: %.4f",
 						perfTest.getPrecision(), perfTest.getRecall(),
 						perfTest.getF1()));
 	return correspondences;

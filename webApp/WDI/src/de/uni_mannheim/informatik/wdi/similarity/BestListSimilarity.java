@@ -9,8 +9,9 @@ import java.util.List;
  */
 public class BestListSimilarity {
 
-
-
+    /**
+     * Compare all strings and return best sim score
+     */
     public double getBestStringSimilarity(SimilarityMeasure sim, List<String> strings1, List<String> strings2) {
         double bestSimilarity = 0.0;
         for (String s1 : strings1) {
@@ -20,6 +21,29 @@ public class BestListSimilarity {
             }
         }
         return bestSimilarity;
+    }
+
+    /**
+     * Stripe prefix for URIs and return best sim score
+     */
+    public double getBestStripedStringSimilarity(SimilarityMeasure sim, List<String> strings1, List<String> strings2) {
+        double bestSimilarity = 0.0;
+        for (String s1 : strings1) {
+            s1 = stripURIPrefix(s1);
+            for (String s2 : strings2) {
+                s2 = stripURIPrefix(s2);
+                double similarity = sim.calculate(s1, s2);
+                bestSimilarity = getHighestSimilarity(similarity, bestSimilarity);
+            }
+        }
+        return bestSimilarity;
+    }
+
+    private String stripURIPrefix(String s) {
+        if (s.contains("resource")) {
+            s = s.substring(s.indexOf("resource")+9, s.length());
+        }
+        return s;
     }
 
     public double getBestDatesSimilarity(SimilarityMeasure sim, List<LocalDate> dates1, List<LocalDate> dates2) {

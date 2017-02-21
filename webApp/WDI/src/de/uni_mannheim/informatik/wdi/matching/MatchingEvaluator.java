@@ -17,11 +17,13 @@
  */
 package de.uni_mannheim.informatik.wdi.matching;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.opencsv.CSVWriter;
 import de.uni_mannheim.informatik.wdi.matching.blocking.BlockedMatchable;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
@@ -56,10 +58,14 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 	 */
 	public Performance evaluateMatching(
 			Collection<Correspondence<RecordType, SchemaElementType>> correspondences,
-			MatchingGoldStandard goldStandard) {
+			MatchingGoldStandard goldStandard,
+            boolean printResults) {
 		int correct = 0;
 		int matched = 0;
 		int correct_max = goldStandard.getPositiveExamples().size();
+		HashMap<String, Integer> matchingOutdegreesFirst = new HashMap<>(correspondences.size() + 1, 1.0f);
+		HashMap<String, Integer> matchingOutdegreesSecond = new HashMap<>(correspondences.size() + 1, 1.0f);
+
 
 		// keep a list of all unmatched positives for later output
 		List<Pair<String, String>> positives = new ArrayList<>(
@@ -71,14 +77,19 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 				correct++;
 				matched++;
 
+				addMatchingOutdegree(matchingOutdegreesFirst, correspondence.getFirstRecord());
+				addMatchingOutdegree(matchingOutdegreesSecond, correspondence.getSecondRecord());
+
 				if (verbose) {
-					System.out.println(String
-							.format("[correct] %s,%s,%s", correspondence
-									.getFirstRecord().getIdentifier(),
-									correspondence.getSecondRecord()
-											.getIdentifier(), Double
-											.toString(correspondence
-													.getSimilarityScore())));
+				    if(printResults) {
+                        System.out.println(String
+                                .format("[correct] %s,%s,%s", correspondence
+                                                .getFirstRecord().getIdentifier(),
+                                        correspondence.getSecondRecord()
+                                                .getIdentifier(), Double
+                                                .toString(correspondence
+                                                        .getSimilarityScore())));
+                    }
 
 					// remove pair from positives
 					Iterator<Pair<String, String>> it = positives.iterator();
@@ -103,25 +114,72 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 				matched++;
 
 				if (verbose) {
-					System.out.println(String
-							.format("[wrong] %s,%s,%s", correspondence
-									.getFirstRecord().getIdentifier(),
-									correspondence.getSecondRecord()
-											.getIdentifier(), Double
-											.toString(correspondence
-													.getSimilarityScore())));
-				}
+                    if (printResults) {
+                        System.out.println(String
+                                .format("[wrong] %s,%s,%s", correspondence
+                                                .getFirstRecord().getIdentifier(),
+                                        correspondence.getSecondRecord()
+                                                .getIdentifier(), Double
+                                                .toString(correspondence
+                                                        .getSimilarityScore())));
+                    }
+                }
 			}
 		}
 
 		if (verbose) {
 			// print all missing positive examples
-			for (Pair<String, String> p : positives) {
-				System.out.println(String.format("[missing] %s,%s",
-						p.getFirst(), p.getSecond()));
-			}
+            if(printResults) {
+                for (Pair<String, String> p : positives) {
+                    System.out.println(String.format("[missing] %s,%s",
+                            p.getFirst(), p.getSecond()));
+                }
+            }
 		}
 
+		//System.out.println("Found links/URI first: " + getSortedHashMap(matchingOutdegreesFirst).toString());
+		//System.out.println("Found links/URI second: " + getSortedHashMap(matchingOutdegreesSecond).toString());
+		saveElementOutdegreesToDisk("dbpedia", matchingOutdegreesFirst);
+        saveElementOutdegreesToDisk("yago", matchingOutdegreesSecond);
+
 		return new Performance(correct, matched, correct_max);
+	}
+
+    private void saveElementOutdegreesToDisk(String filename, HashMap<String, Integer> matchingOutdegrees) {
+	    try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/" + filename + "_elementOutdegree.tsv"));
+            HashMap<String, Integer> sortedSatchingOutdegrees = getSortedHashMap(matchingOutdegrees);
+            for (String k : sortedSatchingOutdegrees.keySet()) {
+                writer.write(k + "\t" + matchingOutdegrees.get(k) + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private HashMap<String, Integer>  getSortedHashMap(HashMap<String, Integer> matchingOutdegreesFirst) {
+		HashMap<String, Integer> sortedMap =
+				matchingOutdegreesFirst.entrySet().stream()
+						.sorted(Map.Entry.comparingByValue())
+						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+								(e1, e2) -> e1, LinkedHashMap::new));
+		return sortedMap;
+
+	}
+
+
+	private void addMatchingOutdegree(HashMap<String, Integer> matchingOutdegrees, RecordType record) {
+		String uri = record.getIdentifier();
+		//check if uri is already contained in hashmap
+		if (matchingOutdegrees.containsKey(uri)) {
+			//increment outdegree count
+			int newCount = matchingOutdegrees.get(uri) + 1;
+			matchingOutdegrees.put(uri, newCount);
+		} else {
+			//create new key with count=1
+			matchingOutdegrees.put(uri, 1);
+		}
 	}
 }

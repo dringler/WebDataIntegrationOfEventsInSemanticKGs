@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.opencsv.CSVWriter;
+import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
@@ -341,6 +342,5 @@ public class FusableDataSet<RecordType extends Matchable & Fusable<SchemaElement
             System.out.println("error while writing to file " + fileName);
         }
 	}
-
 
 }

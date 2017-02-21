@@ -8,7 +8,7 @@ import de.uni_mannheim.informatik.wdi.model.ResultSet;
 
 /**
  * Contract for the result of every blocking operation (even no-blocking). Gives access to the records that should be matched and the schema correspondences between them.
- * Default implementation is {@link MatchingTask}
+ * Default implementation is {@link Matchable}
  * @author Oliver
  *
  * @param <RecordType>

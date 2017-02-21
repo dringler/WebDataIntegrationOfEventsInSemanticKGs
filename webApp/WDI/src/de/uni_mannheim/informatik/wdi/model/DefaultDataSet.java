@@ -39,6 +39,7 @@ import javax.xml.xpath.XPathFactory;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -282,12 +283,23 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	@Override
 	public RecordType getRandomRecord() {
 		Random r = new Random();
-
 		List<RecordType> allRecords = new ArrayList<>(records.values());
-
 		int index = r.nextInt(allRecords.size());
-
 		return allRecords.get(index);
+	}
+
+	public void sampleRecords(int s) {
+		int i = 0;
+		HashSet<String> deleteIDs = new HashSet<>();
+		for (RecordType record :records.values()) {
+			if (i >= s) {
+				deleteIDs.add(record.getIdentifier());
+			}
+			i++;
+		}
+		for (String deleteID : deleteIDs) {
+			records.remove(deleteID);
+		}
 	}
 
 	/***
@@ -413,7 +425,8 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		return getSize();
 	}
 
-	/**
+
+    /**
 	 * Split multiple values for the attributes
 	 */
 	/*public void splitMultipleValues(char separator) {

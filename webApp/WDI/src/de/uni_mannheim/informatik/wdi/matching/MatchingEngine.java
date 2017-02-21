@@ -21,6 +21,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.joda.time.DateTime;
@@ -45,6 +50,8 @@ import de.uni_mannheim.informatik.wdi.processing.DataProcessingEngine;
 import de.uni_mannheim.informatik.wdi.similarity.string.LevenshteinSimilarity;
 import de.uni_mannheim.informatik.wdi.similarity.string.TokenizingJaccardSimilarity;
 import de.uni_mannheim.informatik.wdi.utils.ProgressReporter;
+
+import javax.xml.validation.Schema;
 
 /**
  * The matching engine that executes a given {@link MatchingRule} on one or two
@@ -164,7 +171,7 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 
 		ResultSet<Correspondence<RecordType, SchemaElementType>> result = new ResultSet<>();
 
-		System.out.println(String.format("Blocking %,d x %,d elements", dataset1.getSize(), dataset2.getSize()));
+        System.out.println(String.format("Blocking %,d x %,d elements", dataset1.getSize(), dataset2.getSize()));
 		
 		// use the blocker to generate pairs
 		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> allPairs = blocker.runBlocking(dataset1, dataset2, schemaCorrespondences, getProcessingEngine());
@@ -178,7 +185,7 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 		// compare the pairs using the matching rule
 		ProgressReporter progress = new ProgressReporter(allPairs.size(),
 				"Identity Resolution");
-		for(BlockedMatchable<RecordType, SchemaElementType> task : allPairs.get()) {
+		/*for(BlockedMatchable<RecordType, SchemaElementType> task : allPairs.get()) {
 
 			// apply the matching rule
 			Correspondence<RecordType, SchemaElementType> cor = rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences());
@@ -191,7 +198,26 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 			// increment and report status
 			progress.incrementProgress();
 			progress.report();
-		}
+		}*/
+
+        List<Correspondence<RecordType, SchemaElementType>> corList  = allPairs.get()
+                .stream()
+                .parallel()
+                .filter(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()) != null)
+                .map(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences())
+							//{progress.incrementProgress();
+                            //progress.report();
+                            //return rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences());}
+						 )
+                .collect(Collectors.toList());
+
+        System.out.println("Done with element matching. Adding found correspondences to the ResultSet.");
+		for (Correspondence<RecordType, SchemaElementType> cor : corList) {
+		    result.add(cor);
+            //progress.incrementProgress();
+            //progress.report();
+        }
+
 
 		// report total matching time
 		long end = System.currentTimeMillis();

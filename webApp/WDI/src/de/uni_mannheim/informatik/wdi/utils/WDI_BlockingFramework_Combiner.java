@@ -266,13 +266,409 @@ public class WDI_BlockingFramework_Combiner {
         }
     }
 
+    /**
+     * Analyze Block Building for Standard (Token) Blocking
+     * @param dataSetD
+     * @param dataSetY
+     * @param goldStandardFilePath
+     */
+    public void analyzeStBl_BlBi(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+        try {
+            Date date = new Date();
+            String fileName = "StBl_BlBi_analysis_" + df.format(date) + ".csv";
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
+            String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
+            writer.write(header + "\n");
+
+            //INIT ALL VARIABLES & test run
+            String[] dataSetAttributes = getDatasetAttributes(0);
+            //params
+            List<Double>[] comparisons;
+            List<Double>[] pc;
+            List<Double>[] pq;
+            List<Double>[] rr;
+            List<Double>[] nBlocks;
+            List<Double>[] blbuTimes;
+
+            dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+            yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+            //convert datasets
+            List<EntityProfile>[] profiles = new List[2];
+            profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, 0);
+            profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, 0);
+            int dSize = 0;
+            int ySize = 0;
+            //gold standard
+            Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+            AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
+            AbstractBlockingMethod method = new TokenBlocking(profiles);
+            List<AbstractBlock> blocks = method.buildBlocks();
+            BlockStatistics bStats = new BlockStatistics(blocks, abp);
+            double[] results = bStats.applyProcessing();
+
+            double blbuTime;
+            long time1;
+            long time2;
+            System.out.println("Test run complete");
+
+            for (int datasetID = 0; datasetID < NO_OF_DATASETS; datasetID++) {
+                dataSetAttributes = getDatasetAttributes(datasetID);
+                //params
+                comparisons = new List[1];
+                pc = new List[1];
+                pq = new List[1];
+                rr = new List[1];
+                nBlocks = new List[1];
+                blbuTimes = new List[1];
+                comparisons[0] = new ArrayList<>();
+                pc[0] = new ArrayList<>();
+                pq[0] = new ArrayList<>();
+                rr[0] = new ArrayList<>();
+                nBlocks[0] = new ArrayList<>();
+                blbuTimes[0] = new ArrayList<>();
+
+                //init HashMaps with <URI, ID>
+                dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+                yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+
+                //convert datasets
+                profiles = new List[2];
+                profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, datasetID);
+                profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, datasetID);
+                dSize = profiles[0].size();
+                ySize = profiles[1].size();
+
+                //gold standard
+                goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+                abp = new BilateralDuplicatePropagation(goldStandardMatches);
+
+                //init token blocking
+                method = new TokenBlocking(profiles);
+
+                for (int iterations = 0; iterations < NO_OF_ITERATIONS; iterations++) {
+
+                    //BLOCK BUILDING
+                    time1 = System.currentTimeMillis();
+                    blocks = method.buildBlocks();
+                    time2 = System.currentTimeMillis();
+                    blbuTime = time2 - time1;
+                    //System.out.println("BlBu time\t:\t" + blbuTime);
+
+                    bStats = new BlockStatistics(blocks, abp);
+                    results = bStats.applyProcessing();
+
+                    comparisons[0].add(results[2]);
+                    pc[0].add(results[0]);
+                    pq[0].add(results[1]);
+                    rr[0].add(results[3]);
+                    nBlocks[0].add(results[4]);
+                    blbuTimes[0].add(blbuTime);
+
+
+                } //end for NUMBER_OF_ITERATIONS
+                printOutputAndWriteToFile(writer, dSize, ySize, dataSetAttributes, 0, nBlocks, comparisons, pc, pq, rr, blbuTimes, null, null, -1.0);
+            } //end for NUMBER_OF_DATASETS
+            closeWriter(writer, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Analyze Block Filtering ratios for Standard (Token) Blocking
+     * @param dataSetD
+     * @param dataSetY
+     * @param goldStandardFilePath
+     */
+    public void analyzeStBl_BlFi(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+        try {
+            Date date = new Date();
+            String fileName = "StBl_BlFi_analysis_" + df.format(date) + ".csv";
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
+            String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
+            writer.write(header + "\n");
+
+            //init all variables & test run
+            String[] dataSetAttributes = getDatasetAttributes(0);
+            //params
+            List<Double>[] comparisons = new List[1];
+            List<Double>[] pc = new List[1];
+            List<Double>[] pq = new List[1];
+            List<Double>[] rr = new List[1];
+            List<Double>[] nBlocks = new List[1];;
+            List<Double>[] blbuTimes = new List[1];
+            List<Double>[] blclTimes = new List[1];
+
+            //init HashMaps with <URI, ID>
+            dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+            yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+
+            //convert datasets
+            List<EntityProfile>[] profiles = new List[2];
+            profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, 0);
+            profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, 0);
+            int dSize;
+            int ySize;
+
+            //gold standard
+            Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+            AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
+
+            double r = 0.5;
+
+            AbstractBlockingMethod method = new TokenBlocking(profiles);
+            AbstractEfficiencyMethod bcMethod = new BlockFiltering(r);
+
+            List<AbstractBlock> blocks = method.buildBlocks();
+            bcMethod.applyProcessing(blocks);
+
+            BlockStatistics bStats = new BlockStatistics(blocks, abp);
+            double[] results = bStats.applyProcessing();
+
+            double blbuTime;
+            double blclTime;
+            long time1;
+            long time2;
+            long time3;
+
+            System.out.println("Test run complete.");
+
+            for  (int datasetID = 0; datasetID < NO_OF_DATASETS; datasetID++){
+                dataSetAttributes = getDatasetAttributes(datasetID);
+
+                //init HashMaps with <URI, ID>
+                dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+                yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+
+                //convert datasets
+                profiles = new List[2];
+                profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, datasetID);
+                profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, datasetID);
+                dSize = profiles[0].size();
+                ySize = profiles[1].size();
+
+                //gold standard
+                goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+                abp = new BilateralDuplicatePropagation(goldStandardMatches);
+
+                method = new TokenBlocking(profiles);
+
+                //ANALYZE BLOCK-REFINEMENT METHODS
+
+                for (int i = 0; i < 20; i++) {
+                    //init Block Filtering (BlFi) parameters
+                    r = getRatio(i);
+                    bcMethod = new BlockFiltering(r);
+
+                    for (int iterations = 0; iterations < NO_OF_ITERATIONS; iterations++) {
+                        //params
+                        comparisons = new List[1];
+                        pc = new List[1];
+                        pq = new List[1];
+                        rr = new List[1];
+                        nBlocks = new List[1];
+                        blbuTimes = new List[1];
+                        blclTimes = new List[1];
+                        comparisons[0] = new ArrayList<>();
+                        pc[0] = new ArrayList<>();
+                        pq[0] = new ArrayList<>();
+                        rr[0] = new ArrayList<>();
+                        nBlocks[0] = new ArrayList<>();
+                        blbuTimes[0] = new ArrayList<>();
+                        blclTimes[0] = new ArrayList<>();
+
+                        //BLOCK BUILDING
+                        time1 = System.currentTimeMillis();
+                        blocks = method.buildBlocks();
+                        time2 = System.currentTimeMillis();
+                        //BLOCK CLEANING
+                        if (bcMethod != null) {
+                            bcMethod.applyProcessing(blocks);
+                        }
+                        time3 = System.currentTimeMillis();
+
+                        blbuTime = time2 - time1;
+                        System.out.println("BlBu time\t:\t" + blbuTime);
+                        blclTime = time3 - time2;
+                        System.out.println("BlCl time\t:\t" + blclTime);
+
+                        bStats = new BlockStatistics(blocks, abp);
+                        results = bStats.applyProcessing();
+
+                        comparisons[0].add(results[2]);
+                        pc[0].add(results[0]);
+                        pq[0].add(results[1]);
+                        rr[0].add(results[3]);
+                        nBlocks[0].add(results[4]);
+                        blbuTimes[0].add(blbuTime);
+                        blclTimes[0].add(blclTime);
+                    }//end for iterations
+
+                    printOutputAndWriteToFile(writer, dSize, ySize, dataSetAttributes, 0, nBlocks, comparisons, pc, pq, rr, blbuTimes, blclTimes, null, r);
+                }
+            } //end for NUMBER_OF_DATASETS
+            closeWriter(writer, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Analyze Meta Blocking algorithms and weighting schemes for Standard (Token) Blocking with best Block Filtring
+     * @param dataSetD
+     * @param dataSetY
+     * @param goldStandardFilePath
+     */
+    public void analyzeStBl_bestBlFi_MeBl(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+        try {
+            Date date = new Date();
+            String fileName = "StBl_bestBlFi_MeBl_analysis_" + df.format(date) + ".csv";
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
+            String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
+            writer.write(header + "\n");
+
+            //init all variables & test run
+            //params
+            List<Double>[] comparisons = new List[1];
+            List<Double>[] pc = new List[1];
+            List<Double>[] pq = new List[1];
+            List<Double>[] rr = new List[1];
+            List<Double>[] nBlocks = new List[1];
+            List<Double>[] blbuTimes = new List[1];
+            List<Double>[] blclTimes = new List[1];
+            List<Double>[] coclTimes = new List[1];
+
+            //init HashMaps with <URI, ID>
+            dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+            yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+
+            //convert datasets
+            List<EntityProfile>[] profiles = new List[2];
+            profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, 0);
+            profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, 0);
+            int dSize;
+            int ySize;
+
+            //gold standard
+            Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+            AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
+
+            AbstractBlockingMethod method = new TokenBlocking(profiles);
+            double r = getBestBlFiRatio(0);
+            AbstractEfficiencyMethod bcMethod = new BlockFiltering(r);
+            AbstractEfficiencyMethod ccMethod = OnTheFlyUtilities.getCleaningMethod(true, 0, abp);
+
+            List<AbstractBlock> blocks = method.buildBlocks();
+            bcMethod.applyProcessing(blocks);
+            ccMethod.applyProcessing(blocks);
+
+            double blbuTime;
+            double blclTime;
+            double coclTime;
+            long time1;
+            long time2;
+            long time3;
+            long time4;
+
+            BlockStatistics bStats = new BlockStatistics(blocks, abp);
+            double[] results = bStats.applyProcessing();
+            System.out.println("Test run complete.");
+
+            for  (int datasetID = 0; datasetID < NO_OF_DATASETS; datasetID++){
+                String[] dataSetAttributes = getDatasetAttributes(datasetID);
+
+                //params
+                comparisons = new List[1];
+                pc = new List[1];
+                pq = new List[1];
+                rr = new List[1];
+                nBlocks = new List[1];
+                blbuTimes = new List[1];
+                blclTimes = new List[1];
+                coclTimes = new List[1];
+                comparisons[0] = new ArrayList<>();
+                pc[0] = new ArrayList<>();
+                pq[0] = new ArrayList<>();
+                rr[0] = new ArrayList<>();
+                nBlocks[0] = new ArrayList<>();
+                blbuTimes[0] = new ArrayList<>();
+                blclTimes[0] = new ArrayList<>();
+                coclTimes[0] = new ArrayList<>();
+
+                //init HashMaps with <URI, ID>
+                dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
+                yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
+
+                //convert datasets
+                profiles = new List[2];
+                profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, datasetID);
+                profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, datasetID);
+                dSize = profiles[0].size();
+                ySize = profiles[1].size();
+
+                //gold standard
+                goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
+                abp = new BilateralDuplicatePropagation(goldStandardMatches);
+
+                method = new TokenBlocking(profiles);
+                r = getBestBlFiRatio(datasetID);
+                bcMethod = new BlockFiltering(r);
+
+                //ANALYZE META BLOCKING
+                //Six algorithms and five weighting schemes
+                for (int i = 0; i < 40; i++) {
+                    //init CoCl parameters
+                    ccMethod = OnTheFlyUtilities.getCleaningMethod(true, i, abp);
+
+                    //BLOCK BUILDING
+                    time1 = System.currentTimeMillis();
+                    blocks = method.buildBlocks();
+                    time2 = System.currentTimeMillis();
+                    //BLOCK CLEANING
+                    if (bcMethod != null) {
+                        bcMethod.applyProcessing(blocks);
+                    }
+                    time3 = System.currentTimeMillis();
+                    //COMPARISON CLEANING
+                    if (ccMethod != null) {
+                        ccMethod.applyProcessing(blocks);
+                    }
+                    time4 = System.currentTimeMillis();
+
+                    blbuTime = time2 - time1;
+                    System.out.println("BlBu time\t:\t" + blbuTime);
+                    blclTime = time3 - time2;
+                    System.out.println("BlCl time\t:\t" + blclTime);
+                    coclTime = time4 - time3;
+                    System.out.println("CoCl time\t:\t" + coclTime);
+
+                    bStats = new BlockStatistics(blocks, abp);
+                    results = bStats.applyProcessing();
+
+                    comparisons[0].add(results[2]);
+                    pc[0].add(results[0]);
+                    pq[0].add(results[1]);
+                    rr[0].add(results[3]);
+                    nBlocks[0].add(results[4]);
+                    blbuTimes[0].add(blbuTime);
+                    blclTimes[0].add(blclTime);
+                    coclTimes[0].add(coclTime);
+
+                    printOutputAndWriteToFile(writer, dSize, ySize, dataSetAttributes, 0, nBlocks, comparisons, pc, pq, rr, blbuTimes, blclTimes, coclTimes, i);
+                }
+            } //end for NUMBER_OF_DATASETS
+            closeWriter(writer, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void closeWriter(BufferedWriter writer, String fileName) throws IOException {
         writer.close();
         System.out.println("results written to " + fileName);
     }
 
     private static void printOutputAndWriteToFile(BufferedWriter writer, int dSize, int ySize, String[] dataSetAttributes, int methodId, List<Double>[] nBlocks, List<Double>[] comparisons, List<Double>[] pc, List<Double>[] pq, List<Double>[] rr, List<Double>[] blbuTimes, List<Double>[] blclTimes, List<Double>[] coclTimes, double r) throws IOException {
-        String methodName = getMethodName(methodId, r, coclTimes);
+        String methodName = getMethodName(methodId, r, blclTimes, coclTimes);
         System.out.println("\nCurrent method id\t:\t" + (methodId + 1));
         System.out.println("Current method\t:\t" + methodName);
         System.out.println("Number of Blocks\t:\t" + StatisticsUtilities.getMeanValue(nBlocks[methodId]));
@@ -281,12 +677,13 @@ public class WDI_BlockingFramework_Combiner {
         System.out.println("PC\t:\t" + StatisticsUtilities.getMeanValue(pc[methodId]));
         System.out.println("PQ\t:\t" + StatisticsUtilities.getMeanValue(pq[methodId]));
         System.out.println("RR\t:\t" + StatisticsUtilities.getMeanValue(rr[methodId]));
+        double meanBlBuTime = StatisticsUtilities.getMeanValue(blbuTimes[methodId]);
+        System.out.println("Average BlBu Time\t:\t" + meanBlBuTime);
         double meanBlClTime = -1.0;
         if (blclTimes != null) {
-            meanBlClTime = StatisticsUtilities.getMeanValue(blbuTimes[methodId]);
-            System.out.println("Average BlBu Time\t:\t" + meanBlClTime);
+            meanBlClTime = StatisticsUtilities.getMeanValue(blclTimes[methodId]);
+            System.out.println("Average BlCl Time\t:\t" + meanBlClTime);
         }
-        System.out.println("Average BlCl Time\t:\t" + StatisticsUtilities.getMeanValue(blclTimes[methodId]));
         double meanColTime = -1.0;
         if (coclTimes != null) {
             meanColTime = StatisticsUtilities.getMeanValue(coclTimes[methodId]);
@@ -304,7 +701,7 @@ public class WDI_BlockingFramework_Combiner {
                 StatisticsUtilities.getMeanValue(pq[methodId]) + ", " +
                 StatisticsUtilities.getMeanValue(rr[methodId]) + ", " +
                 StatisticsUtilities.getMeanValue(pc[methodId]) * StatisticsUtilities.getMeanValue(rr[methodId]) + ", " +
-                StatisticsUtilities.getMeanValue(blbuTimes[methodId]) + ", " +
+                meanBlBuTime + ", " +
                 meanBlClTime + ", " +
                 meanColTime;
         writer.write(line + "\n");
@@ -356,8 +753,11 @@ public class WDI_BlockingFramework_Combiner {
         }
     }
 
-    private static String getMethodName(int methodId, double r, List<Double>[] coclTimes) {
-        if (coclTimes == null) { //BlFi
+    private static String getMethodName(int methodId, double r, List<Double>[] blclTimes, List<Double>[] coclTimes) {
+        if (blclTimes == null) { //BlBi analysis
+            return "StBl";
+        }
+        if (coclTimes == null) { //BlFi analysis
             if (r >= 0.0) {
                 return "StBl+BlFi (r=" + r + ")";
             }
@@ -409,206 +809,7 @@ public class WDI_BlockingFramework_Combiner {
         return dataSetAttributes;
     }
 
-    /**
-     * Analyze Block Filtering ratios for Standard (Token) Blocking
-     * @param dataSetD
-     * @param dataSetY
-     * @param goldStandardFilePath
-     */
-    public void analyzeStBl_BlFi(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
-        try {
-            Date date = new Date();
-            String fileName = "StBl_BlFi_analysis_" + df.format(date) + ".csv";
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
-            String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
-            writer.write(header + "\n");
 
-            for  (int datasetID = 0; datasetID < NO_OF_DATASETS; datasetID++){
-                String[] dataSetAttributes = getDatasetAttributes(datasetID);
-
-                //params
-                List<Double>[] comparisons = new List[1];
-                List<Double>[] pc = new List[1];
-                List<Double>[] pq = new List[1];
-                List<Double>[] rr = new List[1];
-                List<Double>[] nBlocks = new List[1];
-                List<Double>[] blbuTimes = new List[1];
-                List<Double>[] blclTimes = new List[1];
-                comparisons[0] = new ArrayList<>();
-                pc[0] = new ArrayList<>();
-                pq[0] = new ArrayList<>();
-                rr[0] = new ArrayList<>();
-                nBlocks[0] = new ArrayList<>();
-                blbuTimes[0] = new ArrayList<>();
-                blclTimes[0] = new ArrayList<>();
-
-                //init HashMaps with <URI, ID>
-                dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
-                yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
-
-                //convert datasets
-                List<EntityProfile>[] profiles = new List[2];
-                profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, datasetID);
-                profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, datasetID);
-                int dSize = profiles[0].size();
-                int ySize = profiles[1].size();
-
-                //gold standard
-                Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
-                AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
-
-                AbstractBlockingMethod method = new TokenBlocking(profiles);
-                AbstractEfficiencyMethod bcMethod = null;
-                //ANALYZE BLOCK-REFINEMENT METHODS
-
-                for (int i = 0; i < 20; i++) {
-                    //Block Filtering (BlFi)
-                    double r = getRatio(i);
-                    bcMethod = new BlockFiltering(r);
-
-                    //BLOCK BUILDING
-                    long time1 = System.currentTimeMillis();
-                    List<AbstractBlock> blocks = method.buildBlocks();
-                    long time2 = System.currentTimeMillis();
-
-                    //BLOCK CLEANING
-                    if (bcMethod != null) {
-                        bcMethod.applyProcessing(blocks);
-                    }
-                    long time3 = System.currentTimeMillis();
-
-                    double blbuTime = time2 - time1;
-                    System.out.println("BlBu time\t:\t" + blbuTime);
-                    double blclTime = time3 - time2;
-                    System.out.println("BlCl time\t:\t" + blclTime);
-
-
-                    BlockStatistics bStats = new BlockStatistics(blocks, abp);
-                    double[] results = bStats.applyProcessing();
-
-                    comparisons[0].add(results[2]);
-                    pc[0].add(results[0]);
-                    pq[0].add(results[1]);
-                    rr[0].add(results[3]);
-                    nBlocks[0].add(results[4]);
-                    blbuTimes[0].add(blbuTime);
-                    blclTimes[0].add(blclTime);
-
-                    printOutputAndWriteToFile(writer, dSize, ySize, dataSetAttributes, 0, nBlocks, comparisons, pc, pq, rr, blbuTimes, blclTimes, null, r);
-                }
-            } //end for NUMBER_OF_DATASETS
-            closeWriter(writer, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Analyze Meta Blocking algorithms and weighting schemes for Standard (Token) Blocking with best Block Filtring
-     * @param dataSetD
-     * @param dataSetY
-     * @param goldStandardFilePath
-     */
-    public void analyzeStBl_bestBlFi_MeBl(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
-        try {
-            Date date = new Date();
-            String fileName = "StBl_bestBlFi_MeBl_analysis_" + df.format(date) + ".csv";
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
-            String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
-            writer.write(header + "\n");
-
-            for  (int datasetID = 0; datasetID < NO_OF_DATASETS; datasetID++){
-                String[] dataSetAttributes = getDatasetAttributes(datasetID);
-
-                //params
-                List<Double>[] comparisons = new List[1];
-                List<Double>[] pc = new List[1];
-                List<Double>[] pq = new List[1];
-                List<Double>[] rr = new List[1];
-                List<Double>[] nBlocks = new List[1];
-                List<Double>[] blbuTimes = new List[1];
-                List<Double>[] blclTimes = new List[1];
-                List<Double>[] coclTimes = new List[1];
-                comparisons[0] = new ArrayList<>();
-                pc[0] = new ArrayList<>();
-                pq[0] = new ArrayList<>();
-                rr[0] = new ArrayList<>();
-                nBlocks[0] = new ArrayList<>();
-                blbuTimes[0] = new ArrayList<>();
-                blclTimes[0] = new ArrayList<>();
-                coclTimes[0] = new ArrayList<>();
-
-                //init HashMaps with <URI, ID>
-                dIDs = new HashMap<>(dataSetD.size() + 10, 1.0f);
-                yIDs = new HashMap<>(dataSetY.size() + 10, 1.0f);
-
-                //convert datasets
-                List<EntityProfile>[] profiles = new List[2];
-                profiles[0] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetD, dIDs, datasetID);
-                profiles[1] = WDI_BlockingFramework_Combiner.convertFusableDataSetToEntityProfile(dataSetY, yIDs, datasetID);
-                int dSize = profiles[0].size();
-                int ySize = profiles[1].size();
-
-                //gold standard
-                Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
-                AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
-
-                AbstractBlockingMethod method = new TokenBlocking(profiles);
-                double r = getBestBlFiRatio(datasetID);
-                AbstractEfficiencyMethod bcMethod = bcMethod = new BlockFiltering(r);
-                AbstractEfficiencyMethod ccMethod = null;
-                //ANALYZE META BLOCKING
-                //Six algorithms and five weighting schemes
-                for (int i = 0; i < 40; i++) {
-
-                    ccMethod = OnTheFlyUtilities.getCleaningMethod(true, i, abp);
-
-                    //BLOCK BUILDING
-                    long time1 = System.currentTimeMillis();
-                    List<AbstractBlock> blocks = method.buildBlocks();
-                    long time2 = System.currentTimeMillis();
-
-                    //BLOCK CLEANING
-                    if (bcMethod != null) {
-                        bcMethod.applyProcessing(blocks);
-                    }
-                    long time3 = System.currentTimeMillis();
-
-                    //COMPARISON CLEANING
-                    if (ccMethod != null) {
-                        ccMethod.applyProcessing(blocks);
-                    }
-                    long time4 = System.currentTimeMillis();
-
-
-                    double blbuTime = time2 - time1;
-                    System.out.println("BlBu time\t:\t" + blbuTime);
-                    double blclTime = time3 - time2;
-                    System.out.println("BlCl time\t:\t" + blclTime);
-                    double coclTime = time4 - time3;
-                    System.out.println("CoCl time\t:\t" + coclTime);
-
-
-                    BlockStatistics bStats = new BlockStatistics(blocks, abp);
-                    double[] results = bStats.applyProcessing();
-
-                    comparisons[0].add(results[2]);
-                    pc[0].add(results[0]);
-                    pq[0].add(results[1]);
-                    rr[0].add(results[3]);
-                    nBlocks[0].add(results[4]);
-                    blbuTimes[0].add(blbuTime);
-                    blclTimes[0].add(blclTime);
-                    coclTimes[0].add(coclTime);
-
-                    printOutputAndWriteToFile(writer, dSize, ySize, dataSetAttributes, 0, nBlocks, comparisons, pc, pq, rr, blbuTimes, blclTimes, coclTimes, i);
-                }
-            } //end for NUMBER_OF_DATASETS
-            closeWriter(writer, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Get the best ratio for the Block Filtering method
@@ -683,4 +884,6 @@ public class WDI_BlockingFramework_Combiner {
                 return -1.0;
         }
     }
+
+
 }
