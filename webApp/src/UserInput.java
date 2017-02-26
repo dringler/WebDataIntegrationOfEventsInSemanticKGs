@@ -3,6 +3,7 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by Daniel on 10/02/17.
@@ -10,29 +11,42 @@ import java.io.InputStreamReader;
 public class UserInput {
 
     /**
+     * Get user input
+     * @param q Question to show user
+     * @param t value for true
+     * @param f value for false
+     * @return boolean
+     * @throws IOException
+     */
+    private boolean getBooleanUserInput(String q, String t, String f) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        //init parameters
+        boolean b = true;
+        boolean newInput = true;
+        System.out.print(q + " Enter '"+t+"' or '"+f+"': ");
+        //get user input from console
+        while (newInput) {
+            String userInput = br.readLine();
+            if (userInput.equals(t)) {
+                newInput = false;
+            } else if (userInput.equals(f)) {
+                b = false;
+                newInput = false;
+            } else {
+                System.out.print("Please enter '"+t+"' or '"+f+"'.");
+            }
+        }
+        return b;
+    }
+
+
+    /**
      * Get user input: Declare if testing is true (use sample data set) or false (use full data set)
      * @return testing
      * @throws IOException
      */
     public boolean getDatasetUserInput() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        //init parameters
-        boolean testing = true;
-        boolean newInput = true;
-        System.out.print("Test on sample set? Enter 'y' or 'n': ");
-        //get user input from console
-        while (newInput) {
-            String userInput = br.readLine();
-            if (userInput.equals("y")) {
-                newInput = false;
-            } else if (userInput.equals("n")) {
-                testing = false;
-                newInput = false;
-            } else {
-                System.out.print("Please enter 'y' or 'n'.");
-            }
-        }
-        return testing;
+        return getBooleanUserInput("Test on sample set?", "y", "n");
     }
     /**
      * Get user input: Sample size
@@ -58,4 +72,39 @@ public class UserInput {
         }
         return s;
     }
+
+    /**
+     * Get user input whether to get the best parameter or to measure the runtime for a blocking method
+     * @return
+     * @throws IOException
+     */
+    public boolean getBestParameter() throws IOException {
+        return getBooleanUserInput("Get best parameter or measure runtime", "p", "r");
+    }
+
+    public int getBlockingStep() throws IOException {
+        ArrayList<Integer> validOptions = new ArrayList<>();
+        validOptions.add(0);//BlBu
+        validOptions.add(1);//BlFi
+        validOptions.add(2);//MeBl
+        boolean newInput = true;
+        System.out.print("Please enter a number. BlockBuilding: 0 , BlockFiltering: 1, MetaBlocking: 2.");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (newInput) {
+            try {
+                int userInput = Integer.parseInt(br.readLine());
+                if (validOptions.contains(userInput)) {
+                    newInput = false;
+                    return userInput;
+                } else {
+                    System.out.print("Please enter a number between 0 and 2.");
+                }
+            } catch (NumberFormatException nfe) {
+                System.out.println("Please enter a valid number.");
+            }
+
+        }
+        return -1;
+    }
+
 }

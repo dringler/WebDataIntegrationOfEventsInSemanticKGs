@@ -14,13 +14,13 @@ import java.util.List;
 public class Location extends Record<DefaultSchemaElement> implements Serializable {
 
     private List<String> labels = new ArrayList<>();
-    private List<String> types = new ArrayList<>();
+    //private List<String> types = new ArrayList<>();
     private List<Pair<Double, Double>> coordinates = new ArrayList<>();
-    private List<String> countries;
+    /*private List<String> countries;
     private List<String> cities;
     private boolean isACountry;
     private boolean isAState;
-    private boolean isACity;
+    private boolean isACity;*/
     private List<String> sames = new ArrayList<>();
 
     //countries, cities, capital ...
@@ -34,9 +34,7 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
     public List<String> getLabels() {
         return labels;
     }
-    public List<String> getTypes() {
-        return types;
-    }
+    //public List<String> getTypes() {return types;}
     public List<Pair<Double, Double>> getCoordinates() {
         return coordinates;
     }
@@ -54,10 +52,10 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
         if (!this.labels.contains(label))
             this.labels.add(label);
     }
-    public void addType(String type) {
+    /*public void addType(String type) {
         if (!this.types.contains(type))
             this.types.add(type);
-    }
+    }*/
 
     public void addCoordinates(Pair<Double, Double> coordinates) {
         if(!this.coordinates.contains(coordinates))
@@ -71,7 +69,7 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
 
 
     public static final DefaultSchemaElement LABELS = new DefaultSchemaElement("Labels");
-    public static final DefaultSchemaElement TYPES = new DefaultSchemaElement("Types");
+    //public static final DefaultSchemaElement TYPES = new DefaultSchemaElement("Types");
     public static final DefaultSchemaElement COORDINATES = new DefaultSchemaElement("Coordinates");
     public static final DefaultSchemaElement SAMES = new DefaultSchemaElement("Sames");
 
@@ -83,8 +81,8 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
     public boolean hasValue(DefaultSchemaElement attribute) {
         if(attribute==LABELS)
             return labels.size()>0;
-        else if(attribute==TYPES)
-            return types.size()>0;
+      /*  else if(attribute==TYPES)
+            return types.size()>0;*/
         else if(attribute==COORDINATES)
             return coordinates.size()>0;//!Double.isNaN(lon);
         else if (attribute==SAMES)
@@ -96,8 +94,8 @@ public class Location extends Record<DefaultSchemaElement> implements Serializab
     public int getNumberOfValues(DefaultSchemaElement attribute) {
         if(attribute==LABELS)
             return labels.size();
-        else if(attribute==TYPES)
-            return types.size();
+     /*   else if(attribute==TYPES)
+            return types.size();*/
         else if(attribute==COORDINATES)
             return coordinates.size();//!Double.isNaN(lon);
         else if (attribute==SAMES)
