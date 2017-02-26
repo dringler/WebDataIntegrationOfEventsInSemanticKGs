@@ -86,9 +86,14 @@ def stripURIPrefix(uri):
 	return uri[uri.index('resource')+9:]
 
 def getRoundedScore(s1, s2):
-	return round(Levenshtein.jaro(stripURIPrefix(s1),stripURIPrefix(s2)), 2)
+	#return round(Levenshtein.jaro(stripURIPrefix(s1),stripURIPrefix(s2)), 2)
+	lDist = Levenshtein.distance(stripURIPrefix(s1),stripURIPrefix(s2))
+	maxLen = max(len(s1),len(s1))*2
+	sLev = round(1-(lDist/float(maxLen)), 2)
+	#print ('{} and {}, maxLen: {}, distance: {}, scaled: {}'.format(stripURIPrefix(s1), stripURIPrefix(s2), maxLen, lDist, sLev))#round()/float(), 2)
+	return sLev
 
-def calcLevLinks(buckets):
+def calcSimLinks(buckets):
 	distLink = initDict(buckets)
 	#print distLink
 	#distLink = dict()
@@ -100,7 +105,7 @@ def calcLevLinks(buckets):
 			#if roundedSim in distLink:
 	return distLink
 
-def calcLevNoLinks(buckets):
+def calcSimNoLinks(buckets):
 	distNoLink = initDict(buckets)
 	for d in dURIsetNoLink:
 		for y in yURIsetNoLink:
@@ -147,18 +152,18 @@ for i in xrange(0, 101, 1):
 print buckets
 
 print ('Calculating countsLink...')
-distLink = calcLevLinks(buckets)
+distLink = calcSimLinks(buckets)
 print ('Done with countsLink')
 print distLink
-countsLinkLog = logScale(distLink)
-countsLink = getCounts(countsLinkLog, False)
+#countsLinkLog = logScale(distLink)
+countsLink = getCounts(distLink, False)
 print countsLink
 print ('Calculating countsNoLink...')
-distNoLink = calcLevNoLinks(buckets)
+distNoLink = calcSimNoLinks(buckets)
 print ('Done with countsNoLink...')
 print distNoLink
-countsNoLinkLog = logScale(distNoLink)
-countsNoLink = getCounts(countsNoLinkLog, True)
+#countsNoLinkLog = logScale(distNoLink)
+countsNoLink = getCounts(distNoLink, True)
 print countsNoLink
 
 
@@ -176,7 +181,7 @@ trace2 = go.Bar(
 )
 
 data = go.Data([trace1, trace2])
-layout=go.Layout(title='Striped URI Jaro Similarity Log Distribution', xaxis={'title':'Buckets'}, yaxis={'title':'Counts', 'showticklabels': False}, barmode='relative', width=1920, height=1024)# , 'type': 'log', 'autorange': True
+layout=go.Layout(title='Striped URI Scaled Levenshtein Similarity Distribution', xaxis={'title':'Buckets'}, yaxis={'title':'Counts', 'showticklabels': True}, barmode='relative', width=1920, height=1024)
 figure = go.Figure(data=data, layout=layout)
-py.image.save_as(figure, filename='stripedURI_Jaro_Sim_Log_Distribution.png')
+py.image.save_as(figure, filename='stripedURI_scaledLevenshtein_Sim_Distribution.png')
 
