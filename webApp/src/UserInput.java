@@ -82,6 +82,12 @@ public class UserInput {
         return getBooleanUserInput("Get best parameter or measure runtime", "p", "r");
     }
 
+    /**
+     * Get user input for blocking steps.
+     * 0: Just BlockBuilding, 1: BlockBuilding and BlockFiltering, 2: BlockBuilding, BlockFiltering, and MetaBlocking
+     * @return
+     * @throws IOException
+     */
     public int getBlockingStep() throws IOException {
         ArrayList<Integer> validOptions = new ArrayList<>();
         validOptions.add(0);//BlBu
@@ -107,4 +113,41 @@ public class UserInput {
         return -1;
     }
 
+    /**
+     * Load gold standard files.
+     * @return
+     * @throws IOException
+     */
+    public boolean getGsUserInput() throws IOException {
+        return getBooleanUserInput("Get gold standard files?", "y", "n");
+    }
+
+    /**
+     * Get user input for blocking method
+     * 0: StandardBlocking, 1: AttributeClustering
+     * @return
+     * @throws IOException
+     */
+    public int getBlockingMethod() throws IOException {
+        ArrayList<Integer> validOptions = new ArrayList<>();
+        validOptions.add(0);//StBl
+        validOptions.add(1);//ACl
+        boolean newInput = true;
+        System.out.print("Please enter a number. StandardBlocking: 0, AttributeClustering: 1.");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (newInput) {
+            try {
+                int userInput = Integer.parseInt(br.readLine());
+                if (validOptions.contains(userInput)) {
+                    newInput = false;
+                    return userInput;
+                } else {
+                    System.out.print("Please enter a number between 0 and 1.");
+                }
+            } catch (NumberFormatException nfe) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+        return -1;
+    }
 }

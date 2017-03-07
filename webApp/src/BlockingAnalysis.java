@@ -17,13 +17,15 @@ public class BlockingAnalysis {
         //get user input: use sample or full data files?
         UserInput ui = new UserInput();
         boolean testing = ui.getDatasetUserInput();
+        boolean gsFiles = ui.getGsUserInput();
         //int s = ui.getSampleSizeUserInput();
         boolean getBestParameter = ui.getBestParameter();
         int blockingStep = ui.getBlockingStep();
+        int blockingMethod = ui.getBlockingMethod();
 
         //get file paths based on user input
         FileLoader fl = new FileLoader();
-        String[] paths = fl.getPaths(testing);
+        String[] paths = fl.getPaths(testing, gsFiles);
 
         //create FusableDataSet objects
         FusableDataSet<Event, DefaultSchemaElement> dataSetD = new FusableDataSet<>();
@@ -50,11 +52,21 @@ public class BlockingAnalysis {
 
         switch(blockingStep) {
             case 0: //BlBu
-                if (getBestParameter) {
-                    System.out.println("Block Building with Token Blocking is parameter-free.");
-                } else {
-                    System.out.println("Measure runtime for Block Building using Standard Blocking.");
-                    blockingFramework.analyzeRuntime_StBl_BlBu(dataSetD, dataSetY, paths[2]); //parameter-free
+                if (blockingMethod==0) {
+                    if (getBestParameter) {
+                        System.out.println("Block Building with Token Blocking is parameter-free.");
+                    } else {
+                        System.out.println("Measure runtime for Block Building using Standard Blocking.");
+                        blockingFramework.analyzeRuntime_BlBu(0, dataSetD, dataSetY, paths[2]); //parameter-free
+                    }
+                } else if (blockingMethod==1) {
+                    if (getBestParameter) {
+                        System.out.println("Get the best parameters for Attribute Clustering.");
+                        blockingFramework.getBestParameterForACl(dataSetD, dataSetY, paths[2]);
+                    } else {
+                        System.out.println("Measure runtime for Block Building using Attribute Clustering.");
+                        blockingFramework.analyzeRuntime_BlBu(1, dataSetD, dataSetY, paths[2]);
+                    }
                 }
                 break;
             case 1: //BlFi

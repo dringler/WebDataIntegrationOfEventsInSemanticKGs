@@ -20,10 +20,7 @@ package de.uni_mannheim.informatik.wdi.matching;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -200,16 +197,14 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 			progress.report();
 		}*/
 
+		int allPairsSize = allPairs.size();
         List<Correspondence<RecordType, SchemaElementType>> corList  = allPairs.get()
                 .stream()
                 .parallel()
                 .filter(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()) != null)
-                .map(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences())
-							//{progress.incrementProgress();
-                            //progress.report();
-                            //return rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences());}
-						 )
-                .collect(Collectors.toList());
+                .map(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()))
+                //.collect(Collectors.toList());
+                .collect(Collectors.toCollection(() -> new ArrayList<>(allPairsSize)));
 
         System.out.println("Done with element matching. Adding found correspondences to the ResultSet.");
 		for (Correspondence<RecordType, SchemaElementType> cor : corList) {
@@ -217,7 +212,8 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
             //progress.incrementProgress();
             //progress.report();
         }
-
+        allPairs = null;
+        corList = null;
 
 		// report total matching time
 		long end = System.currentTimeMillis();
@@ -449,9 +445,9 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 	/**
 	 * Runs the matching on the given data sets
 	 * 
-	 * @param dataset1
+	 * @param schema1
 	 *            The first data set
-	 * @param dataset2
+	 * @param schema2
 	 *            The second data set
 	 * @return A list of correspondences
 	 */
@@ -512,9 +508,9 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 	/**
 	 * Runs the matching on the given data sets
 	 * 
-	 * @param dataset1
+	 * @param schema1
 	 *            The first data set
-	 * @param dataset2
+	 * @param schema2
 	 *            The second data set
 	 * @return A list of correspondences
 	 */
