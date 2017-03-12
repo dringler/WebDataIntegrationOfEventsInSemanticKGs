@@ -57,7 +57,7 @@ public class BlockingAnalysis {
                         System.out.println("Block Building with Token Blocking is parameter-free.");
                     } else {
                         System.out.println("Measure runtime for Block Building using Standard Blocking.");
-                        blockingFramework.analyzeRuntime_BlBu(0, dataSetD, dataSetY, paths[2]); //parameter-free
+                        blockingFramework.analyzeRuntime_BlBu(blockingMethod, dataSetD, dataSetY, paths[2]); //parameter-free
                     }
                 } else if (blockingMethod==1) {
                     if (getBestParameter) {
@@ -65,26 +65,26 @@ public class BlockingAnalysis {
                         blockingFramework.getBestParameterForACl(dataSetD, dataSetY, paths[2]);
                     } else {
                         System.out.println("Measure runtime for Block Building using Attribute Clustering.");
-                        blockingFramework.analyzeRuntime_BlBu(1, dataSetD, dataSetY, paths[2]);
+                        blockingFramework.analyzeRuntime_BlBu(blockingMethod, dataSetD, dataSetY, paths[2]);
                     }
                 }
                 break;
             case 1: //BlFi
                 if (getBestParameter) {
-                    System.out.println("Get the best parameters for Block Filtering with Standard Blocking.");
-                    blockingFramework.getBestParameterForBlFi_preSteps_StBl(dataSetD, dataSetY, paths[2]);
+                    System.out.println("Get the best parameters for Block Filtering with Blocking Method "+ blockingMethod + ".");
+                    blockingFramework.getBestParameterForBlFi(blockingMethod, dataSetD, dataSetY, paths[2]);
                 } else {
-                    System.out.println("Measure runtime for Block Filtering with Standard Blocking.");
-                    blockingFramework.analyzeRuntimeForBlFi_preSteps_StBl(dataSetD, dataSetY, paths[2]);
+                    System.out.println("Measure runtime for Block Filtering with Blocking Method "+ blockingMethod + ".");
+                    blockingFramework.analyzeRuntimeForBlFi(blockingMethod, dataSetD, dataSetY, paths[2]);
                 }
                 break;
             case 2: //MeBl
                 if (getBestParameter) {
-                    System.out.println("Get the best parameters for Meta Blocking with Standard Blocking and Block Filtering.");
-                    blockingFramework.getBestParameterForMeBl_preSteps_StBl_bestBlFi(dataSetD, dataSetY, paths[2]);
+                    System.out.println("Get the best parameters for Meta Blocking with Blocking Method " + blockingMethod + " and Block Filtering.");
+                    blockingFramework.getBestParameterForMeBl_bestBlFi(blockingMethod, dataSetD, dataSetY, paths[2]);
                 } else {
-                    System.out.println("Measure runtime for Meta Blocking with Standard Blocking and Block Filtering.");
-                    blockingFramework.analyzeRuntimeForMeBl_preSteps_StBl_bestBlFi(dataSetD, dataSetY, paths[2]);
+                    System.out.println("Measure runtime for Meta Blocking with Blocking Method " + blockingMethod + " and Block Filtering.");
+                    blockingFramework.analyzeRuntimeForMeBl_preSteps_StBl_bestBlFi(blockingMethod,dataSetD, dataSetY, paths[2]);
                 }
                 break;
 

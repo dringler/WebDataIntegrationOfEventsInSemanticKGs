@@ -49,7 +49,7 @@ public class WDI_BlockingFramework_Combiner {
     private final static int tbBestMbMethodId = 15;
 
     //attribute clustering
-    private final static RepresentationModel ACL_BEST_MODEL = RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
+    private final static RepresentationModel ACL_BEST_MODEL = RepresentationModel.TOKEN_BIGRAMS;
     private final static RepresentationModel[] representationModels = {RepresentationModel.CHARACTER_TRIGRAMS,
                                                                         RepresentationModel.TOKEN_BIGRAMS,
                                                                         RepresentationModel.CHARACTER_BIGRAMS,
@@ -412,17 +412,18 @@ public class WDI_BlockingFramework_Combiner {
         }
     }
     /**
-     * Analyze Block Filtering ratios for Standard (Token) Blocking
+     * Analyze Block Filtering ratios
      * One run for each parameter. Runtime might not be accurate (no iterations and no test runs)
      * @param dataSetD
      * @param dataSetY
      * @param goldStandardFilePath
      */
-    public void getBestParameterForBlFi_preSteps_StBl(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+    public void getBestParameterForBlFi(int m, FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
         try {
             String methodName = "BlFi";
+            String blbiM = getBlBiMethodName(m);
             Date date = new Date();
-            String fileName = "bestParam_"+ methodName +"_preSteps_StBl_" + df.format(date) + ".csv";
+            String fileName = "bestParam_"+ methodName +"_BlBi_"+ blbiM +"_" + df.format(date) + ".csv";
             BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
             String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
             writer.write(header + "\n");
@@ -494,14 +495,18 @@ public class WDI_BlockingFramework_Combiner {
                 goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
                 abp = new BilateralDuplicatePropagation(goldStandardMatches);
 
-                method = new TokenBlocking(profiles);
+                if (m==0) {
+                    method = new TokenBlocking(profiles);
+                } else if (m==1) {
+                    method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+                }
 
                 //ANALYZE BLOCK-REFINEMENT METHODS
 
                 for (int i = 0; i < 20; i++) {
                     //init Block Filtering (BlFi) parameters
                     r = getRatio(i);
-                    methodName = "StBl+BlFi (r=" + r + ")";
+                    methodName = blbiM + "+BlFi (r=" + r + ")";
                     bcMethod = new BlockFiltering(r);
 
                     //params
@@ -557,18 +562,29 @@ public class WDI_BlockingFramework_Combiner {
             e.printStackTrace();
         }
     }
+
+    private String getBlBiMethodName(int m) {
+        if (m==0) {
+            return "StBl";
+        } else if (m==1) {
+            return "ACl("+ ACL_BEST_MODEL.toString() + ")";
+        }
+        return "null";
+    }
+
     /**
-     * Analyze Block Filtering time for best ratios (for Standard (Token) Blocking)
+     * Analyze Block Filtering time for best ratios (for Standard (Token) Blocking or Attribute Clustering)
      * Test-runs and several iterations
      * @param dataSetD
      * @param dataSetY
      * @param goldStandardFilePath
      */
-    public void analyzeRuntimeForBlFi_preSteps_StBl(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+    public void analyzeRuntimeForBlFi(int m, FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
         try {
             String methodName = "BlFi";
+            String blBiMethod = getBlBiMethodName(m);
             Date date = new Date();
-            String fileName = "runtimeBlFi_StBl_best"+ methodName + "_" + df.format(date) + ".csv";
+            String fileName = "runtimeBlFi_"+ blBiMethod +"_best"+ methodName + "_" + df.format(date) + ".csv";
             BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
             String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
             writer.write(header + "\n");
@@ -601,7 +617,12 @@ public class WDI_BlockingFramework_Combiner {
 
             double r = 0.5;
 
-            AbstractBlockingMethod method = new TokenBlocking(profiles);
+            AbstractBlockingMethod method = null;
+            if (m==0){
+                method = new TokenBlocking(profiles);
+            }  else if (m==1) {
+                method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+            }
             AbstractEfficiencyMethod bcMethod = new BlockFiltering(r);
             List<AbstractBlock> blocks;
             BlockStatistics bStats;
@@ -639,16 +660,19 @@ public class WDI_BlockingFramework_Combiner {
                 //gold standard
                 goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
                 abp = new BilateralDuplicatePropagation(goldStandardMatches);
-
-                method = new TokenBlocking(profiles);
+                if (m==0) {
+                    method = new TokenBlocking(profiles);
+                } else if (m==1) {
+                    method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+                }
 
                 //ANALYZE BLOCK-REFINEMENT METHODS
 
 
                 //init Block Filtering (BlFi) parameters
-                r = getBestBlFiRatio(datasetID);
+                r = getBestBlFiRatio(m, datasetID);
                 bcMethod = new BlockFiltering(r);
-                methodName = "StBl+BlFi (r=" + r + ")";
+                methodName = blBiMethod + "+BlFi (r=" + r + ")";
                 //params
                 comparisons = new List[1];
                 pc = new List[1];
@@ -701,17 +725,19 @@ public class WDI_BlockingFramework_Combiner {
     }
 
     /**
-     * Analyze Meta Blocking algorithms and weighting schemes for Standard (Token) Blocking with best Block Filtering
+     * Analyze Meta Blocking algorithms and weighting schemes for Standard (Token) Blocking or Attribute Clustering with best Block Filtering
      * One run for each parameter. Runtime might not be accurate (no iterations and no test runs)
+     * @param m BlockBuilding method
      * @param dataSetD
      * @param dataSetY
      * @param goldStandardFilePath
      */
-    public void getBestParameterForMeBl_preSteps_StBl_bestBlFi(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+    public void getBestParameterForMeBl_bestBlFi(int m, FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
         try {
             String methodName =  "BlFi";
+            String blBiMethod = getBlBiMethodName(m);
             Date date = new Date();
-            String fileName = "bestParam_MeBl_preSteps_StBl_best" + methodName + "_" + df.format(date) + ".csv";
+            String fileName = "bestParam_MeBl_preSteps_"+blBiMethod+"_best" + methodName + "_" + df.format(date) + ".csv";
             BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
             String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
             writer.write(header + "\n");
@@ -742,8 +768,13 @@ public class WDI_BlockingFramework_Combiner {
             Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
             AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
 
-            AbstractBlockingMethod method = new TokenBlocking(profiles);
-            double r = getBestBlFiRatio(0);
+            AbstractBlockingMethod method = null;
+            if (m==0) {
+                method = new TokenBlocking(profiles);
+            } else if (m==1) {
+                method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+            }
+            double r = getBestBlFiRatio(m, 0);
             AbstractEfficiencyMethod bcMethod = new BlockFiltering(r);
             AbstractEfficiencyMethod ccMethod = OnTheFlyUtilities.getCleaningMethod(true, 0, abp);
 
@@ -799,9 +830,12 @@ public class WDI_BlockingFramework_Combiner {
                 //gold standard
                 goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
                 abp = new BilateralDuplicatePropagation(goldStandardMatches);
-
-                method = new TokenBlocking(profiles);
-                r = getBestBlFiRatio(datasetID);
+                if (m==0) {
+                    method = new TokenBlocking(profiles);
+                } else if (m==1) {
+                    method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+                }
+                r = getBestBlFiRatio(m,datasetID);
                 bcMethod = new BlockFiltering(r);
 
                 //ANALYZE META BLOCKING
@@ -809,7 +843,7 @@ public class WDI_BlockingFramework_Combiner {
                 for (int i = 0; i < 40; i++) {
                     //exclude meta blocking algorithms that are not working: 0-5, 20-30,35-40
                     if ((i > 4 && i < 20) || (i > 29 && i < 35)) {
-                        methodName = "StBl+BlFi(r="+r+")+MeBl(" + getPruningAlgorithmName(i) + "-" + getWeightingSchemeName(i) +")";
+                        methodName = blBiMethod+"+BlFi(r="+r+")+MeBl(" + getPruningAlgorithmName(i) + "-" + getWeightingSchemeName(i) +")";
 
                         comparisons[0] = new ArrayList<>();
                         pc[0] = new ArrayList<>();
@@ -873,11 +907,12 @@ public class WDI_BlockingFramework_Combiner {
      * @param dataSetY
      * @param goldStandardFilePath
      */
-    public void analyzeRuntimeForMeBl_preSteps_StBl_bestBlFi(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
+    public void analyzeRuntimeForMeBl_preSteps_StBl_bestBlFi(int m,FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String goldStandardFilePath) {
         try {
             String methodName = "MeBl";
+            String blBiMethod = getBlBiMethodName(m);
             Date date = new Date();
-            String fileName = "runtimeMeBl_StBl_bestBlFi_best" + methodName + "_" + df.format(date) + ".csv";
+            String fileName = "runtimeMeBl_"+blBiMethod+"_bestBlFi_best" + methodName + "_" + df.format(date) + ".csv";
             BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
             String header = "#iD, #iY, #iD*#iY , #attr, attr, methodId, methodName, #blocks, total comparisons, avg comparisons/block, PC, PQ, RR, a (RR*PC), BlBu time, BlCl time, CoCl time";
             writer.write(header + "\n");
@@ -908,8 +943,13 @@ public class WDI_BlockingFramework_Combiner {
             Set<IdDuplicates> goldStandardMatches = WDI_BlockingFramework_Combiner.convertGoldStandardToIdDuplicatesSet(goldStandardFilePath);
             AbstractDuplicatePropagation abp = new BilateralDuplicatePropagation(goldStandardMatches);
 
-            AbstractBlockingMethod method = new TokenBlocking(profiles);
-            double r = getBestBlFiRatio(0);
+            AbstractBlockingMethod method = null;
+            if (m==0) {
+                method = new TokenBlocking(profiles);
+            } else if (m==1) {
+                method = new AttributeClusteringBlocking(ACL_BEST_MODEL, profiles);
+            }
+            double r = getBestBlFiRatio(m,0);
             AbstractEfficiencyMethod bcMethod = new BlockFiltering(r);
             AbstractEfficiencyMethod ccMethod = OnTheFlyUtilities.getCleaningMethod(true, 0, abp);
 
@@ -926,8 +966,8 @@ public class WDI_BlockingFramework_Combiner {
             }
             //get all cleaning methods once
             for (int i = 0; i < 5; i++) {
-                int m = getBestMeBlMethod(i);
-                ccMethod = OnTheFlyUtilities.getCleaningMethod(true, m, abp);
+                int bMB = getBestMeBlMethod(m, i);
+                ccMethod = OnTheFlyUtilities.getCleaningMethod(true, bMB, abp);
             }
             double blbuTime;
             double blclTime;
@@ -976,12 +1016,12 @@ public class WDI_BlockingFramework_Combiner {
                 abp = new BilateralDuplicatePropagation(goldStandardMatches);
 
                 method = new TokenBlocking(profiles);
-                r = getBestBlFiRatio(datasetID);
+                r = getBestBlFiRatio(m,datasetID);
                 bcMethod = new BlockFiltering(r);
 
                 //ANALYZE META BLOCKING
                 //Six algorithms and five weighting schemes
-                int i = getBestMeBlMethod(datasetID);
+                int i = getBestMeBlMethod(m, datasetID);
                 //init CoCl parameters
                 ccMethod = OnTheFlyUtilities.getCleaningMethod(true, i, abp);
 
@@ -1186,13 +1226,14 @@ public class WDI_BlockingFramework_Combiner {
     }
 
     /**
-     * Get the best cleaning method: reCNP with EJS or CBS as weighting scheme
+     * Get the best cleaning method: rWNP with ARCS or CBS as weighting scheme
+     * @param m
      * @param datasetID
      * @return
      */
-    private int getBestMeBlMethod(int datasetID) {
+    private int getBestMeBlMethod(int m, int datasetID) {
         if (datasetID == 0 || datasetID == 1) {// || datasetID == 4) {
-            return 11; //10:rWNN-ARCS, 11:rWNO-CBS, 16: ReCNP-CBS, 19:ReCNP-EJS
+            return 11; //10:rWNP-ARCS, 11:rWNP-CBS, 16: ReCNP-CBS, 19:ReCNP-EJS
         } else {
             return 10;
         }
@@ -1200,10 +1241,11 @@ public class WDI_BlockingFramework_Combiner {
 
     /**
      * Get the best ratio for the Block Filtering method
+     * @param m
      * @param datasetID
      * @return
      */
-    private double getBestBlFiRatio(int datasetID) {
+    private double getBestBlFiRatio(int m, int datasetID) {
         switch (datasetID) {
             case 0:
                 return 0.5;
@@ -1214,7 +1256,11 @@ public class WDI_BlockingFramework_Combiner {
             case 3:
                 return 0.4;
             case 4:
-                return 0.5;
+                if (m==0) {
+                    return 0.5;
+                } else if (m==1) {
+                    return 0.55;
+                }
         }
         return -1.0;
     }
