@@ -41,10 +41,10 @@ public class MultiKeyBlocker<RecordType extends Matchable, SchemaElementType ext
 	
 	@Override
 	public ResultSet<BlockedMatchable<RecordType, SchemaElementType>> runBlocking(
-			DataSet<RecordType, SchemaElementType> dataset1,
-			DataSet<RecordType, SchemaElementType> dataset2,
-			final ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
-			DataProcessingEngine engine) {
+            DataSet<RecordType, SchemaElementType> dataset1,
+            DataSet<RecordType, SchemaElementType> dataset2,
+            final ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
+            DataProcessingEngine engine, boolean blockFiltering, double r) {
 		
 		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> result = new ResultSet<>();
 		
@@ -107,7 +107,7 @@ public class MultiKeyBlocker<RecordType extends Matchable, SchemaElementType ext
 
 		Function<String, Group<String, RecordType>> joinKeyGenerator = new GroupJoinKeyGenerator<>();
 		
-		ResultSet<Pair<Group<String,RecordType>,Group<String,RecordType>>> blockedData = engine.join(grouped1, grouped2, joinKeyGenerator);
+		ResultSet<Pair<Group<String,RecordType>,Group<String,RecordType>>> blockedData = engine.join(grouped1, grouped2, joinKeyGenerator, blockFiltering, r);
 		
 		JoinedGroupsToMatchingTaskMapper<String, RecordType, SchemaElementType> groupsToMatchingTaskMapper = new JoinedGroupsToMatchingTaskMapper<>(schemaCorrespondences);
 		

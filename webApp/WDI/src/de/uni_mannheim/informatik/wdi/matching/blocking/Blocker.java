@@ -34,6 +34,7 @@ import de.uni_mannheim.informatik.wdi.processing.DataProcessingEngine;
  * 
  * @author Oliver Lehmberg (oli@dwslab.de)
  * @author Robert Meusel (robert@dwslab.de)
+ * @author Daniel Ringler
  * 
  * @param <RecordType>
  */
@@ -52,10 +53,10 @@ public abstract class Blocker<RecordType extends Matchable, SchemaElementType ex
 	}
 	
 	public abstract ResultSet<BlockedMatchable<RecordType, SchemaElementType>> runBlocking(
-			DataSet<RecordType, SchemaElementType> dataset1, 
-			DataSet<RecordType, SchemaElementType> dataset2, 
-			ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
-			DataProcessingEngine engine);
+            DataSet<RecordType, SchemaElementType> dataset1,
+            DataSet<RecordType, SchemaElementType> dataset2,
+            ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
+            DataProcessingEngine engine, boolean blockFiltering, double r);
 			
 	public abstract ResultSet<BlockedMatchable<RecordType, SchemaElementType>> runBlocking(
 			DataSet<RecordType, SchemaElementType> dataset, 

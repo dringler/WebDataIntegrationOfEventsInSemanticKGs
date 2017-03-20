@@ -103,7 +103,7 @@ public class StandardSchemaBlocker<SchemaElementType extends Matchable, RecordTy
 			}
 		};
 		
-		for(Pair<SchemaElementType, SchemaElementType> p : engine.join(schema1, schema2, joinKeyGenerator1, joinKeyGenerator2).get()) {
+		for(Pair<SchemaElementType, SchemaElementType> p : engine.join(schema1, schema2, joinKeyGenerator1, joinKeyGenerator2, false, 0.0).get()) {
 			result.add(new MatchingTask<SchemaElementType, RecordType>(p.getFirst(), p.getSecond(), instanceCorrespondences));
 		}
 

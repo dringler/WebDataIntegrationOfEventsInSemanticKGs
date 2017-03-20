@@ -18,7 +18,7 @@ public class EventCSVFormatter extends CSVFormatter<Event,DefaultSchemaElement> 
     }
 
     @Override
-    public String[] format(Event record, DataSet<Event, DefaultSchemaElement> dataset) {
-        return record.getAllAttributeValues();
+    public String[] format(Event record, DataSet<Event, DefaultSchemaElement> dataset, char s) {
+        return record.getAllAttributeValues(s);
     }
 }

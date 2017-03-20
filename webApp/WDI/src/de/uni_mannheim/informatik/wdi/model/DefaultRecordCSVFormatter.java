@@ -44,7 +44,7 @@ public class DefaultRecordCSVFormatter extends CSVFormatter<DefaultRecord, Defau
 	}
 
 	@Override
-	public String[] format(DefaultRecord record, DataSet<DefaultRecord, DefaultSchemaElement> dataset) {
+	public String[] format(DefaultRecord record, DataSet<DefaultRecord, DefaultSchemaElement> dataset, char s) {
 		List<String> values = new ArrayList<>(dataset.getAttributes().size());
 
 		List<DefaultSchemaElement> names = new ArrayList<>();

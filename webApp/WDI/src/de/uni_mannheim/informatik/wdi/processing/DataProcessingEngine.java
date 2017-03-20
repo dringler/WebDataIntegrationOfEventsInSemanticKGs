@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.uni_mannheim.informatik.wdi.matching.blocking.BlockFiltering;
 import de.uni_mannheim.informatik.wdi.model.BasicCollection;
 import de.uni_mannheim.informatik.wdi.model.DataSet;
 import de.uni_mannheim.informatik.wdi.model.DefaultDataSet;
@@ -35,6 +36,7 @@ import de.uni_mannheim.informatik.wdi.model.ResultSet;
 
 /**
  * @author Oliver Lehmberg (oli@dwslab.de)
+ * @author Daniel Ringler
  *
  */
 public class DataProcessingEngine {
@@ -182,13 +184,13 @@ public class DataProcessingEngine {
 		return collector.getResult();
 	}
 	
-	public <KeyType, RecordType> ResultSet<Pair<RecordType,RecordType>> join(BasicCollection<RecordType> dataset1, BasicCollection<RecordType> dataset2, Function<KeyType, RecordType> joinKeyGenerator) {
+	public <KeyType, RecordType> ResultSet<Pair<RecordType,RecordType>> join(BasicCollection<RecordType> dataset1, BasicCollection<RecordType> dataset2, Function<KeyType, RecordType> joinKeyGenerator, boolean blockFiltering, double r) {
 		
-		return join(dataset1, dataset2, joinKeyGenerator, joinKeyGenerator);
+		return join(dataset1, dataset2, joinKeyGenerator, joinKeyGenerator, blockFiltering, r);
 		
 	}
 	
-	public <KeyType, RecordType> ResultSet<Pair<RecordType,RecordType>> join(BasicCollection<RecordType> dataset1, BasicCollection<RecordType> dataset2, Function<KeyType, RecordType> joinKeyGenerator1, Function<KeyType, RecordType> joinKeyGenerator2) {
+	public <KeyType, RecordType> ResultSet<Pair<RecordType,RecordType>> join(BasicCollection<RecordType> dataset1, BasicCollection<RecordType> dataset2, Function<KeyType, RecordType> joinKeyGenerator1, Function<KeyType, RecordType> joinKeyGenerator2, boolean blockFiltering, double r) {
 		
 		ResultSet<Pair<RecordType, RecordType>> result = createResultSet((Pair<RecordType, RecordType>)null);
 		
@@ -218,6 +220,16 @@ public class DataProcessingEngine {
 //			
 //			records.add(record);
 //		}
+
+
+        //BLOCK FILTERING
+        if (blockFiltering) {
+            System.out.println(String.format("Applying Block Filtering with r= %1.1f", r));
+
+            List<Map<KeyType, List<RecordType>>> joinKeysWithFiltering = BlockFiltering.runBlockFiltering(r, joinKeys1, joinKeys2);
+            joinKeys1 = joinKeysWithFiltering.get(0);
+            joinKeys2 = joinKeysWithFiltering.get(1);
+        }
 		
 		for(KeyType key1 : joinKeys1.keySet()) {
 			List<RecordType> block = joinKeys1.get(key1);

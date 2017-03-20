@@ -41,9 +41,9 @@ public class Event extends Record<DefaultSchemaElement> implements Serializable 
         return attributeNames;
     }
 
-    public String[] getAllAttributeValues() {
+    public String[] getAllAttributeValues(char separator) {
         //separator for multiple values
-        char separator = '+';
+        //char separator = "+";;
 
         //get URIs
         String allURIs = "";

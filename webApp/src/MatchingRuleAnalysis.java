@@ -94,7 +94,7 @@ public class MatchingRuleAnalysis {
         long time1 = System.currentTimeMillis();
         ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(
                 dataSetD, dataSetY, null, matchingRule,
-                blocker);
+                blocker, true, 0.5);
         long time2 = System.currentTimeMillis();
         double matchingTime = time2-time1;
         System.out.println("Done with Matching: " + matchingTime + " ms for " + dataSetD.getSize() * dataSetY.getSize() + " comparisons.");

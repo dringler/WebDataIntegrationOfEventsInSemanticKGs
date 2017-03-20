@@ -44,7 +44,7 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 //	private Map<String, List<RecordType>> blocks;
 //	private Map<String, List<RecordType>> blocks2;
 //	
-//	private void initialiseBlocks(DataSet<RecordType, SchemaElementType> dataset, DataProcessingEngine engine) {
+//	private void initializeBlocks(DataSet<RecordType, SchemaElementType> dataset, DataProcessingEngine engine) {
 //		
 //		System.out.println("Calculating blocking keys");
 //		
@@ -57,22 +57,22 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 //		blocks = blocker.getBlocks();
 //	}
 //	
-//	private void initialiseBlocks(DataSet<RecordType, SchemaElementType> dataset1, DataSet<RecordType, SchemaElementType> dataset2, DataProcessingEngine engine) {
-//		
+//	private void initializeBlocks(DataSet<RecordType, SchemaElementType> dataset1, DataSet<RecordType, SchemaElementType> dataset2, DataProcessingEngine engine) {
+//
 //		KeyBasedBlockingPreprocessor<RecordType> blocker = new KeyBasedBlockingPreprocessor<>();
 //		blocker.setBlockingFunction(blockingFunction);
-//		
+//
 //		System.out.println("Calculating blocking keys for dataset 1");
-//		
+//
 //		engine.iterateDataset(dataset1, blocker);
 //		blocks = blocker.getBlocks();
-//		
+//
 //		System.out.println("Calculating blocking keys for dataset 2");
-//		
+//
 //		if(secondBlockingFunction!=null) {
 //			blocker.setBlockingFunction(secondBlockingFunction);
 //		}
-//		
+//
 //		engine.iterateDataset(dataset2, blocker);
 //		blocks2 = blocker.getBlocks();
 //	}
@@ -104,7 +104,9 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 			DataSet<RecordType, SchemaElementType> dataset1,
 			DataSet<RecordType, SchemaElementType> dataset2,
 			ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
-			DataProcessingEngine engine){
+			DataProcessingEngine engine,
+            boolean blockFiltering,
+            double r){
 		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> result = new ResultSet<>();
 		
 		Function<String, RecordType> joinKeyGenerator1 = new Function<String, RecordType>() {
@@ -133,11 +135,11 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 			}
 		};
 		
-		for(Pair<RecordType, RecordType> p : engine.join(dataset1, dataset2, joinKeyGenerator1, joinKeyGenerator2).get()) {
+		for(Pair<RecordType, RecordType> p : engine.join(dataset1, dataset2, joinKeyGenerator1, joinKeyGenerator2, blockFiltering, r).get()) {
 			result.add(new MatchingTask<RecordType, SchemaElementType>(p.getFirst(), p.getSecond(), schemaCorrespondences));
 		}
 		
-//		initialiseBlocks(dataset1, dataset2, engine);
+//		initializeBlocks(dataset1, dataset2, engine);
 //		
 //		for(String key1 : blocks.keySet()) {
 //			List<RecordType> block = blocks.get(key1);
@@ -154,6 +156,8 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 //			}
 //			
 //		}
+        ;
+
 
 		calculatePerformance(dataset1, dataset2, result);
 		
@@ -188,7 +192,7 @@ public class StandardBlocker<RecordType extends Matchable, SchemaElementType ext
 			result.add(new MatchingTask<RecordType, SchemaElementType>(p.getFirst(), p.getSecond(), schemaCorrespondences));
 		}
 		
-//		initialiseBlocks(dataset, engine);
+//		initializeBlocks(dataset, engine);
 //		
 //		for(List<RecordType> block : blocks.values()) {
 //			for(int i = 0; i < block.size(); i++) {

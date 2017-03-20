@@ -20,16 +20,11 @@ package de.uni_mannheim.informatik.wdi.usecase.events;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import de.uni_mannheim.informatik.wdi.matching.LinearCombinationMatchingRule;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEngine;
-import de.uni_mannheim.informatik.wdi.matching.blocking.BlockingKeyGenerator;
-import de.uni_mannheim.informatik.wdi.matching.blocking.StandardBlocker;
-import de.uni_mannheim.informatik.wdi.matching.blocking.StaticBlockingKeyGenerator;
+import de.uni_mannheim.informatik.wdi.matching.blocking.*;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEvaluator;
 import de.uni_mannheim.informatik.wdi.model.Correspondence;
 import de.uni_mannheim.informatik.wdi.model.DefaultDataSet;
@@ -102,7 +97,23 @@ public class Events_IdentityResolution_Main {
 				return null;
 			}
 		};
-		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
+
+        MultiBlockingKeyGenerator<Event> tokenizedLabel = new MultiBlockingKeyGenerator<Event>() {
+            @Override
+            public HashSet<String> getMultiBlockingKey(Event event) {
+                HashSet<String> keys = new HashSet<>();
+                for (String value : event.getAllAttributeValues(' ')) {
+                    String[] tokens = value.split("\\s+");
+                    for (String token : tokens) {
+                        keys.add(token);
+                    }
+                }
+                return keys;
+            }
+        };
+
+		//StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedLabel);
 
 		// Initialize Matching Engine
 		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
@@ -110,7 +121,7 @@ public class Events_IdentityResolution_Main {
 		// Execute the matching
 		ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(
 				dataDBpedia, dataYAGO, null, matchingRule,
-				blocker);
+				blocker, true, 0.5);
 
 		// write the correspondences to the output file
 		engine.writeCorrespondences(
@@ -174,7 +185,8 @@ public class Events_IdentityResolution_Main {
 		features.writeCSV(
 				new File(
 						"usecase/movie/output/optimisation/academy_awards_2_actors_features.csv"),
-				new DefaultRecordCSVFormatter());
+				new DefaultRecordCSVFormatter(),
+                '+');
 	}
 
 	public static void firstMatching() throws Exception {
@@ -207,7 +219,7 @@ public class Events_IdentityResolution_Main {
 		// Execute the matching
 		ResultSet<Correspondence<Movie, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(
 				dataAcademyAwards, dataActors, null, matchingRule,
-				blocker);
+				blocker, false, 0.0);
 
 		// write the correspondences to the output file
 		engine.writeCorrespondences(
@@ -264,9 +276,9 @@ public class Events_IdentityResolution_Main {
 
 		// run the matching
 		ResultSet<Correspondence<Movie, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(ds1,
-				ds2, null, rule, blocker);
+				ds2, null, rule, blocker, false, 0.0);
 		ResultSet<Correspondence<Movie, DefaultSchemaElement>> correspondences2 = engine.runIdentityResolution(ds2,
-				ds3, null, rule, blocker);
+				ds3, null, rule, blocker, false ,0.0);
 
 		// write the correspondences to the output file
 		engine.writeCorrespondences(
@@ -292,7 +304,8 @@ public class Events_IdentityResolution_Main {
 		features.writeCSV(
 				new File(
 						"usecase/movie/output/optimisation/academy_awards_2_actors_features.csv"),
-				new DefaultRecordCSVFormatter());
+				new DefaultRecordCSVFormatter(),
+                '+');
 
 		// load the gold standard (test set)
 		MatchingGoldStandard gsTest = new MatchingGoldStandard();
@@ -382,7 +395,25 @@ public class Events_IdentityResolution_Main {
 				return null;
 			}
 		};
-		StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<>(firstLabel);
+
+        MultiBlockingKeyGenerator<Event> tokenizedLabel = new MultiBlockingKeyGenerator<Event>() {
+            @Override
+            public HashSet<String> getMultiBlockingKey(Event event) {
+
+                HashSet<String> keys = new HashSet<>();
+                for (String value : event.getAllAttributeValues(' ')) {
+                    String[] tokens = value.split("\\s+");
+                    for (String token : tokens) {
+                        keys.add(token);
+                    }
+                }
+                return keys;
+            }
+        };
+
+        //StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedLabel);
+
 
 		// Initialize Matching Engine
 		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
@@ -390,7 +421,7 @@ public class Events_IdentityResolution_Main {
 		// Execute the matching
 		ResultSet<Correspondence<Event, DefaultSchemaElement>> correspondences = engine.runIdentityResolution(
 				dataSetD, dataSetY, null, matchingRule,
-				blocker);
+				blocker, true, 0.5);
 
 		// write the correspondences to the output file
 		/*engine.writeCorrespondences(

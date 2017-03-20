@@ -13,9 +13,9 @@ public abstract class DatasetLevelBlocker<RecordType extends Matchable, SchemaEl
 
 	@Override
 	public ResultSet<BlockedMatchable<RecordType, SchemaElementType>> runBlocking(
-			DataSet<RecordType, SchemaElementType> dataset1, DataSet<RecordType, SchemaElementType> dataset2,
-			ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
-			DataProcessingEngine engine) {
+            DataSet<RecordType, SchemaElementType> dataset1, DataSet<RecordType, SchemaElementType> dataset2,
+            ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
+            DataProcessingEngine engine, boolean blockFiltering, double r) {
 		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> result = block(dataset1, dataset2, schemaCorrespondences); 
 		
 		calculatePerformance(dataset1, dataset2, result);

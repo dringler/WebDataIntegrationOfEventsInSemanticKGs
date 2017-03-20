@@ -317,7 +317,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 	 * @param formatter
 	 * @throws IOException
 	 */
-	public void writeCSV(File file, CSVFormatter<RecordType, SchemaElementType> formatter)
+	public void writeCSV(File file, CSVFormatter<RecordType, SchemaElementType> formatter, char s)
 			throws IOException {
 
 		CSVWriter writer = new CSVWriter(new FileWriter(file),'\t');
@@ -326,7 +326,7 @@ public class DefaultDataSet<RecordType extends Matchable, SchemaElementType> imp
 		writer.writeNext(headers, false);
 
 		for (RecordType record : records.values()) {
-			String[] values = formatter.format(record, this);
+			String[] values = formatter.format(record, this, s);
 
 			writer.writeNext(values, false);
 		}

@@ -27,6 +27,6 @@ public abstract class CSVFormatter<RecordType extends Matchable, SchemaElementTy
 
 	public abstract String[] getHeader(DataSet<RecordType, SchemaElementType> dataset);
 
-	public abstract String[] format(RecordType record, DataSet<RecordType, SchemaElementType> dataset);
+	public abstract String[] format(RecordType record, DataSet<RecordType, SchemaElementType> dataset, char s);
 
 }

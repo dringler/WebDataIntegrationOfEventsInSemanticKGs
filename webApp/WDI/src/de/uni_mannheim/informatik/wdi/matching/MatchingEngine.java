@@ -24,15 +24,11 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import de.uni_mannheim.informatik.wdi.matching.blocking.*;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.joda.time.DateTime;
 
 import com.opencsv.CSVWriter;
-import de.uni_mannheim.informatik.wdi.matching.blocking.BlockedMatchable;
-import de.uni_mannheim.informatik.wdi.matching.blocking.Blocker;
-import de.uni_mannheim.informatik.wdi.matching.blocking.SchemaBlocker;
-import de.uni_mannheim.informatik.wdi.matching.blocking.StandardSchemaBlocker;
-import de.uni_mannheim.informatik.wdi.matching.blocking.StaticBlockingKeyGenerator;
 import de.uni_mannheim.informatik.wdi.model.Correspondence;
 import de.uni_mannheim.informatik.wdi.model.DataSet;
 import de.uni_mannheim.informatik.wdi.model.DefaultDataSet;
@@ -160,7 +156,9 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 			DataSet<RecordType, SchemaElementType> dataset2, 
 			ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
 			MatchingRule<RecordType, SchemaElementType> rule,
-			Blocker<RecordType, SchemaElementType> blocker) {
+			Blocker<RecordType, SchemaElementType> blocker,
+			boolean runBlockFiltering,
+			double r) {
 		long start = System.currentTimeMillis();
 
 		System.out.println(String.format("[%s] Starting Identity Resolution",
@@ -171,7 +169,9 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
         System.out.println(String.format("Blocking %,d x %,d elements", dataset1.getSize(), dataset2.getSize()));
 		
 		// use the blocker to generate pairs
-		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> allPairs = blocker.runBlocking(dataset1, dataset2, schemaCorrespondences, getProcessingEngine());
+		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> allPairs = blocker.runBlocking(dataset1, dataset2, schemaCorrespondences, getProcessingEngine(), runBlockFiltering, r);
+
+
 
 		System.out
 				.println(String

@@ -31,10 +31,10 @@ public abstract class RecordLevelBlocker<RecordType extends Matchable, SchemaEle
 	
 	@Override
 	public ResultSet<BlockedMatchable<RecordType, SchemaElementType>> runBlocking(
-			DataSet<RecordType, SchemaElementType> dataset1, 
-			final DataSet<RecordType, SchemaElementType> dataset2,
-			final ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
-			DataProcessingEngine engine) {
+            DataSet<RecordType, SchemaElementType> dataset1,
+            final DataSet<RecordType, SchemaElementType> dataset2,
+            final ResultSet<Correspondence<SchemaElementType, RecordType>> schemaCorrespondences,
+            DataProcessingEngine engine, boolean blockFiltering, double r) {
 		
 		ResultSet<BlockedMatchable<RecordType, SchemaElementType>> result = null; //engine.runBlocking(dataset1, dataset2, schemaCorrespondences, this); 
 		
