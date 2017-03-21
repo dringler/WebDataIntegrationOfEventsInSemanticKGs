@@ -33,11 +33,64 @@ public class UserInput {
                 b = false;
                 newInput = false;
             } else {
-                System.out.print("Please enter '"+t+"' or '"+f+"'.");
+                System.out.print("Please enter '"+t+"' or '"+f+"': ");
             }
         }
         return b;
     }
+
+    /**
+     * Get integer user input greater or equal to 0
+     * @param q Question to show user
+     * @return int
+     * @throws IOException
+     */
+    public int getIntUserInput(String q) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int s = 0;
+        boolean newInput = true;
+        System.out.print(q);
+        while (newInput) {
+            String userInput = br.readLine();
+            try {
+                s = Integer.parseInt(userInput);
+                if (s>=0) {
+                    newInput = false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number: ");
+            }
+
+        }
+        return s;
+    }
+
+    /**
+     * Get double user input between 0.0 and 1.0
+     * @param q Question to show user
+     * @return double
+     * @throws IOException
+     */
+    public double getDoubleUserInput(String q) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        double s = 0;
+        boolean newInput = true;
+        System.out.print(q);
+        while (newInput) {
+            String userInput = br.readLine();
+            try {
+                s = Double.parseDouble(userInput);
+                if (s>=0 && s<=1) {
+                    newInput = false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number between 0 and 1: ");
+            }
+
+        }
+        return s;
+    }
+
 
 
     /**
@@ -54,7 +107,8 @@ public class UserInput {
      * @throws IOException
      */
     public int getSampleSizeUserInput() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        return getIntUserInput("Sample data set size (enter '0' fo no sampling): ");
+        /*BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int s = 0;
         boolean newInput = true;
         System.out.print("Sample data set size (enter '0' fo no sampling): ");
@@ -70,7 +124,7 @@ public class UserInput {
             }
 
         }
-        return s;
+        return s;*/
     }
 
     /**
@@ -94,7 +148,7 @@ public class UserInput {
         validOptions.add(1);//BlFi
         validOptions.add(2);//MeBl
         boolean newInput = true;
-        System.out.print("Please enter a number. BlockBuilding: 0 , BlockFiltering: 1, MetaBlocking: 2.");
+        System.out.print("Please enter a number. BlockBuilding: 0 , BlockFiltering: 1, MetaBlocking: 2: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (newInput) {
             try {
@@ -103,7 +157,7 @@ public class UserInput {
                     newInput = false;
                     return userInput;
                 } else {
-                    System.out.print("Please enter a number between 0 and 2.");
+                    System.out.print("Please enter a number between 0 and 2: ");
                 }
             } catch (NumberFormatException nfe) {
                 System.out.println("Please enter a valid number.");
@@ -133,7 +187,7 @@ public class UserInput {
         validOptions.add(0);//StBl
         validOptions.add(1);//ACl
         boolean newInput = true;
-        System.out.print("Please enter a number. StandardBlocking: 0, AttributeClustering: 1.");
+        System.out.print("Please enter a number. StandardBlocking: 0, AttributeClustering: 1: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (newInput) {
             try {
@@ -149,5 +203,9 @@ public class UserInput {
             }
         }
         return -1;
+    }
+
+    public double getThreshold() throws IOException {
+        return getDoubleUserInput("Please enter the threshold for the scaled Levenshtein MR: ");
     }
 }

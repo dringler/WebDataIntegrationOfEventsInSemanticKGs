@@ -3,6 +3,8 @@ package de.uni_mannheim.informatik.wdi.matching.blocking;
 import de.uni_mannheim.informatik.wdi.model.ResultSet;
 import de.uni_mannheim.informatik.wdi.processing.Group;
 
+import java.lang.reflect.Array;
+import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,12 +46,16 @@ public class BlockFiltering  {
 
         // get entities with all block assignments
         getEntityBlockAssignment(joinKeys1, joinKeys2, entityBlockAssignments1, entityBlockAssignments2);
+        System.out.println(String.format("Entity block assignments received. Removing entities from largest blocks..."));
 
 
         //delete entities from largest blocks
         removeEntitiesFromBlocks(r, blockCardinalities, entityBlockAssignments1, joinKeys1);
+        System.out.println(String.format("Entities removed from blocks for first dataset"));
         removeEntitiesFromBlocks(r, blockCardinalities, entityBlockAssignments2, joinKeys2);
+        System.out.println(String.format("Entities removed from blocks for second dataset. Done with block filtering"));
 
+        //get new block cardinality
         //getBlockCardinalities(joinKeys1, joinKeys2, blockCardinalities);
 
         resultList.add(joinKeys1);
@@ -97,7 +103,7 @@ public class BlockFiltering  {
                 ResultSet<RecordType> rs1 = (ResultSet) ((Group) block1.get(0)).getRecords();
                 ResultSet<RecordType> rs2 = (ResultSet) ((Group) block2.get(0)).getRecords();
                 // get block cardinalities
-                long blockCardinality = rs1.size() * rs2.size();
+                long blockCardinality = (long) rs1.size() * (long) rs2.size();
                 blockCardinalities.put(key1, blockCardinality);
                 totalCardinality = totalCardinality + blockCardinality;
             } else {
@@ -112,46 +118,101 @@ public class BlockFiltering  {
                 blockCardinalities.put(key2, (long) 0);
             }
         }
-        System.out.println(String.format("Total block cardinality: %,d", totalCardinality));
+        System.out.println(String.format("Block cardinality: %,d", totalCardinality));
     }
 
     private static <KeyType, RecordType> void removeEntitiesFromBlocks(double r,
                                                                        HashMap<KeyType, Long> blockCardinalities,
                                                                        HashMap<RecordType, List<KeyType>> entityBlockAssignments,
                                                                        Map<KeyType, List<RecordType>> joinKeys) {
-        for (Map.Entry<RecordType, List<KeyType>> entry : entityBlockAssignments.entrySet()) {
-            int numberOfBlocks = entry.getValue().size();
-            int limitOfBlocks = (int) Math.floor(numberOfBlocks * r);
 
-            // get block cardinalities of entity
-            HashMap<KeyType, Long> entityBlocks = new HashMap<>();
-            for (KeyType block : entry.getValue()) {
-                entityBlocks.put(block, blockCardinalities.get(block));
-            }
-
-            //sort blocks on cardinality
-            HashMap<KeyType, Long> sortedEntityBlocks = entityBlocks.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByValue())
-                    .collect(Collectors.toMap(Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (e1,e2)->e1,
-                            LinkedHashMap::new));
-
-
-            //remove entity from largest blocks
-            int processedBlocks = 0;
-            for (KeyType block : sortedEntityBlocks.keySet()) {
-                if (processedBlocks >= limitOfBlocks) {
-                    //delete entity from blocks
-                    //System.out.println((int) ((ResultSet) ((Group) joinKeys.get(block).get(0)).getRecords()).size());
-                    ((Group) joinKeys.get(block).get(0)).getRecords().remove(entry.getKey());
-                    //System.out.println((int) ((ResultSet) ((Group) joinKeys.get(block).get(0)).getRecords()).size());
-                }
-                processedBlocks++;
-            }
-
+        //gather blocks to delete
+        HashMap<KeyType, HashSet<RecordType>> blocksToRemove  = new HashMap<>();
+        int s = entityBlockAssignments.entrySet().size() / 10;
+        if (s==0) {
+            s=1;
         }
+        int p = 0;
+        for (Map.Entry<RecordType, List<KeyType>> entry : entityBlockAssignments.entrySet()) {
+            //HashSet<KeyType> blocksToRemoveForEntity = removeEntityFromBlocks(entry, r, blockCardinalities, joinKeys);
+            addBlocksToRemove(entry.getKey(), blocksToRemove, removeEntityFromBlocks(entry, r, blockCardinalities, joinKeys));
+            p++;
+            if (p % s == 0) {
+                System.out.println(String.format("%,d entities processed", p));
+            }
+        }
+
+        /*entityBlockAssignments.entrySet().stream()
+            .forEach(
+                entry -> addBlocksToRemove(entry.getKey(), blocksToRemove, removeEntityFromBlocks(entry, r, blockCardinalities, joinKeys)
+        ));*/
+
+        //delete blocks
+        deleteEntitiesFromBlocks(joinKeys, blocksToRemove);
+
+    }
+
+    private static <KeyType, RecordType> void deleteEntitiesFromBlocks(Map<KeyType, List<RecordType>> joinKeys, HashMap<KeyType, HashSet<RecordType>> blocksToRemove) {
+        for (Map.Entry<KeyType, HashSet<RecordType>> entry : blocksToRemove.entrySet()) {
+            for (RecordType recordToDelete : entry.getValue()) {
+                if (joinKeys.containsKey(entry.getKey())) {
+                    //if (((Group) joinKeys.get(entry.getKey()).get(0)).getRecords().contains(recordToDelete)) {
+                        ((Group) joinKeys.get(entry.getKey()).get(0)).getRecords().remove(recordToDelete);
+                    //}
+                }
+            }
+        }
+    }
+
+    private static <RecordType, KeyType> void addBlocksToRemove(RecordType entity, HashMap<KeyType, HashSet<RecordType>> blocksToRemove, HashSet<KeyType> blocksToRemoveForEntity) {
+        for (KeyType block : blocksToRemoveForEntity) {
+            if (blocksToRemove.containsKey(block)) {
+                blocksToRemove.get(block).add(entity);
+            } else {
+                HashSet<RecordType> entities = new HashSet<>();
+                entities.add(entity);
+                blocksToRemove.put(block, entities);
+            }
+        }
+    }
+
+
+
+    private static <RecordType, KeyType> HashSet<KeyType> removeEntityFromBlocks(Map.Entry<RecordType, List<KeyType>> entry,
+                                                                    double r,
+                                                                    HashMap<KeyType, Long> blockCardinalities,
+                                                                    Map<KeyType, List<RecordType>> joinKeys) {
+        int numberOfBlocks = entry.getValue().size();
+        int limitOfBlocks = (int) Math.floor(numberOfBlocks * r);
+
+        // get block cardinalities of entity
+        HashMap<KeyType, Long> entityBlocks = new HashMap<>();
+        for (KeyType block : entry.getValue()) {
+            entityBlocks.put(block, blockCardinalities.get(block));
+        }
+
+        //sort blocks on cardinality
+        HashMap<KeyType, Long> sortedEntityBlocks = entityBlocks.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1,e2)->e1,
+                        LinkedHashMap::new));
+
+
+        //remove entity from largest blocks
+        HashSet<KeyType> blocksToRemove = new HashSet<KeyType>();
+        int processedBlocks = 0;
+        for (KeyType block : sortedEntityBlocks.keySet()) {
+            if (processedBlocks >= limitOfBlocks) {
+                //delete entity from blocks
+                //((Group) joinKeys.get(block).get(0)).getRecords().remove(entry.getKey());
+                blocksToRemove.add(block);
+            }
+            processedBlocks++;
+        }
+        return blocksToRemove;
     }
 
 

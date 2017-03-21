@@ -39,6 +39,7 @@ import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.EventFactory;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Movie;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.MovieFactory;
+import jdk.nashorn.internal.ir.Block;
 
 /**
  * Class containing the standard setup to perform a identity resolution task,
@@ -88,32 +89,12 @@ public class Events_IdentityResolution_Main {
 
 		// create a blocker (blocking strategy)
 		//NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
-		BlockingKeyGenerator<Event> firstLabel = new BlockingKeyGenerator<Event>() {
-			@Override
-			public String getBlockingKey(Event event) {
-				for (String label : event.getLabels()) {
-					return label;
-				}
-				return null;
-			}
-		};
+        BlockingKeyGenerator<Event> firstLabel = BlockingFunction.getFirstLabel();
+        MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
 
-        MultiBlockingKeyGenerator<Event> tokenizedLabel = new MultiBlockingKeyGenerator<Event>() {
-            @Override
-            public HashSet<String> getMultiBlockingKey(Event event) {
-                HashSet<String> keys = new HashSet<>();
-                for (String value : event.getAllAttributeValues(' ')) {
-                    String[] tokens = value.split("\\s+");
-                    for (String token : tokens) {
-                        keys.add(token);
-                    }
-                }
-                return keys;
-            }
-        };
 
 		//StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
-        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedLabel);
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedAttributes);
 
 		// Initialize Matching Engine
 		MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();
@@ -386,33 +367,13 @@ public class Events_IdentityResolution_Main {
 
 		// create a blocker (blocking strategy)
 		//NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
-		BlockingKeyGenerator<Event> firstLabel = new BlockingKeyGenerator<Event>() {
-			@Override
-			public String getBlockingKey(Event event) {
-				for (String label : event.getLabels()) {
-					return label;
-				}
-				return null;
-			}
-		};
+		BlockingKeyGenerator<Event> firstLabel = BlockingFunction.getFirstLabel();
 
-        MultiBlockingKeyGenerator<Event> tokenizedLabel = new MultiBlockingKeyGenerator<Event>() {
-            @Override
-            public HashSet<String> getMultiBlockingKey(Event event) {
+        MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
 
-                HashSet<String> keys = new HashSet<>();
-                for (String value : event.getAllAttributeValues(' ')) {
-                    String[] tokens = value.split("\\s+");
-                    for (String token : tokens) {
-                        keys.add(token);
-                    }
-                }
-                return keys;
-            }
-        };
 
         //StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
-        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedLabel);
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedAttributes);
 
 
 		// Initialize Matching Engine

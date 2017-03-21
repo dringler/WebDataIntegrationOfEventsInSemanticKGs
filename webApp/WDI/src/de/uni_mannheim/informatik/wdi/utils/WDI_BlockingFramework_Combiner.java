@@ -1025,7 +1025,7 @@ public class WDI_BlockingFramework_Combiner {
                 //init CoCl parameters
                 ccMethod = OnTheFlyUtilities.getCleaningMethod(true, i, abp);
 
-                methodName = "StBl+BlFi(r="+r+")+MeBl(" + getPruningAlgorithmName(i) + "-" + getWeightingSchemeName(i) +")";
+                methodName = blBiMethod+"+BlFi(r="+r+")+MeBl(" + getPruningAlgorithmName(i) + "-" + getWeightingSchemeName(i) +")";
 
                 for (int iterations = 0; iterations < NO_OF_ITERATIONS; iterations++) {
                     //BLOCK BUILDING

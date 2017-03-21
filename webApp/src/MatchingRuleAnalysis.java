@@ -1,6 +1,10 @@
 import de.uni_mannheim.informatik.wdi.matching.LinearCombinationMatchingRule;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEngine;
 import de.uni_mannheim.informatik.wdi.matching.MatchingEvaluator;
+import de.uni_mannheim.informatik.wdi.matching.MatchingRule;
+import de.uni_mannheim.informatik.wdi.matching.blocking.BlockingFunction;
+import de.uni_mannheim.informatik.wdi.matching.blocking.MultiBlockingKeyGenerator;
+import de.uni_mannheim.informatik.wdi.matching.blocking.MultiKeyBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.NoBlocker;
 import de.uni_mannheim.informatik.wdi.model.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.EventDateComparator;
@@ -29,7 +33,8 @@ public class MatchingRuleAnalysis {
         UserInput ui = new UserInput();
         boolean testing = ui.getDatasetUserInput();
         boolean gsFiles = ui.getGsUserInput();
-        int s = ui.getSampleSizeUserInput();
+        int s = 0; // ui.getSampleSizeUserInput();
+        double t = ui.getThreshold();
 
         //get file paths based on user input
         FileLoader fl = new FileLoader();
@@ -52,15 +57,17 @@ public class MatchingRuleAnalysis {
             dataSetY.sampleRecords(s);
         }
 
-        int numberOfRuns = 11;
-        ArrayList<String> results = new ArrayList<>();
+        //BASELINE TESTING
+     /*   ArrayList<String> results = new ArrayList<>();
         for (int i = 10; i >= 0; i--) {
-            double t = i / 10.0;
+            //double t = + i / 10.0; // [0,1] in 0.1 steps -> mr_gs_levURI.csv
+            double t = 0.9 + i / 100.0; // [0.9,1] in 0.01 steps -> mr_gs_levURI-09-1.csv
             String resultString = runMatching(dataSetD, dataSetY, paths, t);
             results.add(resultString);
-        }
+        }*/
+        //saveResultsToFile("mr_gs_levURI_09-1.csv", results);
 
-        saveResultsToFile("mr_gs_levURI.csv", results);
+        String resultString = runMatching(dataSetD, dataSetY, paths, t);
 
     }
 
@@ -84,7 +91,10 @@ public class MatchingRuleAnalysis {
         //matchingRule.addComparator(new EventDateComparator(), 0.2);
         //matchingRule.addComparator(new EventURIComparatorJaccard(), 0.5437);
 
-        NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
+
+        MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedAttributes);
+        //NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
 
         // Initialize Matching Engine
         MatchingEngine<Event, DefaultSchemaElement> engine = new MatchingEngine<>();

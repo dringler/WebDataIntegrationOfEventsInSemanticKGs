@@ -55,4 +55,5 @@ public class ResultSet<ElementType> implements BasicCollection<ElementType> {
 	public void deduplicate() {
 		elements = new ArrayList<>(new HashSet<>(elements));
 	}
+
 }

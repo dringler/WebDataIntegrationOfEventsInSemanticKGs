@@ -198,13 +198,14 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 		}*/
 
 		int allPairsSize = allPairs.size();
-        List<Correspondence<RecordType, SchemaElementType>> corList  = allPairs.get()
+        //use set to add distinct correspondences only
+		Set<Correspondence<RecordType, SchemaElementType>> corList  = allPairs.get()
                 .stream()
                 .parallel()
                 .filter(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()) != null)
                 .map(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()))
-                //.collect(Collectors.toList());
-                .collect(Collectors.toCollection(() -> new ArrayList<>(allPairsSize)));
+                .collect(Collectors.toSet());
+                //.collect(Collectors.toCollection(() -> new ArrayList<>(allPairsSize)));
 
         System.out.println("Done with element matching. Adding found correspondences to the ResultSet.");
 		for (Correspondence<RecordType, SchemaElementType> cor : corList) {
