@@ -18,6 +18,7 @@ public class BlockingAnalysis {
         UserInput ui = new UserInput();
         boolean testing = ui.getDatasetUserInput();
         boolean gsFiles = ui.getGsUserInput();
+        boolean gsNegativeFiles = ui.getGsWithNegativeUserInput();
         //int s = ui.getSampleSizeUserInput();
         boolean getBestParameter = ui.getBestParameter();
         int blockingStep = ui.getBlockingStep();
@@ -25,7 +26,7 @@ public class BlockingAnalysis {
 
         //get file paths based on user input
         FileLoader fl = new FileLoader();
-        String[] paths = fl.getPaths(testing, gsFiles);
+        String[] paths = fl.getPaths(testing, gsFiles, gsNegativeFiles);
 
         //create FusableDataSet objects
         FusableDataSet<Event, DefaultSchemaElement> dataSetD = new FusableDataSet<>();

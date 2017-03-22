@@ -208,4 +208,8 @@ public class UserInput {
     public double getThreshold() throws IOException {
         return getDoubleUserInput("Please enter the threshold for the scaled Levenshtein MR: ");
     }
+
+    public boolean getGsWithNegativeUserInput() throws IOException {
+        return getBooleanUserInput("Get gold standard with negative examples?", "y", "n");
+    }
 }

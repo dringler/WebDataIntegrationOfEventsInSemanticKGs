@@ -33,12 +33,13 @@ public class MatchingRuleAnalysis {
         UserInput ui = new UserInput();
         boolean testing = ui.getDatasetUserInput();
         boolean gsFiles = ui.getGsUserInput();
+        boolean gsNegativeFiles = ui.getGsWithNegativeUserInput();
         int s = 0; // ui.getSampleSizeUserInput();
         double t = ui.getThreshold();
 
         //get file paths based on user input
         FileLoader fl = new FileLoader();
-        String[] paths = fl.getPaths(testing, gsFiles);
+        String[] paths = fl.getPaths(testing, gsFiles, gsNegativeFiles);
 
 
         FusableDataSet<Event, DefaultSchemaElement> dataSetD = new FusableDataSet<>();
