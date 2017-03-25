@@ -206,7 +206,7 @@ public class UserInput {
     }
 
     public double getThreshold() throws IOException {
-        return getDoubleUserInput("Please enter the threshold for the scaled Levenshtein MR: ");
+        return getDoubleUserInput("Please enter the threshold for the MR: ");
     }
 
     public boolean getGsWithNegativeUserInput() throws IOException {

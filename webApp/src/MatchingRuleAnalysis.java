@@ -84,13 +84,15 @@ public class MatchingRuleAnalysis {
     }
 
     private static String runMatching(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String[] paths, double t) throws Exception {
-        //run Matching Rule
+        //Matching Rule
+
         LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(
-                t); //0.7
+                t); //0.97
         // add comparators
-        matchingRule.addComparator(new EventURIComparatorLevenshtein(), 1);
+        String mr = "Jaccard on URI";
+        //matchingRule.addComparator(new EventURIComparatorLevenshtein(), 1);
         //matchingRule.addComparator(new EventDateComparator(), 0.2);
-        //matchingRule.addComparator(new EventURIComparatorJaccard(), 0.5437);
+        matchingRule.addComparator(new EventURIComparatorJaccard(), 1);
 
 
         MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
@@ -120,7 +122,7 @@ public class MatchingRuleAnalysis {
         correspondences = null;
 
         // print the evaluation result
-        System.out.println("DBpedia 2 YAGO with Levenshtein on URI. Threshold: " + t);
+        System.out.println("DBpedia 2 YAGO for " + mr + " with threshold: " + t);
         System.out
                 .println(String.format(
                         "Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
