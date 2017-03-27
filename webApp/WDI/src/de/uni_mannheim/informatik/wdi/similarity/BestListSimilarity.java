@@ -1,6 +1,8 @@
 package de.uni_mannheim.informatik.wdi.similarity;
 
 
+import de.uni_mannheim.informatik.wdi.similarity.string.LevenshteinEditDistance;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,5 +64,18 @@ public class BestListSimilarity {
         if (similarity >= bestSimilarity)
             return similarity;
         return bestSimilarity;
+    }
+
+    /**
+     * Get similarity score for a edit distance measure on striped and lowercase URIs
+     * @param sim
+     * @param uris
+     * @param uris1
+     * @param threshold
+     * @return
+     */
+    public double getBestEditDistance(LevenshteinEditDistance sim, List<String> uris, List<String> uris1, double threshold) {
+        
+
     }
 }

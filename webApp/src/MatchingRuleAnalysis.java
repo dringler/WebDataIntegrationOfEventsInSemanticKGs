@@ -1,16 +1,10 @@
-import de.uni_mannheim.informatik.wdi.matching.LinearCombinationMatchingRule;
-import de.uni_mannheim.informatik.wdi.matching.MatchingEngine;
-import de.uni_mannheim.informatik.wdi.matching.MatchingEvaluator;
-import de.uni_mannheim.informatik.wdi.matching.MatchingRule;
+import de.uni_mannheim.informatik.wdi.matching.*;
 import de.uni_mannheim.informatik.wdi.matching.blocking.BlockingFunction;
 import de.uni_mannheim.informatik.wdi.matching.blocking.MultiBlockingKeyGenerator;
 import de.uni_mannheim.informatik.wdi.matching.blocking.MultiKeyBlocker;
 import de.uni_mannheim.informatik.wdi.matching.blocking.NoBlocker;
 import de.uni_mannheim.informatik.wdi.model.*;
-import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.EventDateComparator;
-import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.EventLabelComparatorLevenshtein;
-import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.EventURIComparatorJaccard;
-import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.EventURIComparatorLevenshtein;
+import de.uni_mannheim.informatik.wdi.usecase.events.identityresolution.*;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.EventFactory;
 
@@ -68,7 +62,9 @@ public class MatchingRuleAnalysis {
         }*/
         //saveResultsToFile("mr_gs_levURI_09-1.csv", results);
 
-        String resultString = runMatching(dataSetD, dataSetY, paths, t);
+        int mrC = 0;
+
+        String resultString = runMatching(dataSetD, dataSetY, paths, mrC, t);
 
     }
 
@@ -83,16 +79,51 @@ public class MatchingRuleAnalysis {
         System.out.println("results written to " + fileName);
     }
 
-    private static String runMatching(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String[] paths, double t) throws Exception {
+    private static String runMatching(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String[] paths, int mrC, double t) throws Exception {
         //Matching Rule
+        String mr = "";
+        double ft;
+        if (mrC==0) {
+            //baseline
+            ft = 0.96;
+            LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(ft); //0.96
+            matchingRule.addComparator(new EventURIComparatorLevenshtein(), 1);
+            mr = "Baseline Lev on stripedURI with " + ft;
 
-        LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(
-                t); //0.97
+        } else if (mrC==1) {
+            //RR
+            //max aggregator
+            // (not scaled!) levenshtein on lowercase, striped URI with edit distance: .6308 and w:4
+            // (not scaled!) levenshtein on label with edit distance 1.5937 and weight: 9
+            ft = 1; //edit distance, 1 (matches) or 0 (non-matches) as similarity value
+            MaximumCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new MaximumCombinationMatchingRule<>(ft);
+            matchingRule.addComparator(new EventURIComparatorLevenshteinEditDistance(0.6308), 1);
+            matchingRule.addComparator(new EventLabelComparatorLevenshteinEditDistance(1.5937), 1);
+
+            mr = "RR editDistance on striped, lowercase URI and edit distance on label " + ft;
+
+        } else if (mrC==2) {
+            // RH
+            //jaccard on striped URI with sim: .4563
+            ft = 0.4563;
+            LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(ft);
+            matchingRule.addComparator(new EventURIComparatorJaccard(), 1);
+            mr = "RH: Jaccard on stripedURI with " + ft;
+        } else if (mrC==3) {
+            //LR
+        } else if (mrC==4) {
+            //LH
+        }
+        //...
+
+
+        //MinimumCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new MinimumCombinationMatchingRule<>(t); //0.96
+
         // add comparators
-        String mr = "Jaccard on URI";
-        //matchingRule.addComparator(new EventURIComparatorLevenshtein(), 1);
+
+
         //matchingRule.addComparator(new EventDateComparator(), 0.2);
-        matchingRule.addComparator(new EventURIComparatorJaccard(), 1);
+
 
 
         MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
