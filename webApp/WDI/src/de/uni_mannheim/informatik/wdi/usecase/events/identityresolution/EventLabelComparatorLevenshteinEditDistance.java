@@ -8,21 +8,21 @@ import de.uni_mannheim.informatik.wdi.similarity.string.LevenshteinEditDistance;
 import de.uni_mannheim.informatik.wdi.usecase.events.model.Event;
 
 /**
- * {@link Comparator} for {@link Event}s based on the {@link Event#getUris()} ()}
+ * {@link Comparator} for {@link Event}s based on the {@link Event#getLabels()}
  * value and their {@link LevenshteinEditDistance} value.
  * Based on the MovieTitleComparatorLevenshtein class
  *
  * @author Daniel Ringler
  *
  */
-public class EventURIComparatorLevenshteinEditDistance  extends Comparator<Event, DefaultSchemaElement> {
+public class EventLabelComparatorLevenshteinEditDistance  extends Comparator<Event, DefaultSchemaElement> {
     private static final long serialVersionUID = 1L;
 
     private BestListSimilarity bestListSimilarity = new BestListSimilarity();
     private LevenshteinEditDistance sim = new LevenshteinEditDistance();
     private double threshold;
 
-    public EventURIComparatorLevenshteinEditDistance(double t) {
+    public EventLabelComparatorLevenshteinEditDistance(double t) {
         threshold = t;
     }
 
@@ -31,12 +31,8 @@ public class EventURIComparatorLevenshteinEditDistance  extends Comparator<Event
             Event record1,
             Event record2,
             Correspondence<DefaultSchemaElement, Event> schemaCorrespondences) {
-        return bestListSimilarity.getBestEditDistanceStripedLowercase(sim, record1.getUris(), record2.getUris(), threshold);
+        return bestListSimilarity.getBestEditDistance(sim, record1.getLabels(), record2.getLabels(), threshold);
     }
 
 }
-
-
-
-
 

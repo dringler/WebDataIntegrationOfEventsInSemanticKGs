@@ -114,8 +114,12 @@ public class LinearCombinationMatchingRule<RecordType extends Matchable, SchemaE
 			//double similarity = comp.compare(record1, record2, schemaCorrespondences);
 			double similarity = comp.compare(record1, record2, null);
 			double weight = pair.getSecond();
-			wSum += weight;
-			sum += (similarity * weight);
+
+			if (similarity != -1.0) {
+
+                wSum += weight;
+                sum += (similarity * weight);
+            }
 		}
 
 		//return offset + (sum / wSum);
