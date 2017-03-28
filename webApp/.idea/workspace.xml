@@ -7,22 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb584427-7cfb-45cb-893f-4c95e9bb62e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarityYear.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventDateComparatorLevenshteinEditDistance.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorDate.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorLevenshteinEditDistance.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/out/production/createDatasets/KGVariableNames.class" afterPath="$PROJECT_DIR$/../createDatasets/out/production/createDatasets/KGVariableNames.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/out/production/createDatasets/createDatasetsMain.class" afterPath="$PROJECT_DIR$/../createDatasets/out/production/createDatasets/createDatasetsMain.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.class" afterPath="$PROJECT_DIR$/out/production/WDI/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/webApp/MatchingRuleAnalysis.class" afterPath="$PROJECT_DIR$/out/production/webApp/MatchingRuleAnalysis.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../createDatasets/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/src/KGVariableNames.java" afterPath="$PROJECT_DIR$/../createDatasets/src/KGVariableNames.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../createDatasets/src/createDatasetsMain.java" afterPath="$PROJECT_DIR$/../createDatasets/src/createDatasetsMain.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventURIComparatorLevenshteinEditDistance.java" afterPath="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventURIComparatorLevenshteinEditDistance.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MatchingRuleAnalysis.java" afterPath="$PROJECT_DIR$/src/MatchingRuleAnalysis.java" />
     </list>
     <ignored path="webApp.iws" />
@@ -53,10 +48,15 @@
           <file leaf-file-name="DataProcessingEngine.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/processing/DataProcessingEngine.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
+                <state relative-caret-position="1665">
                   <caret line="142" column="5" lean-forward="false" selection-start-line="142" selection-start-column="5" selection-end-line="142" selection-end-column="5" />
                   <folding>
-                    <element signature="e#17060#17072#0" expanded="true" />
+                    <element signature="n#!!doc" expanded="false" />
+                    <element signature="imports" expanded="false" />
+                    <element signature="e#16031#16032#0" expanded="false" />
+                    <element signature="e#16063#16064#0" expanded="false" />
+                    <element signature="e#16273#16274#0" expanded="false" />
+                    <element signature="e#16314#16315#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -65,7 +65,7 @@
           <file leaf-file-name="MatchingEvaluator.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="241">
+                <state relative-caret-position="255">
                   <caret line="144" column="0" lean-forward="false" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
                   <folding />
                 </state>
@@ -75,11 +75,9 @@
           <file leaf-file-name="MaximumCombinationMatchingRule.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MaximumCombinationMatchingRule.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="526">
+                <state relative-caret-position="1800">
                   <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -87,7 +85,7 @@
           <file leaf-file-name="MatchingRule.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingRule.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
+                <state relative-caret-position="270">
                   <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
                   <folding>
                     <element signature="e#1349#1350#0" expanded="true" />
@@ -102,19 +100,7 @@
                 <state relative-caret-position="615">
                   <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
                   <folding>
-                    <element signature="n#!!doc" expanded="false" />
-                    <element signature="e#1341#1342#0" expanded="false" />
-                    <element signature="e#1366#1367#0" expanded="false" />
-                    <element signature="e#1485#1486#0" expanded="false" />
-                    <element signature="e#1522#1523#0" expanded="false" />
-                    <element signature="e#1768#1769#0" expanded="false" />
-                    <element signature="e#1807#1808#0" expanded="false" />
-                    <element signature="e#1906#1907#0" expanded="false" />
-                    <element signature="e#1935#1936#0" expanded="false" />
-                    <element signature="e#2066#2067#0" expanded="false" />
-                    <element signature="e#2111#2112#0" expanded="false" />
-                    <element signature="e#4985#4986#0" expanded="false" />
-                    <element signature="e#5073#5074#0" expanded="false" />
+                    <element signature="e#1645#1646#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -126,11 +112,7 @@
                 <state relative-caret-position="1440">
                   <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
                   <folding>
-                    <element signature="n#!!doc" expanded="false" />
-                    <element signature="e#5170#5171#0" expanded="false" />
-                    <element signature="e#5232#5233#0" expanded="false" />
-                    <element signature="e#6890#6891#0" expanded="false" />
-                    <element signature="e#6946#6947#0" expanded="false" />
+                    <element signature="e#4941#4942#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -153,10 +135,7 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="870">
                   <caret line="96" column="133" lean-forward="false" selection-start-line="96" selection-start-column="8" selection-end-line="96" selection-end-column="133" />
-                  <folding>
-                    <element signature="n#!!doc" expanded="false" />
-                    <element signature="imports" expanded="false" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -166,7 +145,9 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="555">
                   <caret line="39" column="26" lean-forward="false" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
-                  <folding />
+                  <folding>
+                    <element signature="imports" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -174,12 +155,9 @@
           <file leaf-file-name="Event.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="645">
+                <state relative-caret-position="695">
                   <caret line="113" column="39" lean-forward="false" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
-                  <folding>
-                    <element signature="e#3448#3449#0" expanded="true" />
-                    <element signature="e#3475#3476#0" expanded="true" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -188,11 +166,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="MatchingRuleAnalysis.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="MatchingRuleAnalysis.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/MatchingRuleAnalysis.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="395">
-                  <caret line="84" column="5" lean-forward="true" selection-start-line="84" selection-start-column="5" selection-end-line="84" selection-end-column="5" />
+                <state relative-caret-position="422">
+                  <caret line="307" column="0" lean-forward="true" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -213,31 +191,21 @@
           <file leaf-file-name="LinearCombinationMatchingRule.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="435">
+                <state relative-caret-position="376">
                   <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="BlockFiltering.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockFiltering.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="414">
-                  <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="MatchingEngine.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="MatchingEngine.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="526">
-                  <caret line="224" column="41" lean-forward="false" selection-start-line="224" selection-start-column="41" selection-end-line="224" selection-end-column="41" />
-                  <folding />
+                <state relative-caret-position="486">
+                  <caret line="191" column="34" lean-forward="true" selection-start-line="191" selection-start-column="34" selection-end-line="191" selection-end-column="34" />
+                  <folding>
+                    <element signature="e#7533#7580#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -245,30 +213,8 @@
           <file leaf-file-name="BestListSimilarity.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="392">
-                  <caret line="153" column="56" lean-forward="true" selection-start-line="153" selection-start-column="56" selection-end-line="153" selection-end-column="56" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="YearSimilarityLocalDate.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarityLocalDate.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="390">
-                  <caret line="32" column="20" lean-forward="true" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="YearSimilarity.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarity.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="46" column="5" lean-forward="true" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+                <state relative-caret-position="516">
+                  <caret line="149" column="34" lean-forward="false" selection-start-line="149" selection-start-column="34" selection-end-line="149" selection-end-column="34" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -370,7 +316,6 @@
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockingFunction.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.java" />
-        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/ResultSet.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/utils/WDI_BlockingFramework_Combiner.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockFiltering.java" />
@@ -389,6 +334,7 @@
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorDate.java" />
         <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java" />
         <option value="$PROJECT_DIR$/src/MatchingRuleAnalysis.java" />
+        <option value="$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java" />
       </list>
     </option>
   </component>
@@ -406,10 +352,10 @@
     <option name="CUSTOM_FILTER" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="667" />
+    <option name="x" value="-116" />
     <option name="y" value="-1057" />
-    <option name="width" value="1920" />
-    <option name="height" value="1057" />
+    <option name="width" value="1680" />
+    <option name="height" value="983" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -429,7 +375,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -974,8 +919,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1832,15 +1778,17 @@
       <workItem from="1490100524430" duration="17568000" />
       <workItem from="1490192283387" duration="667000" />
       <workItem from="1490267743468" duration="620000" />
-      <workItem from="1490471564735" duration="13107000" />
+      <workItem from="1490471564735" duration="13581000" />
+      <workItem from="1490650551152" duration="61000" />
+      <workItem from="1490689858103" duration="2043000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="427786000" />
+    <option name="totallyTimeSpent" value="430364000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="667" y="-1057" width="1920" height="1057" extended-state="6" />
+    <frame x="-116" y="-1057" width="1680" height="983" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1862,10 +1810,10 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.201417" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2177243" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13214286" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -2044,21 +1992,9 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java</url>
-          <line>87</line>
+          <line>93</line>
           <properties />
-          <option name="timeStamp" value="451" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java</url>
-          <line>158</line>
-          <properties />
-          <option name="timeStamp" value="452" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarityYear.java</url>
-          <line>32</line>
-          <properties />
-          <option name="timeStamp" value="457" />
+          <option name="timeStamp" value="459" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/web/js/map.js</url>
@@ -2069,7 +2005,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="458" />
+      <option name="time" value="461" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
@@ -2086,13 +2022,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/RecordLevelBlocker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="36" column="73" lean-forward="false" selection-start-line="36" selection-start-column="73" selection-end-line="36" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/Blocker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -2162,7 +2091,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="705">
           <caret line="63" column="32" lean-forward="true" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2182,71 +2110,6 @@
             <element signature="e#4645#4646#0" expanded="false" />
             <element signature="e#4669#4670#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Correspondence.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="e#1341#1342#0" expanded="false" />
-            <element signature="e#1366#1367#0" expanded="false" />
-            <element signature="e#1485#1486#0" expanded="false" />
-            <element signature="e#1522#1523#0" expanded="false" />
-            <element signature="e#1768#1769#0" expanded="false" />
-            <element signature="e#1807#1808#0" expanded="false" />
-            <element signature="e#1906#1907#0" expanded="false" />
-            <element signature="e#1935#1936#0" expanded="false" />
-            <element signature="e#2066#2067#0" expanded="false" />
-            <element signature="e#2111#2112#0" expanded="false" />
-            <element signature="e#4985#4986#0" expanded="false" />
-            <element signature="e#5073#5074#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StandardBlocker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="e#5170#5171#0" expanded="false" />
-            <element signature="e#5232#5233#0" expanded="false" />
-            <element signature="e#6890#6891#0" expanded="false" />
-            <element signature="e#6946#6947#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StaticBlockingKeyGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="96" column="133" lean-forward="false" selection-start-line="96" selection-start-column="8" selection-end-line="96" selection-end-column="133" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockingFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="39" column="26" lean-forward="false" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2288,10 +2151,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/processing/DataProcessingEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
+        <state relative-caret-position="1665">
           <caret line="142" column="5" lean-forward="false" selection-start-line="142" selection-start-column="5" selection-end-line="142" selection-end-column="5" />
           <folding>
-            <element signature="e#17060#17072#0" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#16031#16032#0" expanded="false" />
+            <element signature="e#16063#16064#0" expanded="false" />
+            <element signature="e#16273#16274#0" expanded="false" />
+            <element signature="e#16314#16315#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2326,10 +2194,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-          <folding>
-            <element signature="e#280#281#0" expanded="true" />
-            <element signature="e#331#332#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2371,28 +2235,8 @@
           <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1116#1117#0" expanded="true" />
-            <element signature="e#1145#1146#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="e#1349#1350#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MaximumCombinationMatchingRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1116#1117#0" expanded="false" />
+            <element signature="e#1145#1146#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2407,25 +2251,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="113" column="39" lean-forward="false" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
-          <folding>
-            <element signature="e#3448#3449#0" expanded="true" />
-            <element signature="e#3475#3476#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorLevenshteinEditDistance.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
           <caret line="38" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1118#1119#0" expanded="true" />
-            <element signature="e#1147#1148#0" expanded="true" />
+            <element signature="e#1118#1119#0" expanded="false" />
+            <element signature="e#1147#1148#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2446,14 +2279,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/LocalDateSimilarity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="33" column="46" lean-forward="true" selection-start-line="33" selection-start-column="46" selection-end-line="33" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/LocalDateSimilarity.java" />
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/DaySimilarity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
@@ -2462,21 +2288,82 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventDateComparatorLevenshteinEditDistance.java">
+    <entry file="jar://$PROJECT_DIR$/web/WEB-INF/lib-src/joda-time-2.4-sources.jar!/org/joda/time/Years.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="11" lean-forward="false" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
+        <state relative-caret-position="294">
+          <caret line="161" column="0" lean-forward="false" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MaximumCombinationMatchingRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1800">
+          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1115#1116#0" expanded="true" />
-            <element signature="e#1144#1145#0" expanded="true" />
+            <element signature="e#1349#1350#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/Correspondence.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding>
+            <element signature="e#1645#1646#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StandardBlocker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1440">
+          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+          <folding>
+            <element signature="e#4941#4942#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/StaticBlockingKeyGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/Events_IdentityResolution_Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="96" column="133" lean-forward="false" selection-start-line="96" selection-start-column="8" selection-end-line="96" selection-end-column="133" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockingFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="39" column="26" lean-forward="false" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/blocking/BlockFiltering.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
+        <state relative-caret-position="2250">
           <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2484,26 +2371,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/web/WEB-INF/lib-src/joda-time-2.4-sources.jar!/org/joda/time/Years.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="161" column="0" lean-forward="false" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarityLocalDate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
-          <caret line="32" column="20" lean-forward="true" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+          <caret line="32" column="20" lean-forward="false" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorDate.java">
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="375">
+          <caret line="46" column="5" lean-forward="false" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2520,34 +2399,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventDateComparatorLevenshteinEditDistance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/LinearCombinationMatchingRule.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
+        <state relative-caret-position="376">
           <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/model/Event.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="695">
+          <caret line="113" column="39" lean-forward="false" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEvaluator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
+        <state relative-caret-position="255">
           <caret line="144" column="0" lean-forward="false" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java">
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/model/DefaultDataSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="224" column="41" lean-forward="false" selection-start-line="224" selection-start-column="41" selection-end-line="224" selection-end-column="41" />
+        <state relative-caret-position="249">
+          <caret line="84" column="16" lean-forward="false" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/date/YearSimilarity.java">
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/usecase/events/identityresolution/EventLabelComparatorDate.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="46" column="5" lean-forward="true" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+        <state relative-caret-position="555">
+          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2556,8 +2453,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/similarity/BestListSimilarity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="153" column="56" lean-forward="true" selection-start-line="153" selection-start-column="56" selection-end-line="153" selection-end-column="56" />
+        <state relative-caret-position="516">
+          <caret line="149" column="34" lean-forward="false" selection-start-line="149" selection-start-column="34" selection-end-line="149" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2566,9 +2463,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MatchingRuleAnalysis.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="84" column="5" lean-forward="true" selection-start-line="84" selection-start-column="5" selection-end-line="84" selection-end-column="5" />
+        <state relative-caret-position="422">
+          <caret line="307" column="0" lean-forward="true" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WDI/src/de/uni_mannheim/informatik/wdi/matching/MatchingEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="191" column="34" lean-forward="true" selection-start-line="191" selection-start-column="34" selection-end-line="191" selection-end-column="34" />
+          <folding>
+            <element signature="e#7533#7580#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

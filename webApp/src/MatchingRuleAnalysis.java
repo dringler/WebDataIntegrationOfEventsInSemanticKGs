@@ -62,14 +62,15 @@ public class MatchingRuleAnalysis {
             results.add(resultString);
         }*/
 
-        ArrayList<String> results = new ArrayList<>();
-        //int mrC = 4; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
+        /*ArrayList<String> results = new ArrayList<>();
         for (int mrC= 1; mrC < 5; mrC++) {
             String resultString = runMatching(dataSetD, dataSetY, paths, mrC);
             results.add(resultString);
         }
         saveResultsToFile("mr_all_5.csv", results);
-
+        */
+        int mrC = 4; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
+        runMatching(dataSetD, dataSetY, paths, mrC);
     }
 
     private static void saveResultsToFile(String fileName, ArrayList<String> results) throws IOException {

@@ -147,7 +147,7 @@ public class BestListSimilarity {
     }
 
     public double getBestDatesSimilarityWithTokenizedStrings(YearSimilarityYear sim, List<String> strings1, List<String> strings2, double threshold, DateTimeFormatter formatter) {
-        double bestSimilarity = 0.0;
+        double bestSimilarity = -1.0;
         for (String s1 : strings1) {
             for (String t1 : s1.split("\\s+")) {
                 for (String s2 : strings2) {
@@ -160,6 +160,7 @@ public class BestListSimilarity {
                             bestSimilarity = getHighestSimilarity(similarity, bestSimilarity);
                         } catch (DateTimeParseException e) {
                             //System.out.println(t1 + " or " + t2 + " could not be parsed.");
+                            //return -1.0;
                         }
                     }
                 }

@@ -180,24 +180,24 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
 								allPairs.size(), Double.toString(blocker.getReductionRatio())));
 
 		// compare the pairs using the matching rule
-		ProgressReporter progress = new ProgressReporter(allPairs.size(),
-				"Identity Resolution");
-		/*for(BlockedMatchable<RecordType, SchemaElementType> task : allPairs.get()) {
+		ProgressReporter progress = new ProgressReporter(allPairs.size(), "Identity Resolution");
+		Set<Correspondence<RecordType, SchemaElementType>> corList = new HashSet<Correspondence<RecordType, SchemaElementType>>(allPairs.size()+1000, 0.99999f);
+
+		for(BlockedMatchable<RecordType, SchemaElementType> task : allPairs.get()) {
 
 			// apply the matching rule
 			Correspondence<RecordType, SchemaElementType> cor = rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences());
 			if (cor != null) {
-
 				// add the correspondences to the result
-				result.add(cor);
+				//result.add(cor);
+				corList.add(cor);
 			}
-
 			// increment and report status
 			progress.incrementProgress();
 			progress.report();
-		}*/
+		}
 
-		int allPairsSize = allPairs.size();
+		/*int allPairsSize = allPairs.size();
         //use set to add distinct correspondences only
 		Set<Correspondence<RecordType, SchemaElementType>> corList  = allPairs.get()
                 .stream()
@@ -206,7 +206,7 @@ public class MatchingEngine<RecordType extends Matchable, SchemaElementType exte
                 .map(task -> rule.apply(task.getFirstRecord(), task.getSecondRecord(), task.getSchemaCorrespondences()))
                 .collect(Collectors.toSet());
                 //.collect(Collectors.toCollection(() -> new ArrayList<>(allPairsSize)));
-
+		*/
         System.out.println("Done with element matching. Adding found correspondences to the ResultSet.");
 		for (Correspondence<RecordType, SchemaElementType> cor : corList) {
 		    result.add(cor);
