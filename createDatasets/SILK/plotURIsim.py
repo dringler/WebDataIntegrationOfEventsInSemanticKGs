@@ -155,33 +155,46 @@ print ('Calculating countsLink...')
 distLink = calcSimLinks(buckets)
 print ('Done with countsLink')
 print distLink
+#LOG SCALE
 #countsLinkLog = logScale(distLink)
+#countsLink = getCounts(countsLinkLog, False)
+# NORMAL COUNTS
 countsLink = getCounts(distLink, False)
+
 print countsLink
 print ('Calculating countsNoLink...')
 distNoLink = calcSimNoLinks(buckets)
 print ('Done with countsNoLink...')
 print distNoLink
+#LOG SCALE
 #countsNoLinkLog = logScale(distNoLink)
+#countsNoLink = getCounts(countsNoLinkLog, True)
+# NORMAL COUNTS
 countsNoLink = getCounts(distNoLink, True)
 print countsNoLink
 
+titlefontDict = dict(family='Times New Roman', size=28, color='black')
+tickfontDict = dict(family='Times New Roman', size=24, color='black')
 
 trace1 = go.Bar(
     x=buckets,
     y=countsLink,
     marker={'color': 'green'},
-    name='owl:sameAs links'
+    name='Entites having owl:sameAs links'
 )
 trace2 = go.Bar(
     x=buckets,
     y=countsNoLink,
     marker={'color': 'red'},
-    name='no owl:sameAs links'
+    name='Entities not having owl:sameAs links'
 )
 
 data = go.Data([trace1, trace2])
-layout=go.Layout(title='Striped URI Scaled Levenshtein Similarity Distribution', xaxis={'title':'Buckets'}, yaxis={'title':'Counts', 'showticklabels': True}, barmode='relative', width=1920, height=1024)
+layout=go.Layout(title='Striped URI Scaled Levenshtein Similarity Distribution', 
+	xaxis={'title':'Buckets', 'titlefont': titlefontDict, 'tickfont': tickfontDict}, 
+	yaxis={'title':'Counts', 'showticklabels': True, 'titlefont': titlefontDict, 'tickfont': tickfontDict},
+	legend={'x': 0.0, 'y':1.1, 'font': titlefontDict},
+	barmode='relative', width=1920, height=1024)
 figure = go.Figure(data=data, layout=layout)
-py.image.save_as(figure, filename='stripedURI_scaledLevenshtein_Sim_Distribution.png')
+py.image.save_as(figure, filename='stripedURI_scaledLevenshtein_Sim_Distribution_v2.png')
 
