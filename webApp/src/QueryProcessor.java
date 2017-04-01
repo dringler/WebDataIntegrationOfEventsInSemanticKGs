@@ -136,7 +136,7 @@ public class QueryProcessor {
 
                 //BLOCKING FRAMEWORK
                 WDI_BlockingFramework_Combiner blockingFramework = new WDI_BlockingFramework_Combiner();
-                blockingFramework.runBlocking(dataSetD, dataSetY, "../data/sameAs_combined.tsv");//dbpedia_2_yago_s.tsv
+                blockingFramework.runBlocking(dataSetD, dataSetY, "../data/sameAs_combined_with_negative_len3.tsv");//dbpedia_2_yago_s.tsv
 
 
                 //WDI FRAMEWORK

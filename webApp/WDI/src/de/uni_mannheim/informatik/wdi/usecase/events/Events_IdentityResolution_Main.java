@@ -360,20 +360,19 @@ public class Events_IdentityResolution_Main {
 	public static ResultSet<Correspondence<Event, DefaultSchemaElement>> runIdentityResolution(DefaultDataSet<Event, DefaultSchemaElement> dataSetD, DefaultDataSet<Event, DefaultSchemaElement> dataSetY, char separator) throws Exception {
 		// create a matching rule
 		LinearCombinationMatchingRule<Event, DefaultSchemaElement> matchingRule = new LinearCombinationMatchingRule<>(
-				0.7);
+				0.96);
 		// add comparators
-		matchingRule.addComparator(new EventLabelComparatorLevenshtein(), 0.8);
-		matchingRule.addComparator(new EventDateComparator(), 0.2);
+		matchingRule.addComparator(new EventURIComparatorLevenshtein(), 1);
+		//matchingRule.addComparator(new EventLabelComparatorLevenshtein(), 0.8);
+		//matchingRule.addComparator(new EventDateComparator(), 0.2);
 
 		// create a blocker (blocking strategy)
 		//NoBlocker<Event, DefaultSchemaElement> blocker = new NoBlocker<>();
-		BlockingKeyGenerator<Event> firstLabel = BlockingFunction.getFirstLabel();
-
+		//BlockingKeyGenerator<Event> firstLabel = BlockingFunction.getFirstLabel();
         MultiBlockingKeyGenerator<Event> tokenizedAttributes = BlockingFunction.getStandardBlockingFunctionAllAttributes();
 
-
         //StandardBlocker<Event, DefaultSchemaElement> blocker = new StandardBlocker<Event, DefaultSchemaElement>(firstLabel);
-        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<Event, DefaultSchemaElement>(tokenizedAttributes);
+        MultiKeyBlocker<Event, DefaultSchemaElement> blocker = new MultiKeyBlocker<>(tokenizedAttributes);
 
 
 		// Initialize Matching Engine
@@ -397,7 +396,7 @@ public class Events_IdentityResolution_Main {
 		MatchingGoldStandard gs = new MatchingGoldStandard();
 		gs.loadFromTSVFile(new File(
 				//"WDI/usecase/event/goldstandard/dbpedia_2_yago_s.csv"));
-				"../data/sameAs_combined.tsv")); //dbpedia_2_yago.tsv
+				"../data/sameAs_combined_with_negative_len3.tsv")); //dbpedia_2_yago.tsv
 
 		// evaluate your result
 		MatchingEvaluator<Event, DefaultSchemaElement> evaluator = new MatchingEvaluator<Event, DefaultSchemaElement>(true);

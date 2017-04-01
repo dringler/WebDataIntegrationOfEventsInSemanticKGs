@@ -43,13 +43,14 @@ public class createDatasetsMain {
 
 
 
-            Map<String, Event> dEvents = getEventInstancePropertiesFromXMLAndWriteNT(k, fileName, returnMap, filterDirectSameAsLinksOnly);
+        /*    Map<String, Event> dEvents = getEventInstancePropertiesFromXMLAndWriteNT(k, fileName, returnMap, filterDirectSameAsLinksOnly);
 
             //Map<String, Event> dEvents = getEventInstancePropertiesFromXML(k, fileName, dbpediaVarNames, testing);
             if (returnMap) {
                 writeXML(dEvents, fileName + "_directLinks");
             }
 
+        */
 
             QueryObject dQ = new QueryObject("http://dbpedia.org/sparql");
 
@@ -70,17 +71,17 @@ public class createDatasetsMain {
 
                 //HashSet<String> eventInstances = getEventInstances(k, dQ, dbpediaVarNames, testing);
                 String eventInstancesFileName = "dEventInstanceURIs.csv";
-
-                //HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);              System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
+                HashSet<String> eventInstances = getEventInstancesFromFile(eventInstancesFileName, testing);
+                System.out.println(eventInstances.size() + " distinct instances received from " + eventInstancesFileName);
                     //HashSet<String> eventInstances = getEventInstancesFromDBpediaTable();
                 //System.out.println(eventInstances.size() + " distinct instances read.");
                 
                 // get event instance properties including location properties
                 //a) from SPARQL
- //               Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances, testing);
+                Map<String, Event> dEvents = getEventInstanceProperties(k, dQ, dbpediaVarNames, eventInstances, testing);
 
 
-  //              writeXML(dEvents, fileName);
+                writeXML(dEvents, fileName);
                 //writeNT(k, dEvents, fileName);
 
 

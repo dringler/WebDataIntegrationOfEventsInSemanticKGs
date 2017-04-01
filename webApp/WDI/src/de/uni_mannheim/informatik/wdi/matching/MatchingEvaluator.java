@@ -139,8 +139,9 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 
 		//System.out.println("Found links/URI first: " + getSortedHashMap(matchingOutdegreesFirst).toString());
 		//System.out.println("Found links/URI second: " + getSortedHashMap(matchingOutdegreesSecond).toString());
-		saveElementOutdegreesToDisk("dbpedia", matchingOutdegreesFirst);
-        saveElementOutdegreesToDisk("yago", matchingOutdegreesSecond);
+
+		//saveElementOutdegreesToDisk("dbpedia", matchingOutdegreesFirst);
+        //saveElementOutdegreesToDisk("yago", matchingOutdegreesSecond);
 
 		return new Performance(correct, matched, correct_max);
 	}

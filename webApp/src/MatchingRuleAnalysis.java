@@ -53,6 +53,9 @@ public class MatchingRuleAnalysis {
             dataSetY.sampleRecords(s);
         }
 
+        dataSetD.printDataSetDensityReport();
+        dataSetY.printDataSetDensityReport();
+
         //BASELINE TESTING
      /*
         for (int i = 10; i >= 0; i--) {
@@ -69,7 +72,7 @@ public class MatchingRuleAnalysis {
         }
         saveResultsToFile("mr_all_5.csv", results);
         */
-        int mrC = 4; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
+        int mrC = 0; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
         runMatching(dataSetD, dataSetY, paths, mrC);
     }
 
