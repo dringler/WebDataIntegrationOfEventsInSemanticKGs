@@ -70,6 +70,7 @@ public class MatchingRuleAnalysis {
             results.add(resultString);
         }*/
 
+     /*
         int minMrC = 0;
         int maxMrC = 5;
         ArrayList<String> results = new ArrayList<>();
@@ -78,13 +79,25 @@ public class MatchingRuleAnalysis {
             results.add(resultString);
         }
         saveResultsToFile("mr_all_5_v2.csv", results);
-
         compareCorrectRecordsMap("compareCorrectRecords_v1.csv",correctRecordsMap, minMrC, maxMrC);
+*/
 
-        /*
         int mrC = 0; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
         runMatching(dataSetD, dataSetY, paths, mrC, correctRecordsMap);
-*/
+        saveCorrectRecordsToDisk(correctRecordsMap, mrC);
+
+    }
+
+    private static void saveCorrectRecordsToDisk(HashMap<Integer, HashSet<String>> correctRecordsMap, int mrC) throws IOException{
+        String fileName = "correctRecordsMr"+mrC+".csv";
+        HashSet<String> correctRecords = correctRecordsMap.get(mrC);
+        BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
+        for (String record : correctRecords) {
+            writer.write(record+"\n");
+        }
+        writer.close();
+        System.out.println("results written to "+fileName);
+
     }
 
     private static void compareCorrectRecordsMap(String fileName, HashMap<Integer, HashSet<String>> correctRecordsMap, int minMrC, int maxMrC) throws IOException{
