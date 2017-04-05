@@ -15,11 +15,14 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by Daniel on 08/02/17.
  */
 public class MatchingRuleAnalysis {
+
     public static void main(String[] args) throws Exception {
         System.out.println("Matching Rule Analysis");
         //System.out.println("Working Directory = " +System.getProperty("user.dir"));
@@ -35,6 +38,8 @@ public class MatchingRuleAnalysis {
         //get file paths based on user input
         FileLoader fl = new FileLoader();
         String[] paths = fl.getPaths(testing, gsFiles, gsNegativeFiles);
+
+        HashMap<Integer, HashSet<String>> correctRecordsMap = new HashMap<>();
 
 
         FusableDataSet<Event, DefaultSchemaElement> dataSetD = new FusableDataSet<>();
@@ -65,21 +70,55 @@ public class MatchingRuleAnalysis {
             results.add(resultString);
         }*/
 
-        /*ArrayList<String> results = new ArrayList<>();
-        for (int mrC= 1; mrC < 5; mrC++) {
-            String resultString = runMatching(dataSetD, dataSetY, paths, mrC);
+        int minMrC = 0;
+        int maxMrC = 5;
+        ArrayList<String> results = new ArrayList<>();
+        for (int mrC= minMrC; mrC < maxMrC; mrC++) {
+            String resultString = runMatching(dataSetD, dataSetY, paths, mrC, correctRecordsMap);
             results.add(resultString);
         }
-        saveResultsToFile("mr_all_5.csv", results);
-        */
+        saveResultsToFile("mr_all_5_v2.csv", results);
+
+        compareCorrectRecordsMap("compareCorrectRecords_v1.csv",correctRecordsMap, minMrC, maxMrC);
+
+        /*
         int mrC = 0; //0:baseline, 1:rr, 2:rh, 3:lr, 4:lh
-        runMatching(dataSetD, dataSetY, paths, mrC);
+        runMatching(dataSetD, dataSetY, paths, mrC, correctRecordsMap);
+*/
+    }
+
+    private static void compareCorrectRecordsMap(String fileName, HashMap<Integer, HashSet<String>> correctRecordsMap, int minMrC, int maxMrC) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
+        writer.write("x2y, xSize , ySize, same, xOnly, yOnly\n");
+        for (int i = minMrC; i < maxMrC; i++) {
+            HashSet<String> correctRecordsFirst = correctRecordsMap.get(i);
+            for (int j = minMrC+i+1; j < maxMrC; j++) {
+                HashSet<String> correctRecordsSecond = correctRecordsMap.get(j);
+                int same = 0;
+                for (String first : correctRecordsFirst) {
+                    for (String second : correctRecordsSecond) {
+                        if (first.equals(second)) {
+                            same++;
+                        }
+                    }
+                }
+                int s1 = correctRecordsFirst.size();
+                int s2 = correctRecordsSecond.size();
+                int s1Only = s1-same;
+                int s2Only = s2-same;
+
+                writer.write(i + "to" + j + "," + s1 + ", " + s2 + ", " + same + ", " + s1Only + ", " + s2Only+"\n");
+
+            }
+        }
+        writer.close();
+        System.out.println("results written to " + fileName);
     }
 
     private static void saveResultsToFile(String fileName, ArrayList<String> results) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("./out/"+fileName));
         //String header = "t, p, r, f1";
-        String header = "t, foundCorrespondences, p, r, f1, numberOfPredicted";
+        String header = "t, foundCorrespondences, p, r, f1, truePositives, declaredDuplicates, trueDuplicates";
         writer.write(header + "\n");
         for (String result : results) {
             writer.write(result + "\n");
@@ -88,7 +127,7 @@ public class MatchingRuleAnalysis {
         System.out.println("results written to " + fileName);
     }
 
-    private static String runMatching(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String[] paths, int mrC) throws Exception {
+    private static String runMatching(FusableDataSet<Event, DefaultSchemaElement> dataSetD, FusableDataSet<Event, DefaultSchemaElement> dataSetY, String[] paths, int mrC, HashMap<Integer, HashSet<String>> correctRecordsMap) throws Exception {
         //Matching Rule
 
         String mr;
@@ -128,11 +167,14 @@ public class MatchingRuleAnalysis {
             long foundCorrespondences = correspondences.size();
             correspondences = null;
 
+            HashSet<String> correctRecords = perfTest.getCorrectRecords();
+            correctRecordsMap.put(mrC, correctRecords);
+
             // print the evaluation result
             System.out.println("DBpedia 2 YAGO for " + mr);
-            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
-                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfPredicted()));
-            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfPredicted();
+            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nTrue Positives: %d\nDeclared Duplicates: %d\nTrue Duplicates: %d",
+                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfCorrectlyPredicted(), perfTest.getNumberOfPredicted(), perfTest.getNumberOfCorrectTotal()));
+            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfCorrectlyPredicted() + ", " + perfTest.getNumberOfPredicted() + ", " + perfTest.getNumberOfCorrectTotal();
             return resultLine;
 
         } else if (mrC==1) {
@@ -176,11 +218,14 @@ public class MatchingRuleAnalysis {
             long foundCorrespondences = correspondences.size();
             correspondences = null;
 
+            HashSet<String> correctRecords = perfTest.getCorrectRecords();
+            correctRecordsMap.put(mrC, correctRecords);
+
             // print the evaluation result
             System.out.println("DBpedia 2 YAGO for " + mr);
-            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
-                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfPredicted()));
-            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfPredicted();
+            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nTrue Positives: %d\nDeclared Duplicates: %d\nTrue Duplicates: %d",
+                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfCorrectlyPredicted(), perfTest.getNumberOfPredicted(), perfTest.getNumberOfCorrectTotal()));
+            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfCorrectlyPredicted() + ", " + perfTest.getNumberOfPredicted() + ", " + perfTest.getNumberOfCorrectTotal();
             return resultLine;
 
         } else if (mrC==2) {
@@ -219,11 +264,14 @@ public class MatchingRuleAnalysis {
             long foundCorrespondences = correspondences.size();
             correspondences = null;
 
+            HashSet<String> correctRecords = perfTest.getCorrectRecords();
+            correctRecordsMap.put(mrC, correctRecords);
+
             // print the evaluation result
             System.out.println("DBpedia 2 YAGO for " + mr);
-            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
-                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfPredicted()));
-            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfPredicted();
+            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nTrue Positives: %d\nDeclared Duplicates: %d\nTrue Duplicates: %d",
+                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfCorrectlyPredicted(), perfTest.getNumberOfPredicted(), perfTest.getNumberOfCorrectTotal()));
+            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfCorrectlyPredicted() + ", " + perfTest.getNumberOfPredicted() + ", " + perfTest.getNumberOfCorrectTotal();
             return resultLine;
         } else if (mrC==3) {
             //LR
@@ -262,11 +310,14 @@ public class MatchingRuleAnalysis {
             long foundCorrespondences = correspondences.size();
             correspondences = null;
 
+            HashSet<String> correctRecords = perfTest.getCorrectRecords();
+            correctRecordsMap.put(mrC, correctRecords);
+
             // print the evaluation result
             System.out.println("DBpedia 2 YAGO for " + mr + " with threshold: " + ft);
-            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
-                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfPredicted()));
-            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfPredicted();
+            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nTrue Positives: %d\nDeclared Duplicates: %d\nTrue Duplicates: %d",
+                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfCorrectlyPredicted(), perfTest.getNumberOfPredicted(), perfTest.getNumberOfCorrectTotal()));
+            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfCorrectlyPredicted() + ", " + perfTest.getNumberOfPredicted() + ", " + perfTest.getNumberOfCorrectTotal();
             return resultLine;
 
         } else if (mrC==4) {
@@ -309,11 +360,14 @@ public class MatchingRuleAnalysis {
             long foundCorrespondences = correspondences.size();
             correspondences = null;
 
+            HashSet<String> correctRecords = perfTest.getCorrectRecords();
+            correctRecordsMap.put(mrC, correctRecords);
+
             // print the evaluation result
             System.out.println("DBpedia 2 YAGO for " + mr);
-            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nNumber of predicted: %d",
-                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfPredicted()));
-            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfPredicted();
+            System.out.println(String.format("Precision: %.4f\nRecall: %.4f\nF1: %.4f\nTrue Positives: %d\nDeclared Duplicates: %d\nTrue Duplicates: %d",
+                    perfTest.getPrecision(), perfTest.getRecall(), perfTest.getF1(), perfTest.getNumberOfCorrectlyPredicted(), perfTest.getNumberOfPredicted(), perfTest.getNumberOfCorrectTotal()));
+            String resultLine = mr + ", " + foundCorrespondences + ", " + perfTest.getPrecision() + ", " + perfTest.getRecall() + ", " + perfTest.getF1() + ", " + perfTest.getNumberOfCorrectlyPredicted() + ", " + perfTest.getNumberOfPredicted() + ", " + perfTest.getNumberOfCorrectTotal();
             return resultLine;
         }
         //...

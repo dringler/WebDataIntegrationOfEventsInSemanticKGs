@@ -17,6 +17,8 @@
  */
 package de.uni_mannheim.informatik.wdi.model;
 
+import java.util.HashSet;
+
 /**
  * Contains the evaluation performance.
  * 
@@ -28,11 +30,19 @@ public class Performance {
 	private int correct;
 	private int created;
 	private int correct_total;
+	private HashSet<String> correctRecords;
 
 	public Performance(int correct, int created, int correct_total) {
 		this.correct = correct;
 		this.created = created;
 		this.correct_total = correct_total;
+	}
+
+	public Performance(int correct, int created, int correct_total, HashSet<String> correctRecords) {
+		this.correct = correct;
+		this.created = created;
+		this.correct_total = correct_total;
+		this.correctRecords = correctRecords;
 	}
 
 	/**
@@ -85,5 +95,9 @@ public class Performance {
 	
 	public int getNumberOfCorrectTotal() {
 		return correct_total;
+	}
+
+	public HashSet<String> getCorrectRecords() {
+		return correctRecords;
 	}
 }

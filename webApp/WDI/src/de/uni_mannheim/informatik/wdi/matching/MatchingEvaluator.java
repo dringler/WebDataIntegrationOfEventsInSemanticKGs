@@ -63,6 +63,7 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 		int correct = 0;
 		int matched = 0;
 		int correct_max = goldStandard.getPositiveExamples().size();
+		HashSet<String> correctRecords = new HashSet<>();
 		HashMap<String, Integer> matchingOutdegreesFirst = new HashMap<>(correspondences.size() + 1, 1.0f);
 		HashMap<String, Integer> matchingOutdegreesSecond = new HashMap<>(correspondences.size() + 1, 1.0f);
 
@@ -76,6 +77,7 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 					correspondence.getSecondRecord())) {
 				correct++;
 				matched++;
+                correctRecords.add((correspondence.getFirstRecord().getIdentifier()+"+"+correspondence.getSecondRecord().getIdentifier()));
 
 				addMatchingOutdegree(matchingOutdegreesFirst, correspondence.getFirstRecord());
 				addMatchingOutdegree(matchingOutdegreesSecond, correspondence.getSecondRecord());
@@ -143,7 +145,7 @@ public class MatchingEvaluator<RecordType extends Matchable, SchemaElementType> 
 		//saveElementOutdegreesToDisk("dbpedia", matchingOutdegreesFirst);
         //saveElementOutdegreesToDisk("yago", matchingOutdegreesSecond);
 
-		return new Performance(correct, matched, correct_max);
+		return new Performance(correct, matched, correct_max, correctRecords);
 	}
 
     private void saveElementOutdegreesToDisk(String filename, HashMap<String, Integer> matchingOutdegrees) {
