@@ -190,11 +190,11 @@ trace2 = go.Bar(
 )
 
 data = go.Data([trace1, trace2])
-layout=go.Layout(title='Striped URI Scaled Levenshtein Similarity Distribution', 
+layout=go.Layout(title='Stripped URI Scaled Levenshtein Similarity Distribution', 
 	xaxis={'title':'Buckets', 'titlefont': titlefontDict, 'tickfont': tickfontDict}, 
 	yaxis={'title':'Counts', 'showticklabels': True, 'titlefont': titlefontDict, 'tickfont': tickfontDict},
 	legend={'x': 0.0, 'y':1.1, 'font': titlefontDict},
 	barmode='relative', width=1920, height=1024)
 figure = go.Figure(data=data, layout=layout)
-py.image.save_as(figure, filename='stripedURI_scaledLevenshtein_Sim_Distribution_v2.png')
+py.image.save_as(figure, filename='strippedURI_scaledLevenshtein_Sim_Distribution_v2.png')
 
