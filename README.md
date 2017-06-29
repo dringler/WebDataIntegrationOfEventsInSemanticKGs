@@ -27,3 +27,5 @@ Main result:
 Blocking only becomes efficient when applying block- or comparison-refinement methods. 
 For the analyzed data, taking all attributes for block building and removing entities from 50% of the largest blocks works best when regarding Pairs Completeness and Reduction Ratio. 
 A simple matching rule that compares the stripped URI of the entities using a Levenshtein similarity measure with a high threshold of 0.96 outperforms all learned matching rules concerning the F-measure.
+
+The full thesis is uploaded as thesis.pdf if you are interested in further details.
