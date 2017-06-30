@@ -6,7 +6,7 @@ Based on the <a href="https://github.com/olehmberg/winter">WInte.r - Web Data In
 <a href="http://l3s.de/~papadakis/erFramework.html">Blocking Framework</a> by Papadakis et al.
 In addition, the <a href="http://silkframework.org/">SILK Linked Data Integration Framework</a> was used to learn different matching rules.
 
-All blocking methods were tested on five different subsets (having different or additional attributes) to analyze the importance of different attributes.
+All blocking methods were tested on five subsets (having different or additional attributes) to analyze the importance of the attributes.
 
 Different consecutive blocking sub-tasks were tested:
 <ol>
